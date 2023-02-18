@@ -7,7 +7,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Folder Include="RestSharp\" />
+	  <Compile Remove="RestSharp\**" />
+	  <EmbeddedResource Remove="RestSharp\**" />
+	  <None Remove="RestSharp\**" />
 	</ItemGroup>
 
 </Project>
