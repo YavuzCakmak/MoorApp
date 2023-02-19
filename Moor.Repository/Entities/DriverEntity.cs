@@ -13,10 +13,11 @@ namespace Moor.Repository.Entities
         [Column("staff_id")]
         public long StaffId { get; set; }
 
-        [Column("price")]
+        [Column("driver_price")]
         public decimal Price { get; set; }
 
         [ForeignKey("StaffId")]
         public virtual StaffEntity StaffEntity { get; set; }
+
     }
 }

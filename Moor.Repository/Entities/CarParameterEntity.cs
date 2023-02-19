@@ -10,5 +10,8 @@ namespace Moor.Repository.Entities
 
         [Column("model")]
         public string Model { get; set; }
+
+        [Column("media_path")]
+        public string MediaPath { get; set; }
     }
 }
