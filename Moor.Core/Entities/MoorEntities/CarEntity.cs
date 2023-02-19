@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Moor.Core.Entities.MoorEntities
 {
+    [Table("car")]
     public class CarEntity : BaseEntity
     {
         [Column("car_parameter_id")]
@@ -11,7 +12,6 @@ namespace Moor.Core.Entities.MoorEntities
         [Column("number_plate")]
         public string NumberPlate { get; set; }
 
-        [ForeignKey("CarParameterId")]
-        public virtual CarParameterEntity CarParameterEntity { get; set; }
+        public CarParameterEntity CarParameter { get; set; }
     }
 }

@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Moor.Core.Repositories;
-using Moor.Core.Services;
+using Moor.Core.Services.BaseService;
 using Moor.Core.UnitOfWorks;
 using Moor.Service.Exceptions;
 using System.Linq.Expressions;
 
-namespace Moor.Service.Services
+namespace Moor.Service.Services.BaseService
 {
     public class Service<T> : IService<T> where T : class
     {

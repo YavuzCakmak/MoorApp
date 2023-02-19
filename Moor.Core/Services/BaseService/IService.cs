@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Moor.Core.Services
+namespace Moor.Core.Services.BaseService
 {
     public interface IService<T> where T : class
     {

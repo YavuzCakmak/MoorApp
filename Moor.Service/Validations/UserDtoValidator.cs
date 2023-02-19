@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Moor.Service.Models.Dto;
+using Moor.Service.Models.Dto.MoorDto;
 
 namespace Moor.Service.Validations
 {

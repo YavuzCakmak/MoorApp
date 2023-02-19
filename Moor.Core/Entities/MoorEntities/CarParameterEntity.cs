@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Moor.Core.Entities.MoorEntities
 {
+    [Table("car_parameter")]
     public class CarParameterEntity : BaseEntity
     {
         [Column("brand")]
@@ -13,5 +14,6 @@ namespace Moor.Core.Entities.MoorEntities
 
         [Column("media_path")]
         public string MediaPath { get; set; }
+
     }
 }
