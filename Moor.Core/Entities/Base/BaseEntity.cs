@@ -10,7 +10,7 @@ namespace Moor.Core.Entities.Base
     public abstract class BaseEntity
     {
         [Column("id")]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         [Column("created_date")]
         public DateTime CreatedDate { get; set; }
