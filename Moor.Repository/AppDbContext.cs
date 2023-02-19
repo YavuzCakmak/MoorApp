@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Reflection.Metadata;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using Moor.Repository.Entities;
 
 namespace Moor.Repository
 {
@@ -16,13 +10,20 @@ namespace Moor.Repository
         {
 
         }
-
-        //public DbSet<Contact> Contact { get; set; }
-        //public DbSet<Faq> Faq { get; set; }
-        //public DbSet<Sidebar> Sidebar { get; set; }
-        //public DbSet<Meaning> Meaning { get; set; }
-        //public DbSet<Content> Content { get; set; }
-
+        public DbSet<AgencyEntity> Agency { get; set; }
+        public DbSet<CarEntity> Car { get; set; }
+        public DbSet<CarParameterEntity> CarParameter { get; set; }
+        public DbSet<CityEntity> City { get; set; }
+        public DbSet<CountryEntity> Country { get; set; }
+        public DbSet<CountyEntity> CountyEntity { get; set; }
+        public DbSet<DisctrictEntity> District { get; set; }
+        public DbSet<DriverCarEntity> DriverCar { get; set; }
+        public DbSet<DriverEntity> Driver { get; set; }
+        public DbSet<PriceEntity> Price { get; set; }
+        public DbSet<StaffEntity> Staff { get; set; }
+        public DbSet<TransferEntity> Transfer { get; set; }
+        public DbSet<TravellerEntity> Traveller { get; set; }
+        public DbSet<UserEntity> User { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
