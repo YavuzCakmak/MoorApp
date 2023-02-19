@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-using Moor.Repository.Entities;
+using Moor.Core.Entities.MoorEntities;
 
 namespace Moor.Repository
 {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Moor.Core.Base
+namespace Moor.Core.Entities.Base
 {
     public abstract class BaseEntity
     {

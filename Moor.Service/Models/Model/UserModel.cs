@@ -1,4 +1,4 @@
-﻿namespace Moor.Service.Models
+﻿namespace Moor.Service.Models.Model
 {
     public class UserModel
     {

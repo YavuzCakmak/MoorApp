@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Moor.Repository.Entities
+namespace Moor.Core.Entities.MoorEntities
 {
     public class CountryEntity
     {

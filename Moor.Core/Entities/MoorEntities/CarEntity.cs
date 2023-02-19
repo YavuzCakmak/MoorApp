@@ -1,7 +1,7 @@
-﻿using Moor.Core.Base;
+﻿using Moor.Core.Entities.Base;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Moor.Repository.Entities
+namespace Moor.Core.Entities.MoorEntities
 {
     public class CarEntity : BaseEntity
     {

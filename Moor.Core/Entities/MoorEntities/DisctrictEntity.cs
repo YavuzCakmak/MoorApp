@@ -1,4 +1,4 @@
-﻿using Moor.Core.Base;
+﻿using Moor.Core.Entities.Base;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Moor.Repository.Entities
+namespace Moor.Core.Entities.MoorEntities
 {
     public class DisctrictEntity : BaseEntity
     {

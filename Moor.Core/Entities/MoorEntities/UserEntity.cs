@@ -5,19 +5,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Moor.Repository.Entities
+namespace Moor.Core.Entities.MoorEntities
 {
     public class UserEntity
     {
         [Column("id")]
         public long Id { get; set; }
-        
+
         [Column("username")]
         public string Username { get; set; }
-        
+
         [Column("password")]
         public string Password { get; set; }
-        
+
         [Column("department")]
         public int Department { get; set; }
 
