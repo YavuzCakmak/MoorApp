@@ -14,6 +14,5 @@ namespace Moor.Core.Entities.MoorEntities
 
         [Column("media_path")]
         public string MediaPath { get; set; }
-
     }
 }

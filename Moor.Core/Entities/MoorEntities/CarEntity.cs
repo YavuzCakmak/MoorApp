@@ -12,6 +12,7 @@ namespace Moor.Core.Entities.MoorEntities
         [Column("number_plate")]
         public string NumberPlate { get; set; }
 
+        [ForeignKey("CarParameterId")]
         public CarParameterEntity CarParameter { get; set; }
     }
 }

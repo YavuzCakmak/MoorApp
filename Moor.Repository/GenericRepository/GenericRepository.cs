@@ -30,7 +30,7 @@ namespace Moor.Repository.GenericRepository
             return await _dbSet.AnyAsync(expression);
         }
 
-        public IQueryable<T> GetAll()
+        public virtual IQueryable<T> GetAll()
         {
             return _dbSet.AsNoTracking().AsQueryable();
         }
