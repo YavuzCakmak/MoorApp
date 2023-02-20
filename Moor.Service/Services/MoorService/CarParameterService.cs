@@ -13,10 +13,10 @@ namespace Moor.Service.Services.MoorService
         private readonly ICarParameterRepository _carParameterRepository;
         private readonly IMapper _mapper;
 
-        public CarParameterService(IGenericRepository<CarParameterEntity> repoistory, IUnitOfWork unitOfWork, IMapper mapper, ICarParameterRepository _carParameterRepository) : base(repoistory, unitOfWork)
+        public CarParameterService(IGenericRepository<CarParameterEntity> repoistory, IUnitOfWork unitOfWork, IMapper mapper, ICarParameterRepository carParameterRepository) : base(repoistory, unitOfWork)
         {
             _mapper = mapper;
-            _carParameterRepository = _carParameterRepository;
+            _carParameterRepository = carParameterRepository;
         }
     }
 }
