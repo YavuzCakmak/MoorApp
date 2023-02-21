@@ -55,7 +55,7 @@ namespace Moor.Repository.GenericRepository
             _dbSet.Update(entity);
         }
 
-        public IQueryable<T> Where(Expression<Func<T, bool>> expression)
+        public virtual IQueryable<T> Where(Expression<Func<T, bool>> expression)
         {
             return _dbSet.Where(expression);
         }

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Moor.Core.Entities.MoorEntities
 {
+    [Table("driver_car")]
     public class DriverCarEntity : BaseEntity
     {
         [Column("driver_id")]

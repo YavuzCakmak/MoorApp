@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Moor.Core.Entities.MoorEntities
 {
+    [Table("county")]
     public class CountyEntity
     {
         [Column("id")]
@@ -18,10 +14,10 @@ namespace Moor.Core.Entities.MoorEntities
         [Column("name")]
         public string Name { get; set; }
 
-        [ForeignKey("CityId")]
-        public virtual CityEntity City { get; set; }
-
         [Column("is_deleted")]
         public bool IsDeleted { get; set; }
+
+        [ForeignKey("CityId")]
+        public virtual CityEntity City { get; set; }
     }
 }

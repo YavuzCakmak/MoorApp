@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Moor.Core.Entities.MoorEntities
 {
+    [Table("city")]
     public class CityEntity
     {
         [Column("id")]
@@ -25,6 +26,6 @@ namespace Moor.Core.Entities.MoorEntities
         public bool IsDeleted { get; set; }
 
         [ForeignKey("CountryId")]
-        public virtual CountryEntity CountryEntity { get; set; }
+        public virtual CountryEntity Country { get; set; }
     }
 }

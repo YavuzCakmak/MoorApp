@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Moor.Core.Entities.MoorEntities
 {
+    [Table("country")]
     public class CountryEntity
     {
         [Column("id")]
