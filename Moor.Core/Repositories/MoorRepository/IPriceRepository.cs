@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Moor.Core.Repositories.MoorRepository
 {
-    public interface IDriverCarRepository : IGenericRepository<DriverCarEntity>
+    public interface IPriceRepository : IGenericRepository<PriceEntity>
     {
     }
 }

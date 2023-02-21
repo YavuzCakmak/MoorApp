@@ -24,6 +24,6 @@ namespace Moor.Core.Entities.MoorEntities
         public long UserId { get; set; }
 
         [ForeignKey("UserId")]
-        public virtual UserEntity UserEntity { get; set; }
+        public virtual UserEntity User { get; set; }
     }
 }

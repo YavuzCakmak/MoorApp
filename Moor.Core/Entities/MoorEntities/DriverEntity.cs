@@ -17,7 +17,7 @@ namespace Moor.Core.Entities.MoorEntities
         public decimal Price { get; set; }
 
         [ForeignKey("StaffId")]
-        public virtual StaffEntity StaffEntity { get; set; }
+        public virtual StaffEntity Staff { get; set; }
 
     }
 }

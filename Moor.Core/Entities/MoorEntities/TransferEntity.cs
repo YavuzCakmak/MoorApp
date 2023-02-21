@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Moor.Core.Entities.Base;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Moor.Core.Entities.MoorEntities
 {
-    public class TransferEntity
+    public class TransferEntity : BaseEntity
     {
         [Column("agency_id")]
         public long AgencyId { get; set; }

@@ -8,15 +8,15 @@ using Moor.Service.Services.BaseService;
 
 namespace Moor.Service.Services.MoorService
 {
-    public class CarService : Service<CarEntity>, ICarService
+    public class TransferService : Service<TransferEntity>, ITransferService
     {
-        private readonly ICarRepository _carRepository;
+        private readonly ITransferRepository _transferRepository;
         private readonly IMapper _mapper;
 
-        public CarService(IGenericRepository<CarEntity> repository, IUnitOfWork unitOfWork, IMapper mapper, ICarRepository carRepository) : base(repository, unitOfWork)
+        public TransferService(IGenericRepository<TransferEntity> repository, IUnitOfWork unitOfWork, IMapper mapper, ITransferRepository transferRepository) : base(repository, unitOfWork)
         {
             _mapper = mapper;
-            _carRepository = carRepository;
+            _transferRepository = transferRepository;
         }
     }
 }

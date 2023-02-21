@@ -20,9 +20,9 @@ namespace Moor.Core.Entities.MoorEntities
         public decimal Price { get; set; }
 
         [ForeignKey("DistrictId")]
-        public virtual DistrictEntity DisctrictEntity { get; set; }
+        public virtual DistrictEntity District { get; set; }
 
         [ForeignKey("CarParameterId")]
-        public virtual CarParameterEntity CarParameterEntity { get; set; }
+        public virtual CarParameterEntity CarParameter { get; set; }
     }
 }
