@@ -12,4 +12,8 @@
 	  <None Remove="RestSharp\**" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\Moor.Model\Moor.Model.csproj" />
+	</ItemGroup>
+
 </Project>
