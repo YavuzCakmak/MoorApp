@@ -45,6 +45,7 @@ builder.Services.AddDbContext<AppDbContext>(
 var appSettingsSection = builder.Configuration.GetSection("MoorSettings");
 builder.Services.Configure<MoorSettings>(appSettingsSection);
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
 //Default
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(containersBuilder => containersBuilder.RegisterModule(new RepoServiceModule()));
