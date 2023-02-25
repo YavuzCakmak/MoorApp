@@ -2,7 +2,7 @@
 
 namespace Moor.Model.Model.Authorize
 {
-    public class PersonnelModel : BaseModel
+    public class PersonnelModel : BaseAuthorizeModel
     {
         public string UserName { get; set; }
 

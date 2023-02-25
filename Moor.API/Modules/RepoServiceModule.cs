@@ -9,6 +9,9 @@ using Moor.Service.Mapping;
 using Moor.Service.Services.BaseService;
 using System.Reflection;
 using Module = Autofac.Module;
+using Moor.Core.Services.MoorService;
+using Moor.Service.Services.MoorService;
+using Moor.Service.Utilities.AuthorizeHelpers;
 
 namespace Moor.API.Modules
 {
@@ -20,6 +23,7 @@ namespace Moor.API.Modules
             builder.RegisterGeneric(typeof(GenericRepository<>)).As(typeof(IGenericRepository<>)).InstancePerLifetimeScope();
             builder.RegisterGeneric(typeof(Service<>)).As(typeof(IService<>)).InstancePerLifetimeScope();
             builder.RegisterType<UnitOfWork>().As<IUnitOfWork>();
+          
 
             var apiAssembly = Assembly.GetExecutingAssembly();
             var repoAseembly = Assembly.GetAssembly(typeof(AppDbContext));

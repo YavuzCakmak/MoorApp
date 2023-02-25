@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Moor.Core.Entities.MoorEntities;
+using Moor.Core.Entities.MoorEntities.AuthorizeEntities;
 
 namespace Moor.Repository
 {
@@ -10,6 +11,15 @@ namespace Moor.Repository
         {
 
         }
+
+        #region Authorize
+        public DbSet<PersonnelEntity> Personnel { get; set; }
+        public DbSet<PrivilegeEntity> Privilege { get; set; }
+        public DbSet<RoleEntity> Role { get; set; }
+        public DbSet<RolePrivilegeEntity> RolePrivilege { get; set; }
+        public DbSet<PersonnelRoleEntity> PersonnelRole { get; set; }
+        #endregion
+
         public DbSet<AgencyEntity> Agency { get; set; }
         public DbSet<CarEntity> Car { get; set; }
         public DbSet<CarParameterEntity> CarParameter { get; set; }

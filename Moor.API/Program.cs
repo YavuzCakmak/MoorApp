@@ -9,6 +9,10 @@ using Moor.Repository;
 using Moor.Service.Mapping;
 using FluentValidation.AspNetCore;
 using Moor.Service.Validations;
+using Moor.Service.Utilities.AppSettings;
+using Moor.Core.Services.MoorService;
+using Moor.Service.Services.MoorService;
+using Moor.Service.Utilities.AuthorizeHelpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,14 +40,18 @@ builder.Services.AddDbContext<AppDbContext>(
                 .EnableDetailedErrors());
 
 
-////Defaul AppSettings
-//var appSettingsSection = builder.Configuration.GetSection("WayToHairSettings");
-//builder.Services.Configure<WayToHairSettings>(appSettingsSection);
+//Defaul AppSettings
+var appSettingsSection = builder.Configuration.GetSection("MoorSettings");
+builder.Services.Configure<MoorSettings>(appSettingsSection);
 
 
 //Default
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(containersBuilder => containersBuilder.RegisterModule(new RepoServiceModule()));
+
+
+builder.Services.AddScoped<IAuthorizeService, AuthorizeService>();
+builder.Services.AddScoped(typeof(TokenHelper));
 
 var app = builder.Build();
 

@@ -1,6 +1,8 @@
-﻿namespace Moor.Model.Model.Authorize
+﻿using Moor.Model.Models.Base;
+
+namespace Moor.Model.Model.Authorize
 {
-    public class RolePrivilegeModel /*: BaseModel*/
+    public class RolePrivilegeModel : BaseAuthorizeModel
     {
         public RoleModel Role { get; set; }
         public PrivilegeModel Privilege { get; set; }
