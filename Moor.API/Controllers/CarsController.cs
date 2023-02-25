@@ -4,11 +4,13 @@ using Moor.API.Controllers.BaseController;
 using Moor.API.Filters;
 using Moor.Core.Entities.MoorEntities;
 using Moor.Core.Services.MoorService;
+using Moor.Core.Utilities;
 using System.Net;
 
 namespace Moor.API.Controllers
 {
     [ValidateFilter]
+    [HasPermission]
     public class CarsController : CustomBaseController
     {
         private readonly ICarService _carService;

@@ -13,6 +13,7 @@ using Moor.Service.Utilities.AppSettings;
 using Moor.Core.Services.MoorService;
 using Moor.Service.Services.MoorService;
 using Moor.Service.Utilities.AuthorizeHelpers;
+using Moor.Service.Utilities.Session;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,13 +45,23 @@ builder.Services.AddDbContext<AppDbContext>(
 var appSettingsSection = builder.Configuration.GetSection("MoorSettings");
 builder.Services.Configure<MoorSettings>(appSettingsSection);
 
+builder.Services.AddMvc();
+builder.Services.AddDistributedMemoryCache();
 
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(20);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 //Default
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(containersBuilder => containersBuilder.RegisterModule(new RepoServiceModule()));
 
 
 builder.Services.AddScoped<IAuthorizeService, AuthorizeService>();
+builder.Services.AddScoped<SessionManager>();
 builder.Services.AddScoped(typeof(TokenHelper));
 
 var app = builder.Build();
@@ -58,11 +69,15 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
+
 app.UseHttpsRedirection();
+app.UseCustomAuthMiddleware();
 
-app.UseCustomException();
+
 app.UseAuthorization();
-
+app.UseSession();
+app.UseRouting();
+app.UseCustomException();
 app.MapControllers();
 
 app.Run();
