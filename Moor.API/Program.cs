@@ -13,6 +13,7 @@ using Moor.Service.Utilities.AppSettings;
 using Moor.Core.Services.MoorService;
 using Moor.Service.Services.MoorService;
 using Moor.Service.Utilities.AuthorizeHelpers;
+using Moor.Service.Utilities.Session;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,7 +44,7 @@ builder.Services.AddDbContext<AppDbContext>(
 //Defaul AppSettings
 var appSettingsSection = builder.Configuration.GetSection("MoorSettings");
 builder.Services.Configure<MoorSettings>(appSettingsSection);
-
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 //Default
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
@@ -51,17 +52,27 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containersBuilder => container
 
 
 builder.Services.AddScoped<IAuthorizeService, AuthorizeService>();
+builder.Services.AddScoped<SessionManager>();
 builder.Services.AddScoped(typeof(TokenHelper));
 
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(20);
+});
+builder.Services.AddDistributedMemoryCache();
+
 var app = builder.Build();
+app.UseHttpsRedirection();
+app.UseRouting();
+app.UseAuthorization();
+app.UseSession();
+
+
+app.UseCustomException();
+app.UseCustomAuthMiddleware();
 
 app.UseSwagger();
 app.UseSwaggerUI();
-
-app.UseHttpsRedirection();
-
-app.UseCustomException();
-app.UseAuthorization();
 
 app.MapControllers();
 

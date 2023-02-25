@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using Moor.API.Controllers.BaseController;
 using Moor.API.Filters;
 using Moor.Core.Services.MoorService;
+using Moor.Core.Utilities;
 
 namespace Moor.API.Controllers
 {
     [ValidateFilter]
+    [HasPermission]
     public class CarParametersController : CustomBaseController
     {
         private readonly ICarParameterService _carParameterService;

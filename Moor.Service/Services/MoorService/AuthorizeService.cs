@@ -18,6 +18,7 @@ using Moor.Model.Utilities.TokenModel;
 using Moor.Model.Utilities.Authorize;
 using Moor.Core.Entities.MoorEntities;
 using Moor.Core.Repositories.MoorRepository;
+using Org.BouncyCastle.Asn1.Pkcs;
 
 namespace Moor.Service.Services.MoorService
 {
@@ -79,8 +80,8 @@ namespace Moor.Service.Services.MoorService
                 };
             }
 
-            var rolePrivileges = _rolePrivilegeService.Where(x => personnelRoles.Select(x => x.Role.Id).Contains(x.RoleId)).ToList();
-
+            var aa = _rolePrivilegeService.Where(x => personnelRoles.Select(x => x.Role.Id).Contains(x.RoleId)).ToList();
+            var rolePrivileges = _mapper.Map<List<RolePrivilegeModel>>(aa);
             var roleDtos = new List<Role>();
 
             foreach (var rolePrivilegeGroup in rolePrivileges.GroupBy(x => x.Role.Id))
@@ -94,7 +95,7 @@ namespace Moor.Service.Services.MoorService
                 {
                     Id = role.Id,
                     Name = role.Name,
-                    //Privileges = privileges  Burda sen Mapleme yapmadığın için hata aldın Maple Modele çevir her şeyi 
+                    Privileges = privileges.ToList()
                 });
             }
 

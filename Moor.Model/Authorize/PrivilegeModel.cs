@@ -1,10 +1,10 @@
 ﻿
+using Moor.Model.Models.Base;
+
 namespace Moor.Model.Model.Authorize
 {
-    public class PrivilegeModel 
+    public class PrivilegeModel : BaseAuthorizeModel
     {
-        public long Id { get; set; }
-        public bool IsDeleted { get; set; }
         public string Name { get; set; }
     }
 }
