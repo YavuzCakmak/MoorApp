@@ -42,7 +42,6 @@ namespace Moor.API.Controllers
         {
             var car = await _carService.GetByIdAsync(id);
             return CreateActionResult(CustomResponseDto<CarDto>.Succces((int)HttpStatusCode.OK, _mapper.Map<CarDto>(car)));
-            //return CreateActionResult(CustomResponseDto<NoContentDto>.Fail((int)HttpStatusCode.NotFound, string.Empty));
         }
 
         [HttpPost]

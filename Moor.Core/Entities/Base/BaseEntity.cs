@@ -16,7 +16,7 @@ namespace Moor.Core.Entities.Base
         public DateTime CreatedDate { get; set; }
 
         [Column("update_date")]
-        public DateTime UpdateDate { get; set; }
+        public DateTime? UpdateDate { get; set; }
 
         [Column("is_deleted")]
         public bool IsDeleted { get; set; }

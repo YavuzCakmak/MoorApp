@@ -15,7 +15,7 @@ using System.Net;
 
 namespace Moor.API.Controllers
 {
-    [ValidateFilter]
+    //[ValidateFilter]
     //[HasPermission]
     public class CarParametersController : CustomBaseController
     {
@@ -32,7 +32,14 @@ namespace Moor.API.Controllers
         public async Task<IActionResult> All()
         {
             var carParameters = await _carParameterService.GetAllAsync();
-            return CreateActionResult(CustomResponseDto<List<CarParameterDto>>.Succces((int)HttpStatusCode.OK, _mapper.Map<List<CarParameterDto>>(carParameters)));
+            if (carParameters.IsNotNullOrEmpty())
+            {
+                return CreateActionResult(CustomResponseDto<List<CarParameterDto>>.Succces((int)HttpStatusCode.OK, _mapper.Map<List<CarParameterDto>>(carParameters)));
+            }
+            else
+            {
+                return CreateActionResult(CustomResponseDto<List<NoContentDto>>.Fail((int)HttpStatusCode.NotFound));
+            }
         }
 
         [ServiceFilter(typeof(NotFoundFilter<CarParameterEntity>))]
