@@ -9,5 +9,6 @@ namespace Moor.Service.Utilities.AppSettings
     public class MoorSettings
     {
         public JwtSetting.JwtSetting JwtSetting { get; set; }
+        public FileSetting.FileSetting FileSetting { get; set; }
     }
 }

@@ -34,7 +34,6 @@ namespace Moor.Service.Services.MoorService
 
             return new CarDto();
             //CarParameterKayıtEtmemLazım
-
         }
     }
 }

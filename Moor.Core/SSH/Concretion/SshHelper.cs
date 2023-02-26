@@ -1,22 +1,21 @@
-﻿using Moor.Core.SSH.Abstraction;
+﻿using Microsoft.Extensions.Options;
+using Moor.Core.SSH.Abstraction;
 using Moor.Core.SSH.Model;
-using System;
-using System.Collections.Generic;
-using System.IO;
+using Moor.Service.Utilities.AppSettings;
+using Moor.Service.Utilities.FileSetting;
 using System.IO.Compression;
-using System.Text;
 
 namespace Moor.Core.SSH.Concretion
 {
     public class SshHelper : ISshHelper
     {
-        private readonly IOptions<AppSettings> appSettings;
+        private readonly IOptions<MoorSettings> appSettings;
         private FileSetting fileSetting { get; set; } = new FileSetting();
 
-        public SshHelper(IOptions<AppSettings> appSettings)
+        public SshHelper(IOptions<MoorSettings> appSettings)
         {
             this.appSettings = appSettings;
-            this.fileSetting = this.appSettings.Value.PrivateInsuranceSettings.FileSetting;
+            this.fileSetting = this.appSettings.Value.FileSetting;
         }
 
         public string CreateDirectoryAndWriteInit(string fileDirectory, string text)

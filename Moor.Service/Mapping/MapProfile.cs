@@ -3,6 +3,7 @@ using Moor.Core.Entities.Base;
 using Moor.Core.Entities.MoorEntities;
 using Moor.Core.Entities.MoorEntities.AuthorizeEntities;
 using Moor.Model.Dtos.MoorDto.CarDto;
+using Moor.Model.Dtos.MoorDto.CarParameterDto;
 using Moor.Model.Model.Authorize;
 using Moor.Model.Models.Base;
 using Moor.Model.Models.MoorModels.CarModel;
@@ -33,8 +34,9 @@ namespace Moor.Service.Mapping
 
             #region Moor
 
-            #region
+            #region CarParameter
             CreateMap<CarParameterEntity, CarParameterModel>().ReverseMap().IncludeBase<BaseModel, BaseEntity>();
+            CreateMap<CarParameterEntity, CarParameterDto>().ReverseMap();
             #endregion
 
             #region Car
