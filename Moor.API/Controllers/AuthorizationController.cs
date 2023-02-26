@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moor.Core.Services.MoorService;
+using Moor.Model.Dtos.MoorDto.CarParameterDto;
 using Moor.Model.Model.Authorize;
 using Moor.Model.Utilities.Authentication;
+using Moor.Service.Models.Dto.ResponseDto;
+using System.Net;
 
 namespace Moor.API.Controllers
 {
@@ -26,7 +29,8 @@ namespace Moor.API.Controllers
         [HttpPost("register")]
         public IActionResult Register([FromBody] PersonnelModel personnelModel)
         {
-            return Ok(_authorizationService.Register(personnelModel));
+            var newPersonellModel = _authorizationService.Register(personnelModel).Result;
+            return Ok(newPersonellModel);
         }
     }
 }

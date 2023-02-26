@@ -1,4 +1,5 @@
 ﻿using Moor.Core.Entities.Base;
+using Moor.Core.Entities.MoorEntities.AuthorizeEntities;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Moor.Core.Entities.MoorEntities
@@ -20,10 +21,10 @@ namespace Moor.Core.Entities.MoorEntities
         [Column("media_path")]
         public string? MediaPath { get; set; }
 
-        [Column("user_id")]
-        public long UserId { get; set; }
+        [Column("personnel_id")]
+        public long PersonnelId { get; set; }
 
-        [ForeignKey("UserId")]
-        public virtual UserEntity User { get; set; }
+        [ForeignKey("PersonnelId")]
+        public virtual PersonnelEntity Personnel { get; set; }
     }
 }

@@ -7,6 +7,6 @@ namespace Moor.Core.Services.MoorService
     public interface IAuthorizeService
     {
         LoginResponseModel Login(LoginModel loginModel);
-        DataResult Register(PersonnelModel personnelModel);
+        Task<DataResult> Register(PersonnelModel personnelModel);
     }
 }

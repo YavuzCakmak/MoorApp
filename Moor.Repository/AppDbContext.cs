@@ -33,7 +33,6 @@ namespace Moor.Repository
         public DbSet<StaffEntity> Staff { get; set; }
         public DbSet<TransferEntity> Transfer { get; set; }
         public DbSet<TravellerEntity> Traveller { get; set; }
-        public DbSet<UserEntity> User { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

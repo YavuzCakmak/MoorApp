@@ -1,4 +1,5 @@
-﻿using Moor.Model.Models.Base;
+﻿using Moor.Model.Model.Authorize;
+using Moor.Model.Models.Base;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -19,7 +20,7 @@ namespace Moor.Model.Models.MoorModels.StaffModel
         public string? PhoneNumber { get; set; }
 
         public string? MediaPath { get; set; }
-        public long UserId { get; set; }
-        public virtual UserModel.UserModel User { get; set; }
+        public long PersonnelId { get; set; }
+        public virtual PersonnelModel Personnel { get; set; }
     }
 }

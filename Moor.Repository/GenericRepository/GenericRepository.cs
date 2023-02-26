@@ -17,7 +17,7 @@ namespace Moor.Repository.GenericRepository
         }
         public async Task AddAsync(T entity)
         {
-            await _dbSet.AddAsync(entity);
+           var aa = await _dbSet.AddAsync(entity);
         }
 
         public async Task AddRangeAsync(IEnumerable<T> entities)

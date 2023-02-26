@@ -15,7 +15,6 @@ namespace Moor.Core.Entities.MoorEntities.AuthorizeEntities
         [Column("personnel_id")]
         public long PersonnelId { get; set; }
 
-
         [Column("role_id")]
         public long RoleId { get; set; }
 

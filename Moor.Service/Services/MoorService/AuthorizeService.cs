@@ -19,6 +19,7 @@ using Moor.Model.Utilities.Authorize;
 using Moor.Core.Entities.MoorEntities;
 using Moor.Core.Repositories.MoorRepository;
 using Org.BouncyCastle.Asn1.Pkcs;
+using Moor.Core.Extension.String;
 
 namespace Moor.Service.Services.MoorService
 {
@@ -113,7 +114,7 @@ namespace Moor.Service.Services.MoorService
             };
         }
 
-        public DataResult Register(PersonnelModel personnelModel)
+        public async Task<DataResult> Register(PersonnelModel personnelModel)
         {
             var personnel = _personnelService.Where(x => x.UserName == personnelModel.UserName || x.Email == personnelModel.Email).ToList();
 
@@ -128,7 +129,6 @@ namespace Moor.Service.Services.MoorService
 
             var hashedPassword = HashingHelper.CreatePasswordHash(personnelModel.Password);
 
-            //Bunu PersonnelModeleÇevir
             var dataResult = _personnelService.AddAsync(new PersonnelEntity
             {
                 Email = personnelModel.Email,
@@ -139,19 +139,39 @@ namespace Moor.Service.Services.MoorService
                 LastName = personnelModel.LastName,
             });
 
-            // DataResult Dön IsSuccesOlsun 
-            //if (dataResult.IsSuccess)
-            //{
-            //    _personnelRoleService.Add(new PersonnelRoleModel
-            //    {
-            //        Personnel = new PersonnelModel { Id = dataResult.PkId },
-            //        Role = new RoleModel { Id = 85 }
-            //    });
+            if (dataResult.Result.IsNotNull() && dataResult.Result.Id.IsNotNull())
+            {
+                var personnelRoles = _personnelRoleService.Where(x => x.IsDeleted == false).OrderByDescending(x => x.Id).ToList();
+                if (personnelRoles.IsNotNullOrEmpty())
+                {
+                    var lastPersonnelRole = personnelRoles.Select(x => x.Id).FirstOrDefault();
+                    PersonnelRoleEntity personnelRoleEntity = new PersonnelRoleEntity();
+                    personnelRoleEntity.Id = lastPersonnelRole + 1;
+                    personnelRoleEntity.IsDeleted = false;
+                    personnelRoleEntity.RoleId = 86;
+                    personnelRoleEntity.PersonnelId = dataResult.Result.Id;
+                    var result = await _personnelRoleService.AddAsync(personnelRoleEntity);
+                }
+                else
+                {
+                    PersonnelRoleEntity personnelRoleEntity = new PersonnelRoleEntity();
+                    personnelRoleEntity.Id = 2;
+                    personnelRoleEntity.IsDeleted = false;
+                    personnelRoleEntity.RoleId = 86;
+                    personnelRoleEntity.PersonnelId = dataResult.Result.Id;
+                    var result = await _personnelRoleService.AddAsync(personnelRoleEntity);
+                }
+            }
+            else
+            {
+                return new DataResult
+                {
+                    IsSuccess = false,
+                    ErrorMessage = "Kullanıcı Kaydı sırasında hata oluştu."
+                };
+            }
 
-            //    return new DataResult { IsSuccess = true, PkId = dataResult.PkId };
-            //}
-
-            return new DataResult { IsSuccess = false };
+            return new DataResult { IsSuccess = true, PkId = dataResult.Result.Id };
         }
     }
 }
