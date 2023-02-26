@@ -24,7 +24,7 @@ namespace Moor.API.Filters
                 await next.Invoke();
             }
 
-            var anyEntity = await _service.AnyAsync(x => x.Id == (int)idValue);
+            var anyEntity = await _service.AnyAsync(x => x.Id == (long)idValue);
             if (anyEntity)
             {
                 await next.Invoke();

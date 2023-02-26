@@ -18,7 +18,7 @@ namespace Moor.Service.Services.BaseService
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<T> AddAsync(T entity)
+        public virtual async Task<T> AddAsync(T entity)
         {
             await _repository.AddAsync(entity);
             await _unitOfWork.CommitAsync();
@@ -42,7 +42,7 @@ namespace Moor.Service.Services.BaseService
             return await _repository.GetAll().ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async Task<T> GetByIdAsync(long id)
         {
             var value = await _repository.GetByIdAsync(id);
             if (value == null)

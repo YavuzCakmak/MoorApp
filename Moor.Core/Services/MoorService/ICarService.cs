@@ -1,5 +1,6 @@
 ﻿using Moor.Core.Entities.MoorEntities;
 using Moor.Core.Services.BaseService;
+using Moor.Model.Dtos.MoorDto.CarDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,6 @@ namespace Moor.Core.Services.MoorService
 {
     public interface ICarService : IService<CarEntity>
     {
-
+        public CarDto Save(CarDto carDto);
     }
 }

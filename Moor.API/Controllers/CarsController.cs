@@ -5,6 +5,10 @@ using Moor.API.Filters;
 using Moor.Core.Entities.MoorEntities;
 using Moor.Core.Services.MoorService;
 using Moor.Core.Utilities;
+using Moor.Model.Dtos.MoorDto.CarDto;
+using Moor.Model.Model.Authorize;
+using Moor.Model.Models.MoorModels.CarModel;
+using Moor.Service.Models.Dto.ResponseDto;
 using System.Net;
 
 namespace Moor.API.Controllers
@@ -22,34 +26,32 @@ namespace Moor.API.Controllers
             _mapper = mapper;
         }
 
-        //Constuructor
-
         [HttpGet]
         public async Task<IActionResult> All()
         {
             var cars = await _carService.GetAllAsync();
-            return Ok(cars);
-            //var contents = await _contentService.GetAllAsync();
-            //var contentDtos = _mapper.Map<List<ContentDto>>(contents.ToList());
-            //return CreateActionResult(CustomResponseDto<List<ContentDto>>.Succces((int)HttpStatusCode.OK, contentDtos));
+            var carModels = _mapper.Map<List<CarModel>>(cars);
+            var carDtos = _mapper.Map<List<CarDto>>(carModels);
+            return CreateActionResult(CustomResponseDto<List<CarDto>>.Succces((int)HttpStatusCode.OK, carDtos));
         }
 
 
-        //[ServiceFilter(typeof(NotFoundFilter<CarEntity>))]
-        //[HttpGet("{id}")]
-        //public async Task<IActionResult> GetById(int id)
-        //{
-        //    //var content = await _contentService.GetByIdAsync(id);
-        //    //var contentDto = _mapper.Map<ContentDto>(content);
-        //    //return CreateActionResult(CustomResponseDto<ContentDto>.Succces((int)HttpStatusCode.OK, contentDto));
-        //}
+        [ServiceFilter(typeof(NotFoundFilter<CarEntity>))]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(long id)
+        {
+            var car = await _carService.GetByIdAsync(id);
+            var carModel = _mapper.Map<CarModel>(car);
+            var carEn = _mapper.Map<CarDto>(car);
+            return CreateActionResult(CustomResponseDto<CarDto>.Succces((int)HttpStatusCode.OK, _mapper.Map<CarDto>(carModel)));
+        }
 
-        //[HttpPost]
-        //public async Task<IActionResult> Save(ContentDto contentDto)
-        //{
-        //    //var content = await _contentService.AddAsync(_mapper.Map<Content>(contentDto));
-        //    //return CreateActionResult(CustomResponseDto<ContentDto>.Succces((int)HttpStatusCode.OK, _mapper.Map<ContentDto>(content)));
-        //}
+        [HttpPost]
+        public async Task<IActionResult> Save(CarDto carDto)
+        {
+            var carEntity = await _carService.AddAsync(_mapper.Map<CarEntity>(carDto));
+            return CreateActionResult(CustomResponseDto<CarDto>.Succces((int)HttpStatusCode.OK, _mapper.Map<CarDto>(carEntity)));
+        }
 
         //[HttpPut]
         //public async Task<IActionResult> Update(ContentDto contentDto)
