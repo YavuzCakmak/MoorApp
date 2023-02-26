@@ -27,11 +27,11 @@ namespace Moor.Core.Entities.MoorEntities
         [Column("reception_price")]
         public decimal ReceptionPrice { get; set; }
         [Column("staff_id")]
-        public long StaffId { get; set; }
+        public long? StaffId { get; set; } // PersonnelId olacak 
         [Column("city_id")]
-        public long CityId { get; set; }
+        public long? CityId { get; set; }
         [Column("county_id")]
-        public long CountyId { get; set; }
+        public long? CountyId { get; set; }
 
         [ForeignKey("StaffId")]
         public virtual StaffEntity Staff { get; set; }
