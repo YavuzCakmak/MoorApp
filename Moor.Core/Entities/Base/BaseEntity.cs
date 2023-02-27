@@ -13,7 +13,7 @@ namespace Moor.Core.Entities.Base
         public long Id { get; set; }
 
         [Column("created_date")]
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
 
         [Column("update_date")]
         public DateTime? UpdateDate { get; set; }

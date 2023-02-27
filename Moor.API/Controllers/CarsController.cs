@@ -14,8 +14,8 @@ using System.Net;
 
 namespace Moor.API.Controllers
 {
-    [ValidateFilter]
-    [HasPermission]
+ 
+    //[HasPermission]
     public class CarsController : CustomBaseController
     {
         private readonly ICarService _carService;
@@ -45,15 +45,17 @@ namespace Moor.API.Controllers
         }
 
         [HttpPost]
+        [ValidateFilter]
         public async Task<IActionResult> Save(CarDto carDto)
         {
-            return CreateActionResult(CustomResponseDto<CarDto>.Succces((int)HttpStatusCode.OK, _carService.Save(carDto)));
+            return CreateActionResult(CustomResponseDto<CarDto>.Succces((int)HttpStatusCode.OK, await _carService.Save(carDto)));
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(CarDto CarDto)
+        public async Task<IActionResult> Update(CarDto carDto)
         {
-            return CreateActionResult(CustomResponseDto<CarDto>.Succces((int)HttpStatusCode.OK));
+            await _carService.UpdateAsync(_mapper.Map<CarEntity>(carDto));
+            return CreateActionResult(CustomResponseDto<CarDto>.Succces((int)HttpStatusCode.OK, _mapper.Map<CarDto>(_carService.GetByIdAsync((long)carDto.Id))));
         }
 
         //[HttpDelete("{id}")]

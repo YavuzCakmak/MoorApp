@@ -14,26 +14,25 @@ namespace Moor.Service.Services.MoorService
     public class CarService : Service<CarEntity>, ICarService
     {
         private readonly ICarRepository _carRepository;
+        private readonly ICarParameterService _carParameterService;
         private readonly IMapper _mapper;
 
-        public CarService(IGenericRepository<CarEntity> repository, IUnitOfWork unitOfWork, IMapper mapper, ICarRepository carRepository) : base(repository, unitOfWork)
+        public CarService(IGenericRepository<CarEntity> repository, IUnitOfWork unitOfWork, IMapper mapper, ICarRepository carRepository, ICarParameterService carParameterService) : base(repository, unitOfWork)
         {
             _mapper = mapper;
             _carRepository = carRepository;
+            _carParameterService = carParameterService;
         }
 
-        public CarDto Save(CarDto carDto)
+        public async Task<CarDto> Save(CarDto carDto)
         {
-            #region Object
-            CarParameterModel carParameterModel = new CarParameterModel();
-            #endregion
-
-            carParameterModel.Brand = carDto.Brand;
-            carParameterModel.Model = carDto.Model;
-            carParameterModel.MediaPath = carDto.MediaPath; // SSH Kullan
-
-            return new CarDto();
-            //CarParameterKayıtEtmemLazım
+            var carNewModel = await base.AddAsync(_mapper.Map<CarEntity>(carDto));
+            return _mapper.Map<CarDto>(carNewModel);
         }
+        public override Task UpdateAsync(CarEntity entity)
+        {
+            return base.UpdateAsync(entity);
+        }
+
     }
 }

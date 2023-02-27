@@ -11,6 +11,6 @@ namespace Moor.Core.Services.MoorService
 {
     public interface ICarService : IService<CarEntity>
     {
-        public CarDto Save(CarDto carDto);
+        public Task<CarDto> Save(CarDto carDto);
     }
 }

@@ -18,7 +18,7 @@ using Moor.Service.Utilities.Session;
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddControllers(options => options.Filters.Add(new ValidateFilterAttribute())).AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<UserDtoValidator>());
+builder.Services.AddControllers(options => options.Filters.Add(new ValidateFilterAttribute())).AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<CarDtoValidator>());
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
