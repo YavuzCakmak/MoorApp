@@ -14,7 +14,7 @@ using System.Net;
 
 namespace Moor.API.Controllers
 {
- 
+
     //[HasPermission]
     public class CarsController : CustomBaseController
     {
@@ -27,13 +27,23 @@ namespace Moor.API.Controllers
             _mapper = mapper;
         }
 
+        //[HttpGet]
+        //public async Task<IActionResult> All()
+        //{
+        //    var cars = await _carService.GetAllAsync();
+        //    var carModels = _mapper.Map<List<CarModel>>(cars);
+        //    var carDtos = _mapper.Map<List<CarDto>>(carModels);
+        //    return CreateActionResult(CustomResponseDto<List<CarDto>>.Succces((int)HttpStatusCode.OK, carDtos));
+        //}
+
         [HttpGet]
-        public async Task<IActionResult> All()
+        public string All()
         {
-            var cars = await _carService.GetAllAsync();
-            var carModels = _mapper.Map<List<CarModel>>(cars);
-            var carDtos = _mapper.Map<List<CarDto>>(carModels);
-            return CreateActionResult(CustomResponseDto<List<CarDto>>.Succces((int)HttpStatusCode.OK, carDtos));
+            return "Test Başarılı";
+            //var cars = await _carService.GetAllAsync();
+            //var carModels = _mapper.Map<List<CarModel>>(cars);
+            //var carDtos = _mapper.Map<List<CarDto>>(carModels);
+            //return CreateActionResult(CustomResponseDto<List<CarDto>>.Succces((int)HttpStatusCode.OK, carDtos));
         }
 
         [ServiceFilter(typeof(NotFoundFilter<CarEntity>))]
