@@ -13,7 +13,7 @@ namespace Moor.Core.Entities.MoorEntities
         [Column("car_parameter_id")]
         public long CarParameterId { get; set; }
 
-        [Column("disctrict_id")]
+        [Column("district_id")]
         public long DistrictId { get; set; }
 
         [Column("Price")]

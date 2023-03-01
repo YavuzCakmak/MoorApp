@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Moor.Core.Entities.MoorEntities.AuthorizeEntities
 {
     [Table("personnel_role")]
-    public class PersonnelRoleEntity : BaseAuthorizeEntity
+    public class PersonnelRoleEntity : BaseEntity
     {
 
         [Column("personnel_id")]

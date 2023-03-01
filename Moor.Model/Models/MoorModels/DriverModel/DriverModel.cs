@@ -1,4 +1,5 @@
-﻿using Moor.Model.Models.Base;
+﻿using Moor.Model.Model.Authorize;
+using Moor.Model.Models.Base;
 
 namespace Moor.Model.Models.MoorModels.DriverModel
 {
@@ -6,6 +7,6 @@ namespace Moor.Model.Models.MoorModels.DriverModel
     {
         public long StaffId { get; set; }
         public decimal Price { get; set; }
-        public virtual StaffModel.StaffModel Staff { get; set; }
+        public virtual PersonnelModel Personnel { get; set; }
     }
 }

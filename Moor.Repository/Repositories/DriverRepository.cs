@@ -21,11 +21,11 @@ namespace Moor.Repository.Repositories
 
         public override IQueryable<DriverEntity> GetAll()
         {
-            return _context.Set<DriverEntity>().Where(x => x.IsDeleted == false).Include(x => x.Staff);
+            return _context.Set<DriverEntity>().Where(x => x.IsDeleted == false).Include(x => x.Personnel);
         }
         public override IQueryable<DriverEntity> Where(Expression<Func<DriverEntity, bool>> expression)
         {
-            return base.Where(expression).Where(x => x.IsDeleted == false).Include(x => x.Staff);
+            return base.Where(expression).Where(x => x.IsDeleted == false).Include(x => x.Personnel);
         }
     }
 }

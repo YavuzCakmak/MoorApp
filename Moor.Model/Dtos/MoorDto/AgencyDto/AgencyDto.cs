@@ -1,6 +1,6 @@
-﻿using Moor.Model.Models.MoorModels.CityModel;
+﻿using Moor.Model.Model.Authorize;
+using Moor.Model.Models.MoorModels.CityModel;
 using Moor.Model.Models.MoorModels.CountyModel;
-using Moor.Model.Models.MoorModels.StaffModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -25,7 +25,7 @@ namespace Moor.Model.Dtos.MoorDto.AgencyDto
         public long? StaffId { get; set; } // PersonnelId olacak 
         public long? CityId { get; set; }
         public long? CountyId { get; set; }
-        public virtual StaffModel Staff { get; set; }
+        public virtual PersonnelModel Personnel { get; set; }
         public virtual CityModel City { get; set; }
         public virtual CountyModel County { get; set; }
     }

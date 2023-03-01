@@ -1,4 +1,5 @@
-﻿using Moor.Model.Models.Base;
+﻿using Moor.Model.Model.Authorize;
+using Moor.Model.Models.Base;
 
 namespace Moor.Model.Models.MoorModels.AgencyModel
 {
@@ -15,11 +16,10 @@ namespace Moor.Model.Models.MoorModels.AgencyModel
         public string Email { get; set; }
         public string Details { get; set; }
         public decimal ReceptionPrice { get; set; }
-        public long StaffId { get; set; }
+        public long PersonnelId { get; set; }
         public long CityId { get; set; }
         public long CountyId { get; set; }
-
-        public virtual StaffModel.StaffModel Staff { get; set; }
+        public virtual PersonnelModel Personnel { get; set; }
         public virtual CityModel.CityModel City { get; set; }
         public virtual CountyModel.CountyModel County { get; set; }
     }

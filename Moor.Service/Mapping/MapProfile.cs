@@ -7,6 +7,7 @@ using Moor.Model.Dtos.MoorDto.CarParameterDto;
 using Moor.Model.Dtos.MoorDto.CityDto;
 using Moor.Model.Dtos.MoorDto.CountyDto;
 using Moor.Model.Dtos.MoorDto.DistrictDto;
+using Moor.Model.Dtos.MoorDto.PriceDto;
 using Moor.Model.Model.Authorize;
 using Moor.Model.Models.Base;
 using Moor.Model.Models.MoorModels.CarModel;
@@ -28,14 +29,7 @@ namespace Moor.Service.Mapping
             #endregion
 
             #region Authorize
-            CreateMap<RoleEntity, RoleModel>().ReverseMap().IncludeBase<BaseAuthorizeModel, BaseAuthorizeEntity>();
-            CreateMap<PrivilegeEntity, PrivilegeModel>().ReverseMap().IncludeBase<BaseAuthorizeModel, BaseAuthorizeEntity>();
-
-            CreateMap<RolePrivilegeModel, RolePrivilegeEntity>()
-                .ForMember(x => x.RoleId, source => source.MapFrom(src => src.Role.Id))
-                .ForMember(x => x.PrivilegeId, source => source.MapFrom(src => src.Privilege.Id))
-                .IncludeBase<BaseAuthorizeModel, BaseAuthorizeEntity>()
-                .ReverseMap();
+            CreateMap<RoleEntity, RoleModel>().ReverseMap().IncludeBase<BaseModel, BaseEntity>();
             #endregion*
 
 
@@ -94,6 +88,10 @@ namespace Moor.Service.Mapping
 
             #region CountyDto
             CreateMap<CountyDto, CountyEntity>().ReverseMap();
+            #endregion
+
+            #region Price
+            CreateMap<PriceDto, PriceEntity>().ReverseMap();
             #endregion
 
             #endregion

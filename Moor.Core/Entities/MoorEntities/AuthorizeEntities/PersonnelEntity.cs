@@ -3,7 +3,7 @@ using Moor.Core.Entities.Base;
 
 namespace Moor.Core.Entities.MoorEntities.AuthorizeEntities
 {
-    public class PersonnelEntity : BaseAuthorizeEntity
+    public class PersonnelEntity : BaseEntity
     {
         [Column("username")]
         public string UserName { get; set; }
@@ -19,6 +19,9 @@ namespace Moor.Core.Entities.MoorEntities.AuthorizeEntities
 
         [Column("last_name")]
         public string? LastName { get; set; }
+
+        [Column("media_path")]
+        public string? MediaPath { get; set; }
 
         [Column("email")]
         public string? Email { get; set; }

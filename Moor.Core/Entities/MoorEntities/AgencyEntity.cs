@@ -1,4 +1,5 @@
 ﻿using Moor.Core.Entities.Base;
+using Moor.Core.Entities.MoorEntities.AuthorizeEntities;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Moor.Core.Entities.MoorEntities
@@ -26,15 +27,15 @@ namespace Moor.Core.Entities.MoorEntities
         public string Details { get; set; }
         [Column("reception_price")]
         public decimal ReceptionPrice { get; set; }
-        [Column("staff_id")]
-        public long? StaffId { get; set; } // PersonnelId olacak 
+        [Column("personnel_id")]
+        public long? PersonnelId { get; set; } // PersonnelId olacak 
         [Column("city_id")]
         public long? CityId { get; set; }
         [Column("county_id")]
         public long? CountyId { get; set; }
 
-        [ForeignKey("StaffId")]
-        public virtual StaffEntity Staff { get; set; }
+        [ForeignKey("PersonnelId")]
+        public virtual PersonnelEntity Personnel { get; set; }
         [ForeignKey("CityId")]
         public virtual CityEntity City { get; set; }
         [ForeignKey("CountyId")]

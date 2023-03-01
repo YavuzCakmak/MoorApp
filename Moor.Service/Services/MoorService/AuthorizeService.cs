@@ -28,18 +28,21 @@ namespace Moor.Service.Services.MoorService
     {
         private readonly IMapper _mapper;
         private readonly IPersonnelService _personnelService;
+        private readonly IDriverService _driverService;
+        private readonly IAgencyService _agencyService;
         private readonly IPersonnelRoleService _personnelRoleService;
         private readonly IRolePrivilegeService _rolePrivilegeService;
         private readonly TokenHelper _tokenHelper;
 
 
-        public AuthorizeService(IUnitOfWork unitOfWork, IPersonnelService personnelService, IPersonnelRoleService personnelRoleService, IRolePrivilegeService rolePrivilegeService, TokenHelper tokenHelper, IMapper mapper)
+        public AuthorizeService(IUnitOfWork unitOfWork, IPersonnelService personnelService, IPersonnelRoleService personnelRoleService, IRolePrivilegeService rolePrivilegeService, TokenHelper tokenHelper, IMapper mapper, IAgencyService agencyService)
         {
             _personnelService = personnelService;
             _personnelRoleService = personnelRoleService;
             _rolePrivilegeService = rolePrivilegeService;
             _tokenHelper = tokenHelper;
             _mapper = mapper;
+            _agencyService = agencyService;
         }
 
         public LoginResponseModel Login(LoginModel loginModel)
@@ -82,7 +85,6 @@ namespace Moor.Service.Services.MoorService
                 };
             }
             var roleDtos = new List<Role>();
-
             foreach (var rolePrivilegeGroup in personnelRoles.GroupBy(x => x.Role.Id))
             {
                 var role = rolePrivilegeGroup.Select(x => x.Role).First();
@@ -92,13 +94,19 @@ namespace Moor.Service.Services.MoorService
                     Name = role.Name,
                 });
             }
+            TokenModel tokenModel = new TokenModel();
+            tokenModel.PersonnelId = personnel.Id;
+            tokenModel.Roles = roleDtos.ToList();
+            tokenModel.Username = personnel.UserName;
 
-            var tokenModel = new TokenModel
+            if (personnelRoles.Any(x=> x.RoleId == (long)Roles.ACENTE))
             {
-                PersonnelId = personnel.Id,
-                Roles = roleDtos.ToList(),
-                Username = personnel.UserName
-            };
+                tokenModel.AgencyId = _agencyService.Where(x => x.PersonnelId == personnel.Id).Select(x=> x.Id).FirstOrDefault();
+            }
+            else if (personnelRoles.Any(x => x.RoleId == (long)Roles.SOFOR))
+            {
+                tokenModel.DriverId = _driverService.Where(x => x.PersonnelId == personnel.Id).Select(x => x.Id).FirstOrDefault();
+            }
 
             return new LoginResponseModel
             {

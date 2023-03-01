@@ -14,9 +14,7 @@ namespace Moor.Repository
 
         #region Authorize
         public DbSet<PersonnelEntity> Personnel { get; set; }
-        public DbSet<PrivilegeEntity> Privilege { get; set; }
         public DbSet<RoleEntity> Role { get; set; }
-        public DbSet<RolePrivilegeEntity> RolePrivilege { get; set; }
         public DbSet<PersonnelRoleEntity> PersonnelRole { get; set; }
         #endregion
 
@@ -30,7 +28,6 @@ namespace Moor.Repository
         public DbSet<DriverCarEntity> DriverCar { get; set; }
         public DbSet<DriverEntity> Driver { get; set; }
         public DbSet<PriceEntity> Price { get; set; }
-        public DbSet<StaffEntity> Staff { get; set; }
         public DbSet<TransferEntity> Transfer { get; set; }
         public DbSet<TravellerEntity> Traveller { get; set; }
 

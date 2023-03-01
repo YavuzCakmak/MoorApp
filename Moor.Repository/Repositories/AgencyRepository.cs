@@ -16,11 +16,11 @@ namespace Moor.Repository.Repositories
 
         public override IQueryable<AgencyEntity> GetAll()
         {
-            return _context.Set<AgencyEntity>().Where(x => x.IsDeleted == false).Include(x => x.Staff);
+            return _context.Set<AgencyEntity>().Where(x => x.IsDeleted == false);
         }
         public override IQueryable<AgencyEntity> Where(Expression<Func<AgencyEntity, bool>> expression)
         {
-            return base.Where(expression).Where(x => x.IsDeleted == false).Include(x => x.Staff);
+            return base.Where(expression).Where(x => x.IsDeleted == false);
         }
     }
 }
