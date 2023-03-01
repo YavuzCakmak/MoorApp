@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Moor.Core.Entities.Base;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -8,11 +9,8 @@ using System.Threading.Tasks;
 namespace Moor.Core.Entities.MoorEntities
 {
     [Table("city")]
-    public class CityEntity
+    public class CityEntity : BaseEntity
     {
-        [Column("id")]
-        public long Id { get; set; }
-
         [Column("country_id")]
         public long CountryId { get; set; }
 
@@ -21,9 +19,6 @@ namespace Moor.Core.Entities.MoorEntities
 
         [Column("name")]
         public string Name { get; set; }
-
-        [Column("is_deleted")]
-        public bool IsDeleted { get; set; }
 
         [ForeignKey("CountryId")]
         public virtual CountryEntity Country { get; set; }

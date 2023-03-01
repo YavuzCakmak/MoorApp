@@ -35,7 +35,7 @@ namespace Moor.API.Controllers
         }
 
 
-        [ServiceFilter(typeof(NotFoundFilter<CarEntity>))]
+        [ServiceFilter(typeof(NotFoundFilter<DistrictEntity>))]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(long id)
         {
@@ -54,7 +54,7 @@ namespace Moor.API.Controllers
         public async Task<IActionResult> Update(DistrictModel districtModel)
         {
             await _districtService.UpdateAsync(_mapper.Map<DistrictEntity>(districtModel));
-            return CreateActionResult(CustomResponseDto<CarDto>.Succces((int)HttpStatusCode.OK, _mapper.Map<CarDto>(_districtService.GetByIdAsync((long)districtModel.Id))));
+            return CreateActionResult(CustomResponseDto<DistrictModel>.Succces((int)HttpStatusCode.OK, _mapper.Map<DistrictModel>(_districtService.GetByIdAsync((long)districtModel.Id))));
         }
 
         [HttpDelete("{id}")]
