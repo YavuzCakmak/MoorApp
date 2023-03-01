@@ -25,6 +25,14 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressModelStateInvalidFilter = true;
 });
 
+builder.Services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder =>
+{
+    builder
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .AllowCredentials().WithExposedHeaders("Authorization", "api-supported-versions", "X-Total-Count");
+}));
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
