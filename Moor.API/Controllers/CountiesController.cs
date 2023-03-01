@@ -5,6 +5,7 @@ using Moor.API.Controllers.BaseController;
 using Moor.API.Filters;
 using Moor.Core.Entities.MoorEntities;
 using Moor.Core.Services.MoorService;
+using Moor.Model.Dtos.MoorDto.CountyDto;
 using Moor.Model.Models.MoorModels.CityModel;
 using Moor.Model.Models.MoorModels.CountryModel;
 using Moor.Model.Models.MoorModels.CountyModel;
@@ -28,8 +29,8 @@ namespace Moor.API.Controllers
         public async Task<IActionResult> All()
         {
             var countyEntities = await _countyService.GetAllAsync();
-            var countyModels = _mapper.Map<List<CountyModel>>(countyEntities);
-            return CreateActionResult(CustomResponseDto<List<CountyModel>>.Succces((int)HttpStatusCode.OK, countyModels));
+            var countyDtos = _mapper.Map<List<CountyDto>>(countyEntities);
+            return CreateActionResult(CustomResponseDto<List<CountyDto>>.Succces((int)HttpStatusCode.OK, countyDtos));
         }
 
         [ServiceFilter(typeof(NotFoundFilter<CountyEntity>))]
@@ -37,21 +38,28 @@ namespace Moor.API.Controllers
         public async Task<IActionResult> GetById(long id)
         {
             var countyEntity = await _countyService.GetByIdAsync(id);
-            return CreateActionResult(CustomResponseDto<CountyModel>.Succces((int)HttpStatusCode.OK, _mapper.Map<CountyModel>(countyEntity)));
+            return CreateActionResult(CustomResponseDto<CountyDto>.Succces((int)HttpStatusCode.OK, _mapper.Map<CountyDto>(countyEntity)));
+        }
+
+        [HttpGet("GetCountiesWithCityId/{id}")]
+        public async Task<IActionResult> GetCountiesWithCityId(long id)
+        {
+            var countyEntities = _countyService.Where(x=> x.CityId == id).ToList();
+            return CreateActionResult(CustomResponseDto<List<CountyDto>>.Succces((int)HttpStatusCode.OK, _mapper.Map<List<CountyDto>>(countyEntities)));
         }
 
         [HttpPost]
         public async Task<IActionResult> Save(CountyModel countyModel)
         {
             var countyEntity = _mapper.Map<CountyEntity>(countyModel);
-            return CreateActionResult(CustomResponseDto<CountyModel>.Succces((int)HttpStatusCode.OK, _mapper.Map<CountyModel>(await _countyService.AddAsync(countyEntity))));
+            return CreateActionResult(CustomResponseDto<CountyDto>.Succces((int)HttpStatusCode.OK, _mapper.Map<CountyDto>(await _countyService.AddAsync(countyEntity))));
         }
 
         [HttpPut]
         public async Task<IActionResult> Update(CountyModel countyModel)
         {
             await _countyService.UpdateAsync(_mapper.Map<CountyEntity>(countyModel));
-            return CreateActionResult(CustomResponseDto<CityModel>.Succces((int)HttpStatusCode.OK, _mapper.Map<CityModel>(_countyService.GetByIdAsync((long)countyModel.Id))));
+            return CreateActionResult(CustomResponseDto<CountyDto>.Succces((int)HttpStatusCode.OK, _mapper.Map<CountyDto>(_countyService.GetByIdAsync((long)countyModel.Id))));
         }
 
         [HttpDelete("{id}")]

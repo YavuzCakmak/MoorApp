@@ -6,6 +6,7 @@ using Moor.Core.Entities.MoorEntities;
 using Moor.Core.Services.MoorService;
 using Moor.Core.Utilities;
 using Moor.Model.Dtos.MoorDto.CarDto;
+using Moor.Model.Dtos.MoorDto.DistrictDto;
 using Moor.Model.Models.MoorModels.CarModel;
 using Moor.Model.Models.MoorModels.DistrictModel;
 using Moor.Service.Models.Dto.ResponseDto;
@@ -30,8 +31,8 @@ namespace Moor.API.Controllers
         public async Task<IActionResult> All()
         {
             var districtEntities = await _districtService.GetAllAsync();
-            var districtModels = _mapper.Map<List<DistrictModel>>(districtEntities);
-            return CreateActionResult(CustomResponseDto<List<DistrictModel>>.Succces((int)HttpStatusCode.OK, districtModels));
+            var districtModels = _mapper.Map<List<DisctrictDto>>(districtEntities);
+            return CreateActionResult(CustomResponseDto<List<DisctrictDto>>.Succces((int)HttpStatusCode.OK, districtModels));
         }
 
 
@@ -40,7 +41,7 @@ namespace Moor.API.Controllers
         public async Task<IActionResult> GetById(long id)
         {
             var districtEntity = await _districtService.GetByIdAsync(id);
-            return CreateActionResult(CustomResponseDto<DistrictModel>.Succces((int)HttpStatusCode.OK, _mapper.Map<DistrictModel>(districtEntity)));
+            return CreateActionResult(CustomResponseDto<DisctrictDto>.Succces((int)HttpStatusCode.OK, _mapper.Map<DisctrictDto>(districtEntity)));
         }
 
         [HttpPost]

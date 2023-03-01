@@ -4,6 +4,9 @@ using Moor.Core.Entities.MoorEntities;
 using Moor.Core.Entities.MoorEntities.AuthorizeEntities;
 using Moor.Model.Dtos.MoorDto.CarDto;
 using Moor.Model.Dtos.MoorDto.CarParameterDto;
+using Moor.Model.Dtos.MoorDto.CityDto;
+using Moor.Model.Dtos.MoorDto.CountyDto;
+using Moor.Model.Dtos.MoorDto.DistrictDto;
 using Moor.Model.Model.Authorize;
 using Moor.Model.Models.Base;
 using Moor.Model.Models.MoorModels.CarModel;
@@ -63,6 +66,9 @@ namespace Moor.Service.Mapping
             CreateMap<DistrictModel, DistrictEntity>()
              .IncludeBase<BaseModel, BaseEntity>()
              .ReverseMap();
+
+
+            CreateMap<DisctrictDto, DistrictEntity>().ReverseMap();
             #endregion
 
             #region Country
@@ -76,6 +82,8 @@ namespace Moor.Service.Mapping
               .ForMember(x=> x.CountryId, source => source.MapFrom(src=> src.Country.Id))
              .IncludeBase<BaseModel, BaseEntity>()
              .ReverseMap();
+
+            CreateMap<CityDto, CityEntity>().ReverseMap();
             #endregion
 
             #region County
@@ -83,6 +91,11 @@ namespace Moor.Service.Mapping
               .ForMember(x => x.CityId, source => source.MapFrom(src => src.City.Id))
              .IncludeBase<BaseModel, BaseEntity>()
              .ReverseMap();
+
+            #region CountyDto
+            CreateMap<CountyDto, CountyEntity>().ReverseMap();
+            #endregion
+
             #endregion
 
             #endregion
