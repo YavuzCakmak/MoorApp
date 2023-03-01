@@ -14,6 +14,7 @@ using Moor.Core.Services.MoorService;
 using Moor.Service.Services.MoorService;
 using Moor.Service.Utilities.AuthorizeHelpers;
 using Moor.Service.Utilities.Session;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,13 +26,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressModelStateInvalidFilter = true;
 });
 
-builder.Services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder =>
-{
-    builder
-    .AllowAnyMethod()
-    .AllowAnyHeader()
-    .AllowCredentials().WithExposedHeaders("Authorization", "api-supported-versions", "X-Total-Count");
-}));
+builder.Services.AddCors();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -47,6 +42,9 @@ builder.Services.AddDbContext<AppDbContext>(
                 .LogTo(Console.WriteLine, LogLevel.Information)
                 .EnableSensitiveDataLogging()
                 .EnableDetailedErrors());
+
+
+
 
 
 //Defaul AppSettings
@@ -81,6 +79,11 @@ app.UseCustomAuthMiddleware();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+
+app.UseCors(options => 
+ options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
 
 app.MapControllers();
 
