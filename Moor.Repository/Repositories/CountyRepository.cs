@@ -16,11 +16,11 @@ namespace Moor.Repository.Repositories
 
         public override IQueryable<CountyEntity> GetAll()
         {
-            return _context.Set<CountyEntity>().Where(x => x.IsDeleted == false);
+            return _context.Set<CountyEntity>().Where(x => x.IsDeleted == false).Include(x=> x.City).ThenInclude(x=> x.Country);
         }
         public override IQueryable<CountyEntity> Where(Expression<Func<CountyEntity, bool>> expression)
         {
-            return base.Where(expression).Where(x => x.IsDeleted == false);
+            return base.Where(expression).Where(x => x.IsDeleted == false).Include(x => x.City).ThenInclude(x => x.Country);
         }
     }
 }

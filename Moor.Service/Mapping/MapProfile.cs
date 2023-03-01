@@ -10,6 +10,7 @@ using Moor.Model.Models.MoorModels.CarModel;
 using Moor.Model.Models.MoorModels.CarParameterModel;
 using Moor.Model.Models.MoorModels.CityModel;
 using Moor.Model.Models.MoorModels.CountryModel;
+using Moor.Model.Models.MoorModels.CountyModel;
 using Moor.Model.Models.MoorModels.DistrictModel;
 
 namespace Moor.Service.Mapping
@@ -73,6 +74,13 @@ namespace Moor.Service.Mapping
             #region City
             CreateMap<CityModel, CityEntity>()
               .ForMember(x=> x.CountryId, source => source.MapFrom(src=> src.Country.Id))
+             .IncludeBase<BaseModel, BaseEntity>()
+             .ReverseMap();
+            #endregion
+
+            #region County
+            CreateMap<CountyModel, CountyEntity>()
+              .ForMember(x => x.CityId, source => source.MapFrom(src => src.City.Id))
              .IncludeBase<BaseModel, BaseEntity>()
              .ReverseMap();
             #endregion
