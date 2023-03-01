@@ -11,12 +11,12 @@ namespace Moor.Model.Models.Base
     {
         public long Id { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; } = DateTime.Now;  
 
-        public DateTime UpdateDate { get; set; }
+        public DateTime? UpdateDate { get; set; }
 
-        public bool IsDeleted { get; set; }
+        public bool IsDeleted { get; set; } = false;
 
-        public int Status { get; set; }
+        public int Status { get; set; } = 0;
     }
 }

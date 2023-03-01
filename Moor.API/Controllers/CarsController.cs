@@ -27,24 +27,15 @@ namespace Moor.API.Controllers
             _mapper = mapper;
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> All()
-        //{
-        //    var cars = await _carService.GetAllAsync();
-        //    var carModels = _mapper.Map<List<CarModel>>(cars);
-        //    var carDtos = _mapper.Map<List<CarDto>>(carModels);
-        //    return CreateActionResult(CustomResponseDto<List<CarDto>>.Succces((int)HttpStatusCode.OK, carDtos));
-        //}
-
         [HttpGet]
-        public string All()
+        public async Task<IActionResult> All()
         {
-            return "Test Başarılı";
-            //var cars = await _carService.GetAllAsync();
-            //var carModels = _mapper.Map<List<CarModel>>(cars);
-            //var carDtos = _mapper.Map<List<CarDto>>(carModels);
-            //return CreateActionResult(CustomResponseDto<List<CarDto>>.Succces((int)HttpStatusCode.OK, carDtos));
+            var cars = await _carService.GetAllAsync();
+            var carModels = _mapper.Map<List<CarModel>>(cars);
+            var carDtos = _mapper.Map<List<CarDto>>(carModels);
+            return CreateActionResult(CustomResponseDto<List<CarDto>>.Succces((int)HttpStatusCode.OK, carDtos));
         }
+
 
         [ServiceFilter(typeof(NotFoundFilter<CarEntity>))]
         [HttpGet("{id}")]

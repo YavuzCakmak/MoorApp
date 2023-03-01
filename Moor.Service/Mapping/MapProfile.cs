@@ -8,6 +8,7 @@ using Moor.Model.Model.Authorize;
 using Moor.Model.Models.Base;
 using Moor.Model.Models.MoorModels.CarModel;
 using Moor.Model.Models.MoorModels.CarParameterModel;
+using Moor.Model.Models.MoorModels.DistrictModel;
 
 namespace Moor.Service.Mapping
 {
@@ -53,6 +54,12 @@ namespace Moor.Service.Mapping
             CreateMap<CarEntity, CarDto>().ReverseMap();
             #endregion
 
+            #endregion
+
+            #region District
+            CreateMap<DistrictModel, DistrictEntity>()
+             .IncludeBase<BaseModel, BaseEntity>()
+             .ReverseMap();
             #endregion
 
             #endregion
