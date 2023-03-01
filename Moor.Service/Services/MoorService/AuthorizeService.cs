@@ -81,23 +81,15 @@ namespace Moor.Service.Services.MoorService
                     Message = "Kullanıcıya ait herhangi bir role bulunamadı."
                 };
             }
-
-            var aa = _rolePrivilegeService.Where(x => personnelRoles.Select(x => x.Role.Id).Contains(x.RoleId)).ToList();
-            var rolePrivileges = _mapper.Map<List<RolePrivilegeModel>>(aa);
             var roleDtos = new List<Role>();
 
-            foreach (var rolePrivilegeGroup in rolePrivileges.GroupBy(x => x.Role.Id))
+            foreach (var rolePrivilegeGroup in personnelRoles.GroupBy(x => x.Role.Id))
             {
                 var role = rolePrivilegeGroup.Select(x => x.Role).First();
-                var privileges = rolePrivilegeGroup.Select(x => x.Privilege);
-
-                var a = privileges.FirstOrDefault();
-
                 roleDtos.Add(new Role
                 {
                     Id = role.Id,
                     Name = role.Name,
-                    Privileges = privileges.ToList()
                 });
             }
 

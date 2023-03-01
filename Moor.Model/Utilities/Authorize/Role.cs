@@ -11,6 +11,5 @@ namespace Moor.Model.Utilities.Authorize
     {
         public long Id { get; set; }
         public string Name { get; set; }
-        public List<PrivilegeModel> Privileges { get; set; }
     }
 }
