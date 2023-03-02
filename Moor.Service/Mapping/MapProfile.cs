@@ -8,6 +8,7 @@ using Moor.Model.Dtos.MoorDto.CityDto;
 using Moor.Model.Dtos.MoorDto.CountyDto;
 using Moor.Model.Dtos.MoorDto.DistrictDto;
 using Moor.Model.Dtos.MoorDto.PriceDto;
+using Moor.Model.Dtos.MoorDto.TransferDto.TransferPostDto;
 using Moor.Model.Model.Authorize;
 using Moor.Model.Models.Base;
 using Moor.Model.Models.MoorModels.CarModel;
@@ -92,6 +93,11 @@ namespace Moor.Service.Mapping
 
             #region Price
             CreateMap<PriceDto, PriceEntity>().ReverseMap();
+            #endregion
+
+
+            #region Transfer 
+            CreateMap<TransferPostDto, TransferEntity>().ReverseMap();
             #endregion
 
             #endregion

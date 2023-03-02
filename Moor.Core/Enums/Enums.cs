@@ -18,4 +18,10 @@ namespace Moor.Core.Enums
         SOFOR = 88,
         ADMIN = 89
     }
+
+    public enum DirectionType
+    {
+        TEK_YON = 1,
+        GİDİS_DONUS = 2
+    }
 }

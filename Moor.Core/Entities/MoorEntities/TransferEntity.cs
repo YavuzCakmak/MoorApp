@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Moor.Core.Entities.MoorEntities
 {
+    [Table("transfer")]
     public class TransferEntity : BaseEntity
     {
         [Column("agency_id")]
@@ -33,5 +34,20 @@ namespace Moor.Core.Entities.MoorEntities
         public DateTime ReturnDate { get; set; }
         [Column("amount")]
         public decimal Amount { get; set; }
+
+        [ForeignKey("AgencyId")]
+        public virtual AgencyEntity Agency { get; set; }
+
+        [ForeignKey("DriverId")]
+        public virtual DriverEntity Driver{ get; set; }
+
+        [ForeignKey("DisctrictId")]
+        public virtual DistrictEntity District{ get; set; }
+
+        [ForeignKey("CityId")]
+        public virtual CityEntity City{ get; set; }
+
+        [ForeignKey("CountyId")]
+        public virtual CountyEntity County{ get; set; }
     }
 }

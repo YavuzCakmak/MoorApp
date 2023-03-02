@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ namespace Moor.Core.Entities.Base
     public abstract class BaseEntity
     {
         [Column("id")]
+        [Key]
         public long Id { get; set; }
 
         [Column("created_date")]
