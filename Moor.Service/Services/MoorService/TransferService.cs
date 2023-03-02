@@ -15,6 +15,7 @@ namespace Moor.Service.Services.MoorService
     {
         private readonly ITravellerService _travellerService;
         private readonly IAgencyService _agencyService;
+        private readonly IDriverService _driverService;
         private readonly ICityService _cityService;
         private readonly IPriceService _priceService;
         private readonly ICarParameterService _carParameterService;
@@ -23,7 +24,7 @@ namespace Moor.Service.Services.MoorService
         private readonly ITransferRepository _transferRepository;
         private readonly IMapper _mapper;
 
-        public TransferService(IGenericRepository<TransferEntity> repository, IUnitOfWork unitOfWork, IMapper mapper, ITransferRepository transferRepository, IDistrictService districtService, IAgencyService agencyService, ICityService cityService, ICarParameterService carParameterService, IPriceService priceService, ITravellerService travellerService, ICountyService countyService) : base(repository, unitOfWork)
+        public TransferService(IGenericRepository<TransferEntity> repository, IUnitOfWork unitOfWork, IMapper mapper, ITransferRepository transferRepository, IDistrictService districtService, IAgencyService agencyService, ICityService cityService, ICarParameterService carParameterService, IPriceService priceService, ITravellerService travellerService, ICountyService countyService, IDriverService driverService) : base(repository, unitOfWork)
         {
             _mapper = mapper;
             _transferRepository = transferRepository;
@@ -34,6 +35,7 @@ namespace Moor.Service.Services.MoorService
             _priceService = priceService;
             _travellerService = travellerService;
             _countyService = countyService;
+            _driverService = driverService;
         }
 
         public async Task<TransferViewDto> CreateTransfer(TransferPostDto transferPostDto)

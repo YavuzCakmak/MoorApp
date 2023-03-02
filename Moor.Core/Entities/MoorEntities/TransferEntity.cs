@@ -39,15 +39,18 @@ namespace Moor.Core.Entities.MoorEntities
         public virtual AgencyEntity Agency { get; set; }
 
         [ForeignKey("DriverId")]
-        public virtual DriverEntity Driver{ get; set; }
+        public virtual DriverEntity Driver { get; set; }
 
         [ForeignKey("DisctrictId")]
-        public virtual DistrictEntity District{ get; set; }
+        public virtual DistrictEntity District { get; set; }
 
         [ForeignKey("CityId")]
-        public virtual CityEntity City{ get; set; }
+        public virtual CityEntity City { get; set; }
 
         [ForeignKey("CountyId")]
-        public virtual CountyEntity County{ get; set; }
+        public virtual CountyEntity County { get; set; }
+
+        [ForeignKey("CarParameterId")]
+        public virtual CarParameterEntity CarParameter { get; set; }
     }
 }

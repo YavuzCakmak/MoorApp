@@ -20,7 +20,7 @@ namespace Moor.Repository.Repositories
         }
         public override IQueryable<TransferEntity> GetAll()
         {
-            return _context.Set<TransferEntity>().Where(x => x.IsDeleted == false);
+            return _context.Set<TransferEntity>().Where(x => x.IsDeleted == false).Include(x => x.Driver).ThenInclude(a => a.Personnel).Include(x => x.District).Include(x => x.CarParameter).Include(x => x.City).Include(x => x.County);
         }
         public override IQueryable<TransferEntity> Where(Expression<Func<TransferEntity, bool>> expression)
         {
