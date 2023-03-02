@@ -10,7 +10,7 @@ namespace Moor.Model.Dtos.MoorDto.TransferDto.TransferPostDto
     {
         public long AgencyId { get; set; }
         public long? DriverId { get; set; }
-        public long DistrictId { get; set; }
+        public long DisctrictId { get; set; }
         public decimal? Amount { get; set; }
         public long CityId { get; set; }
         public long CountyId { get; set; }

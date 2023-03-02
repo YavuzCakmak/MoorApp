@@ -18,12 +18,12 @@ namespace Moor.Service.Services.MoorService
         private readonly ICityService _cityService;
         private readonly IPriceService _priceService;
         private readonly ICarParameterService _carParameterService;
-        private readonly ICityService _countyService;
+        private readonly ICountyService _countyService;
         private readonly IDistrictService _districtService;
         private readonly ITransferRepository _transferRepository;
         private readonly IMapper _mapper;
 
-        public TransferService(IGenericRepository<TransferEntity> repository, IUnitOfWork unitOfWork, IMapper mapper, ITransferRepository transferRepository, IDistrictService districtService, IAgencyService agencyService, ICityService cityService, ICarParameterService carParameterService, IPriceService priceService, ITravellerService travellerService, ICityService countyService) : base(repository, unitOfWork)
+        public TransferService(IGenericRepository<TransferEntity> repository, IUnitOfWork unitOfWork, IMapper mapper, ITransferRepository transferRepository, IDistrictService districtService, IAgencyService agencyService, ICityService cityService, ICarParameterService carParameterService, IPriceService priceService, ITravellerService travellerService, ICountyService countyService) : base(repository, unitOfWork)
         {
             _mapper = mapper;
             _transferRepository = transferRepository;
@@ -55,7 +55,7 @@ namespace Moor.Service.Services.MoorService
                 transferViewDto.ErrorMessage = "Yolcu Kayıt Etmek Zorunludur.";
                 return transferViewDto;
             }
-            var priceModel = _priceService.Where(x => x.CarParameterId == transferPostDto.CarParameterId && x.DistrictId == transferPostDto.DistrictId).FirstOrDefault();
+            var priceModel = _priceService.Where(x => x.CarParameterId == transferPostDto.CarParameterId && x.DistrictId == transferPostDto.DisctrictId).FirstOrDefault();
             if (priceModel.IsNull())
             {
                 transferViewDto.IsSucces = false;
@@ -81,16 +81,16 @@ namespace Moor.Service.Services.MoorService
             var travellerAddResult = _travellerService.AddRangeAsync(travellerEntities);
 
 
-            var districtModel = _districtService.GetByIdAsync(transferPostDto.DistrictId);
-            var cityModel = _cityService.GetByIdAsync(transferPostDto.CityId);
-            var countyName = _countyService.GetByIdAsync(transferPostDto.CountyId);
+            var districtModel = _districtService.GetByIdAsync(transferPostDto.DisctrictId).Result;
+            var cityModel = _cityService.GetByIdAsync(transferPostDto.CityId).Result;
+            var countyName = _countyService.GetByIdAsync(transferPostDto.CountyId).Result;
             var carParameterModel = _carParameterService.GetByIdAsync(transferPostDto.CarParameterId).Result;
 
-            transferViewDto.DistrictName = districtModel.Result.Name;
+            transferViewDto.DistrictName = districtModel.Name;
             transferViewDto.Location = transferPostDto.Location;
             transferViewDto.FlightCode = transferPostDto.FlightCode;
-            transferViewDto.CityName = cityModel.Result.Name;
-            transferViewDto.CountyName = countyName.Result.Name;
+            transferViewDto.CityName = cityModel.Name;
+            transferViewDto.CountyName = countyName.Name;
             transferViewDto.CarParameterBrand = carParameterModel.Brand;
             transferViewDto.CarParameterModel = carParameterModel.Model;
             transferViewDto.Explanation = transferPostDto.Explanation;
@@ -99,7 +99,7 @@ namespace Moor.Service.Services.MoorService
             transferViewDto.ReturnDate = transferPostDto.ReturnDate;
             transferViewDto.DepartureDate = transferPostDto.DepartureDate;
             transferViewDto.Price = (decimal)transferPostDto.Amount;
-
+            transferViewDto.IsSucces = true;
             return transferViewDto;
         }
     }

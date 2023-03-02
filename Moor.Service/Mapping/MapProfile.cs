@@ -2,6 +2,7 @@
 using Moor.Core.Entities.Base;
 using Moor.Core.Entities.MoorEntities;
 using Moor.Core.Entities.MoorEntities.AuthorizeEntities;
+using Moor.Model.Dtos.MoorDto;
 using Moor.Model.Dtos.MoorDto.CarDto;
 using Moor.Model.Dtos.MoorDto.CarParameterDto;
 using Moor.Model.Dtos.MoorDto.CityDto;
@@ -98,6 +99,10 @@ namespace Moor.Service.Mapping
 
             #region Transfer 
             CreateMap<TransferPostDto, TransferEntity>().ReverseMap();
+            #endregion
+
+            #region Traveller
+            CreateMap<TravellerDto, TravellerEntity>().ReverseMap();
             #endregion
 
             #endregion

@@ -11,7 +11,7 @@ using System.Net;
 
 namespace Moor.API.Controllers
 {
-    [HasPermission]
+    //[HasPermission]
     public class TransfersController : CustomBaseController
     {
         private readonly ITransferService _transferService;
