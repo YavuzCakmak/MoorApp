@@ -11,7 +11,7 @@ namespace Moor.Model.Models.MoorModels.TransferModel
     public class TransferModel : BaseModel
     {
         public long AgencyId { get; set; }
-        public long DriverId { get; set; }
+        public long? DriverId { get; set; }
         public long DisctrictId { get; set; }
         public long CityId { get; set; }
         public long CountyId { get; set; }

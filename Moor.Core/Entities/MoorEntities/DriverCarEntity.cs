@@ -12,7 +12,7 @@ namespace Moor.Core.Entities.MoorEntities
     public class DriverCarEntity : BaseEntity
     {
         [Column("driver_id")]
-        public long DriverId { get; set; }
+        public long? DriverId { get; set; }
         [Column("car_id")]
         public long CarId { get; set; }
 

@@ -7,6 +7,9 @@ using Moor.Core.Services.MoorService;
 using Moor.Core.UnitOfWorks;
 using Moor.Model.Dtos.MoorDto.TransferDto.TransferPostDto;
 using Moor.Model.Dtos.MoorDto.TransferDto.TransferViewDto;
+using Moor.Model.Models.MoorModels.CarParameterModel;
+using Moor.Model.Models.MoorModels.CityModel;
+using Moor.Model.Models.MoorModels.DistrictModel;
 using Moor.Service.Services.BaseService;
 
 namespace Moor.Service.Services.MoorService
@@ -103,6 +106,82 @@ namespace Moor.Service.Services.MoorService
             transferViewDto.Price = (decimal)transferPostDto.Amount;
             transferViewDto.IsSucces = true;
             return transferViewDto;
+        }
+
+        public async Task<TransferViewDto> MapTransferViewDto(TransferEntity transferEntity)
+        {
+            #region Objects
+            TransferViewDto transferViewDto = new TransferViewDto();
+            #endregion
+
+            var districtModel = _districtService.GetByIdAsync(transferEntity.DisctrictId).Result;
+            var cityModel = _cityService.GetByIdAsync(transferEntity.CityId).Result;
+            var countyName = _countyService.GetByIdAsync(transferEntity.CountyId).Result;
+            var carParameterModel = _carParameterService.GetByIdAsync(transferEntity.CarParameterId).Result;
+
+            if (transferEntity.DriverId.IsNotNull())
+            {
+                var driverModel = _driverService.GetByIdAsync((long)transferEntity.DriverId).Result;
+                transferViewDto.DriverName =  $"{driverModel.Personnel.FirstName} {driverModel.Personnel.LastName} " ;
+            }
+
+            transferViewDto.DistrictName = districtModel.Name;
+            transferViewDto.Location = transferEntity.Location;
+            transferViewDto.FlightCode = transferEntity.FlightCode;
+            transferViewDto.CityName = cityModel.Name;
+            transferViewDto.CountyName = countyName.Name;
+            transferViewDto.CarParameterBrand = carParameterModel.Brand;
+            transferViewDto.CarParameterModel = carParameterModel.Model;
+            transferViewDto.Explanation = transferEntity.Explanation;
+            transferViewDto.DirectionType = transferEntity.DirectionType;
+            transferViewDto.ReceptionType = transferEntity.ReceptionType;
+            transferViewDto.ReturnDate = transferEntity.ReturnDate;
+            transferViewDto.DepartureDate = transferEntity.DepartureDate;
+            transferViewDto.Price = (decimal)transferEntity.Amount;
+            transferViewDto.IsSucces = true;
+            return transferViewDto;
+
+        }
+
+        public async Task<List<TransferViewDto>> MapTransferViewDtos(List<TransferEntity> transferEntities)
+        {
+            #region Objects
+            List<TransferViewDto> transferViewDtos = new List<TransferViewDto>();
+            #endregion
+
+            foreach (var transferEntity in transferEntities)
+            {
+                TransferViewDto transferViewDto = new TransferViewDto();
+
+                if (transferEntity.DriverId.IsNotNull())
+                {
+                    var driverModel = _driverService.GetByIdAsync((long)transferEntity.DriverId).Result;
+                    transferViewDto.DriverName = $"{driverModel.Personnel.FirstName} {driverModel.Personnel.LastName} ";
+                }
+
+                var districtModel = _districtService.GetByIdAsync(transferEntity.DisctrictId).Result;
+                var cityModel = _cityService.GetByIdAsync(transferEntity.CityId).Result;
+                var countyName = _countyService.GetByIdAsync(transferEntity.CountyId).Result;
+                var carParameterModel = _carParameterService.GetByIdAsync(transferEntity.CarParameterId).Result;
+
+
+                transferViewDto.DistrictName = districtModel.Name;
+                transferViewDto.Location = transferEntity.Location;
+                transferViewDto.FlightCode = transferEntity.FlightCode;
+                transferViewDto.CityName = cityModel.Name;
+                transferViewDto.CountyName = countyName.Name;
+                transferViewDto.CarParameterBrand = carParameterModel.Brand;
+                transferViewDto.CarParameterModel = carParameterModel.Model;
+                transferViewDto.Explanation = transferEntity.Explanation;
+                transferViewDto.DirectionType = transferEntity.DirectionType;
+                transferViewDto.ReceptionType = transferEntity.ReceptionType;
+                transferViewDto.ReturnDate = transferEntity.ReturnDate;
+                transferViewDto.DepartureDate = transferEntity.DepartureDate;
+                transferViewDto.Price = (decimal)transferEntity.Amount;
+                transferViewDto.IsSucces = true;
+                transferViewDtos.Add(transferViewDto);
+            }
+            return transferViewDtos;
         }
     }
 }

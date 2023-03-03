@@ -7,6 +7,8 @@ namespace Moor.Core.Services.MoorService
 {
     public interface ITransferService : IService<TransferEntity>
     {
-      public Task<TransferViewDto> CreateTransfer(TransferPostDto transferPostDto);
+        public Task<TransferViewDto> CreateTransfer(TransferPostDto transferPostDto);
+        public Task<List<TransferViewDto>> MapTransferViewDtos(List<TransferEntity> transferEntities);
+        public Task<TransferViewDto> MapTransferViewDto(TransferEntity transferEntity);
     }
 }

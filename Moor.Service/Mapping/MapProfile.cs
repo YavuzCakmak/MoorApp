@@ -20,6 +20,7 @@ using Moor.Model.Models.MoorModels.CityModel;
 using Moor.Model.Models.MoorModels.CountryModel;
 using Moor.Model.Models.MoorModels.CountyModel;
 using Moor.Model.Models.MoorModels.DistrictModel;
+using Moor.Model.Models.MoorModels.TransferModel;
 
 namespace Moor.Service.Mapping
 {
@@ -101,24 +102,7 @@ namespace Moor.Service.Mapping
 
             #region Transfer 
             CreateMap<TransferPostDto, TransferEntity>().ReverseMap();
-            CreateMap<TransferViewDto, TransferEntity>()
-                .ForMember(x => x.City.Name, source => source.MapFrom(src => src.CityName))
-                .ForMember(x => x.District.Name, source => source.MapFrom(src => src.DistrictName))
-                .ForMember(x => x.County.Name, source => source.MapFrom(src => src.CountyName))
-                .ForMember(x => x.County.Name, source => source.MapFrom(src => src.CountyName))
-                .ForMember(x => x.Location, source => source.MapFrom(src => src.Location))
-                .ForMember(x => x.FlightCode, source => source.MapFrom(src => src.FlightCode))
-                .ForMember(x => x.CarParameter.Brand, source => source.MapFrom(src => src.CarParameterBrand))
-                .ForMember(x => x.CarParameter.Model, source => source.MapFrom(src => src.CarParameterModel))
-                .ForMember(x => x.Explanation, source => source.MapFrom(src => src.Explanation))
-                .ForMember(x => x.ReceptionType, source => source.MapFrom(src => src.ReceptionType))
-                .ForMember(x => x.DirectionType, source => source.MapFrom(src => src.DirectionType))
-                .ForMember(x => x.DepartureDate, source => source.MapFrom(src => src.DepartureDate))
-                .ForMember(x => x.ReturnDate, source => source.MapFrom(src => src.ReturnDate))
-                .ForMember(x => x.Amount, source => source.MapFrom(src => src.Price))
-                .ReverseMap()
-                .ForPath(x => x.CityName, source => source.MapFrom(x => x.City.Name))
-                .ForPath(x => x.DistrictName, source => source.MapFrom(x => x.District.Name));
+            CreateMap<TransferModel, TransferEntity>().ReverseMap();
             #endregion
 
             #region Traveller

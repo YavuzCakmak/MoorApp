@@ -22,7 +22,7 @@ namespace Moor.Model.Dtos.MoorDto.AgencyDto
         public string Email { get; set; }
         public string Details { get; set; }
         public decimal ReceptionPrice { get; set; }
-        public long? StaffId { get; set; } // PersonnelId olacak 
+        public long? PersonnelId { get; set; } // PersonnelId olacak 
         public long? CityId { get; set; }
         public long? CountyId { get; set; }
         public virtual PersonnelModel Personnel { get; set; }

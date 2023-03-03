@@ -30,7 +30,7 @@ namespace Moor.API.Controllers
         public async Task<IActionResult> All()
         {
             var transferEntities = await _transferService.GetAllAsync();
-            var transferViewDtos = _mapper.Map<List<TransferViewDto>>(transferEntities);
+            var transferViewDtos = await _transferService.MapTransferViewDtos(transferEntities.ToList());
             return CreateActionResult(CustomResponseDto<List<TransferViewDto>>.Succces((int)HttpStatusCode.OK, transferViewDtos));
         }
 
@@ -39,7 +39,8 @@ namespace Moor.API.Controllers
         public async Task<IActionResult> GetById(long id)
         {
             var transferEntity = await _transferService.GetByIdAsync(id);
-            return CreateActionResult(CustomResponseDto<TransferViewDto>.Succces((int)HttpStatusCode.OK, _mapper.Map<TransferViewDto>(transferEntity)));
+            var transferViewModel = await _transferService.MapTransferViewDto(transferEntity);
+            return CreateActionResult(CustomResponseDto<TransferViewDto>.Succces((int)HttpStatusCode.OK, transferViewModel));
         }
 
         [HttpPost]
@@ -56,12 +57,12 @@ namespace Moor.API.Controllers
             return CreateActionResult(CustomResponseDto<TransferViewDto>.Succces((int)HttpStatusCode.OK, _mapper.Map<TransferViewDto>(_transferService.GetByIdAsync((long)transferModel.Id))));
         }
 
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> Remove(long id)
-        //{
-        //    var cityEntiy = await _cityService.GetByIdAsync(id);
-        //    await _cityService.RemoveAsync(cityEntiy);
-        //    return CreateActionResult(CustomResponseDto<NoContentDto>.Succces((int)HttpStatusCode.OK));
-        //}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Remove(long id)
+        {
+            var transferEntity = await _transferService.GetByIdAsync(id);
+            await _transferService.RemoveAsync(transferEntity);
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Succces((int)HttpStatusCode.OK));
+        }
     }
 }
