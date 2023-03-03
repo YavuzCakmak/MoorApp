@@ -83,7 +83,7 @@ namespace Moor.Service.Services.MoorService
                 travellerDto.TransferId = transferAddResult.Id;
             }
             var travellerEntities = _mapper.Map<List<TravellerEntity>>(transferPostDto.TravellerDtos);
-            var travellerAddResult = _travellerService.AddRangeAsync(travellerEntities);
+            var travellerAddResult = await _travellerService.AddRangeAsync(travellerEntities);
 
 
             var districtModel = _districtService.GetByIdAsync(transferPostDto.DisctrictId).Result;
