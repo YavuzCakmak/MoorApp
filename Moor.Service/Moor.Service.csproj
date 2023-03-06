@@ -18,4 +18,8 @@
 		<ProjectReference Include="..\Moor.Repository\Moor.Repository.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Extensions\" />
+	</ItemGroup>
+
 </Project>

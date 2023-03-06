@@ -1,11 +1,13 @@
-﻿using System.Linq.Expressions;
+﻿using Moor.Core.Entities.Base;
+using Moor.Core.Utilities.DataFilter;
+using System.Linq.Expressions;
 
 namespace Moor.Core.Repositories
 {
-    public interface IGenericRepository<T> where T : class
+    public interface IGenericRepository<T> where T : CoreEntity
     {
         Task<T> GetByIdAsync(long id);
-        IQueryable<T> GetAll();
+        IQueryable<T> GetAll(DataFilterModel dataFilterModel);
         IQueryable<T> Where(Expression<Func<T, bool>> expression);
         Task<bool> AnyAsync(Expression<Func<T, bool>> expression);
         Task AddAsync(T entity);

@@ -1,28 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using Moor.Core.Attributes;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Moor.Core.Entities.Base
 {
-    public abstract class BaseEntity
+    public abstract class BaseEntity : CoreEntity
     {
-        [Column("id")]
-        [Key]
-        public long Id { get; set; }
-
+        [DataFilter]
         [Column("created_date")]
         public DateTime CreatedDate { get; set; } = DateTime.Now;
 
+        [DataFilter]
         [Column("update_date")]
         public DateTime? UpdateDate { get; set; }
 
-        [Column("is_deleted")]
-        public bool IsDeleted { get; set; }
-
+        [DataFilter]
         [Column("status")]
         public int Status { get; set; }
     }

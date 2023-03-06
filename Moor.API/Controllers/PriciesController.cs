@@ -6,6 +6,7 @@ using Moor.API.Filters;
 using Moor.Core.Entities.MoorEntities;
 using Moor.Core.Services.MoorService;
 using Moor.Core.Utilities;
+using Moor.Core.Utilities.DataFilter;
 using Moor.Model.Dtos.MoorDto.CityDto;
 using Moor.Model.Dtos.MoorDto.PriceDto;
 using Moor.Model.Dtos.MoorDto.PriceDto.GetPriceWithCarParameterIdAndDistrictIdDto;
@@ -29,9 +30,9 @@ namespace Moor.API.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All([FromQuery] DataFilterModel dataFilterModel)
         {
-            var priceEntities = await _priceService.GetAllAsync();
+            var priceEntities = await _priceService.GetAllAsync(dataFilterModel);
             var priceDtos = _mapper.Map<List<PriceDto>>(priceEntities);
             return CreateActionResult(CustomResponseDto<List<PriceDto>>.Succces((int)HttpStatusCode.OK, priceDtos));
         }

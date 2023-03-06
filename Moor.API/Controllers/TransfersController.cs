@@ -6,6 +6,7 @@ using Moor.API.Filters;
 using Moor.Core.Entities.MoorEntities;
 using Moor.Core.Services.MoorService;
 using Moor.Core.Utilities;
+using Moor.Core.Utilities.DataFilter;
 using Moor.Model.Dtos.MoorDto.TransferDto.TransferPostDto;
 using Moor.Model.Dtos.MoorDto.TransferDto.TransferViewDto;
 using Moor.Model.Models.MoorModels.TransferModel;
@@ -27,9 +28,9 @@ namespace Moor.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All([FromQuery] DataFilterModel dataFilterModel)
         {
-            var transferEntities = await _transferService.GetAllAsync();
+            var transferEntities = await _transferService.GetAllAsync(dataFilterModel);
             var transferViewDtos = await _transferService.MapTransferViewDtos(transferEntities.ToList());
             return CreateActionResult(CustomResponseDto<List<TransferViewDto>>.Succces((int)HttpStatusCode.OK, transferViewDtos));
         }

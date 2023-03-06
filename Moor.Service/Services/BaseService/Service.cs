@@ -1,13 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Moor.Core.Entities.Base;
 using Moor.Core.Repositories;
 using Moor.Core.Services.BaseService;
 using Moor.Core.UnitOfWorks;
+using Moor.Core.Utilities.DataFilter;
 using Moor.Service.Exceptions;
 using System.Linq.Expressions;
 
 namespace Moor.Service.Services.BaseService
 {
-    public class Service<T> : IService<T> where T : class
+    public class Service<T> : IService<T> where T : CoreEntity
     {
         private readonly IGenericRepository<T> _repository;
         private readonly IUnitOfWork _unitOfWork;
@@ -37,9 +39,9 @@ namespace Moor.Service.Services.BaseService
             return await _repository.AnyAsync(expression);
         }
 
-        public virtual async Task<IEnumerable<T>> GetAllAsync()
+        public virtual async Task<IEnumerable<T>> GetAllAsync(DataFilterModel dataFilterModel)
         {
-            return await _repository.GetAll().ToListAsync();
+            return await _repository.GetAll(dataFilterModel).ToListAsync();
         }
 
         public async Task<T> GetByIdAsync(long id)

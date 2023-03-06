@@ -1,4 +1,5 @@
-﻿using Moor.Core.Entities.Base;
+﻿using Moor.Core.Attributes;
+using Moor.Core.Entities.Base;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -11,14 +12,19 @@ namespace Moor.Core.Entities.MoorEntities
     [Table("driver_car")]
     public class DriverCarEntity : BaseEntity
     {
+        [DataFilter]
         [Column("driver_id")]
         public long? DriverId { get; set; }
+
+        [DataFilter]
         [Column("car_id")]
         public long CarId { get; set; }
 
+        [DataFilter]
         [ForeignKey("CarId")]
         public virtual CarEntity Car { get; set; }
 
+        [DataFilter]
         [ForeignKey("DriverId")]
         public virtual DriverEntity Driver { get; set; }
     }

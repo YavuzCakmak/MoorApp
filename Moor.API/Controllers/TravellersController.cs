@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moor.API.Controllers.BaseController;
 using Moor.Core.Services.MoorService;
 using Moor.Core.Utilities;
+using Moor.Core.Utilities.DataFilter;
 using Moor.Model.Dtos.MoorDto;
 using Moor.Service.Models.Dto.ResponseDto;
 using System.Net;
@@ -23,9 +24,9 @@ namespace Moor.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All([FromQuery] DataFilterModel dataFilterModel)
         {
-            var travellerEntities = await _travellerService.GetAllAsync();
+            var travellerEntities = await _travellerService.GetAllAsync(dataFilterModel);
             var travellerDtos = _mapper.Map<List<TravellerDto>>(travellerEntities);
             return CreateActionResult(CustomResponseDto<List<TravellerDto>>.Succces((int)HttpStatusCode.OK, travellerDtos));
         }

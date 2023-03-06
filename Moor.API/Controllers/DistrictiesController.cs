@@ -5,6 +5,7 @@ using Moor.API.Filters;
 using Moor.Core.Entities.MoorEntities;
 using Moor.Core.Services.MoorService;
 using Moor.Core.Utilities;
+using Moor.Core.Utilities.DataFilter;
 using Moor.Model.Dtos.MoorDto.CarDto;
 using Moor.Model.Dtos.MoorDto.DistrictDto;
 using Moor.Model.Models.MoorModels.CarModel;
@@ -28,9 +29,9 @@ namespace Moor.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All([FromQuery] DataFilterModel dataFilterModel)
         {
-            var districtEntities = await _districtService.GetAllAsync();
+            var districtEntities = await _districtService.GetAllAsync(dataFilterModel);
             var districtModels = _mapper.Map<List<DisctrictDto>>(districtEntities);
             return CreateActionResult(CustomResponseDto<List<DisctrictDto>>.Succces((int)HttpStatusCode.OK, districtModels));
         }

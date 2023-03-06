@@ -5,6 +5,7 @@ using Moor.API.Controllers.BaseController;
 using Moor.API.Filters;
 using Moor.Core.Entities.MoorEntities;
 using Moor.Core.Services.MoorService;
+using Moor.Core.Utilities.DataFilter;
 using Moor.Model.Dtos.MoorDto.CountyDto;
 using Moor.Model.Models.MoorModels.CityModel;
 using Moor.Model.Models.MoorModels.CountryModel;
@@ -26,9 +27,9 @@ namespace Moor.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All([FromQuery] DataFilterModel dataFilterModel)
         {
-            var countyEntities = await _countyService.GetAllAsync();
+            var countyEntities = await _countyService.GetAllAsync(dataFilterModel);
             var countyDtos = _mapper.Map<List<CountyDto>>(countyEntities);
             return CreateActionResult(CustomResponseDto<List<CountyDto>>.Succces((int)HttpStatusCode.OK, countyDtos));
         }

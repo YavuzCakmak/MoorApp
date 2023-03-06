@@ -1,20 +1,22 @@
-using Autofac.Extensions.DependencyInjection;
 using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Moor.API.Filters;
 using Moor.API.Middlewares;
 using Moor.API.Modules;
+using Moor.Core.Services.MoorService;
+using Moor.Core.Session;
+using Moor.Core.Sieve;
+using Moor.Core.Utilities.DataFilter;
 using Moor.Repository;
 using Moor.Service.Mapping;
-using FluentValidation.AspNetCore;
-using Moor.Service.Validations;
-using Moor.Service.Utilities.AppSettings;
-using Moor.Core.Services.MoorService;
 using Moor.Service.Services.MoorService;
+using Moor.Service.Utilities.AppSettings;
 using Moor.Service.Utilities.AuthorizeHelpers;
-using Moor.Service.Utilities.Session;
-using Microsoft.Extensions.Options;
+using Moor.Service.Validations;
+using Sieve.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +37,9 @@ builder.Services.AddScoped(typeof(NotFoundFilter<>));
 builder.Services.AddAutoMapper(typeof(MapProfile));
 
 var serverVersion = new MySqlServerVersion(new Version(8, 0, 30));
+
+builder.Services.Configure<SieveOptions>(builder.Configuration.GetSection("Sieve"));
+builder.Services.AddScoped<BaseApplicationSieveProcessor<DataFilterModel, FilterTerm, SortTerm>>();
 
 builder.Services.AddDbContext<AppDbContext>(
             dbContextOptions => dbContextOptions

@@ -6,6 +6,7 @@ using Moor.Core.Entities.MoorEntities;
 using Moor.Core.Extension.String;
 using Moor.Core.Services.MoorService;
 using Moor.Core.Utilities;
+using Moor.Core.Utilities.DataFilter;
 using Moor.Model.Dtos.MoorDto.CarDto;
 using Moor.Model.Model.Authorize;
 using Moor.Model.Models.MoorModels.CarModel;
@@ -28,9 +29,9 @@ namespace Moor.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All([FromQuery] DataFilterModel dataFilterModel)
         {
-            var cars = await _carService.GetAllAsync();
+            var cars = await _carService.GetAllAsync(dataFilterModel);
             var carModels = _mapper.Map<List<CarModel>>(cars);
             var carDtos = _mapper.Map<List<CarDto>>(carModels);
             return CreateActionResult(CustomResponseDto<List<CarDto>>.Succces((int)HttpStatusCode.OK, carDtos));

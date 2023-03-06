@@ -1,14 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Moor.Core.Constant;
+using Moor.Core.Extension.Session;
 using Moor.Model.Authorize;
-using Moor.Service.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Moor.Service.Utilities.Session
+namespace Moor.Core.Session
 {
     public class SessionManager
     {

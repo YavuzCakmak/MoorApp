@@ -1,13 +1,11 @@
 ﻿using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using Moor.Core.Constant;
+using Moor.Core.Session;
 using Moor.Core.Utilities;
 using Moor.Model.Authorize;
 using Moor.Service.Exceptions;
 using Moor.Service.Utilities.AppSettings;
 using Moor.Service.Utilities.AuthorizeHelpers;
-using Moor.Service.Utilities.Session;
-using System.Net;
 
 namespace Moor.API.Middlewares
 {

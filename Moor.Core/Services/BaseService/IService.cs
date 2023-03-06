@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Moor.Core.Entities.Base;
+using Moor.Core.Utilities.DataFilter;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Moor.Core.Services.BaseService
 {
-    public interface IService<T> where T : class
+    public interface IService<T> where T : CoreEntity
     {
         Task<T> GetByIdAsync(long id);
-        Task<IEnumerable<T>> GetAllAsync();
+        Task<IEnumerable<T>> GetAllAsync(DataFilterModel dataFilterModel);
         IQueryable<T> Where(Expression<Func<T, bool>> expression);
         Task<bool> AnyAsync(Expression<Func<T, bool>> expression);
         Task<T> AddAsync(T entity);

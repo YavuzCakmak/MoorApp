@@ -1,9 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Moor.Core.Entities.MoorEntities;
 using Moor.Core.Entities.MoorEntities.AuthorizeEntities;
 using Moor.Core.Repositories.MoorRepository;
 using Moor.Core.Repositories.MoorRepository.AuthorizeRepository;
+using Moor.Core.Session;
+using Moor.Core.Sieve;
+using Moor.Core.Utilities.DataFilter;
 using Moor.Repository.GenericRepository;
+using Sieve.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,16 +20,11 @@ namespace Moor.Repository.Repositories
 {
     public class RoleRepository : GenericRepository<RoleEntity>, IRoleRepository
     {
-        AppDbContext _appDbContext;
-        public RoleRepository(AppDbContext appDbContext) : base(appDbContext)
+        public RoleRepository(AppDbContext context, BaseApplicationSieveProcessor<DataFilterModel, FilterTerm, SortTerm> sieveProcessor, SessionManager sessionManager, IHttpContextAccessor httpContextAccessor) : base(context, sieveProcessor, sessionManager, httpContextAccessor)
         {
-            _appDbContext = (AppDbContext)appDbContext;
+
         }
 
-        public override IQueryable<RoleEntity> GetAll()
-        {
-            return _context.Set<RoleEntity>().Where(x => x.IsDeleted == false);
-        }
         public override IQueryable<RoleEntity> Where(Expression<Func<RoleEntity, bool>> expression)
         {
             return base.Where(expression).Where(x => x.IsDeleted == false);

@@ -1,4 +1,5 @@
-﻿using Moor.Core.Entities.Base;
+﻿using Moor.Core.Attributes;
+using Moor.Core.Entities.Base;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -11,6 +12,7 @@ namespace Moor.Core.Entities.MoorEntities.AuthorizeEntities
     [Table("privilege")]
     public class PrivilegeEntity : BaseAuthorizeEntity
     {
+        [DataFilter]
         [Column("name")]
         public string Name { get; set; }
     }

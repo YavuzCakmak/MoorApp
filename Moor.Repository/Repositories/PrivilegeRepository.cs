@@ -1,26 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
 using Moor.Core.Entities.MoorEntities.AuthorizeEntities;
 using Moor.Core.Repositories.MoorRepository.AuthorizeRepository;
+using Moor.Core.Session;
+using Moor.Core.Sieve;
+using Moor.Core.Utilities.DataFilter;
 using Moor.Repository.GenericRepository;
-using System.Linq;
+using Sieve.Models;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Moor.Repository.Repositories
 {
     public class PrivilegeRepository : GenericRepository<PrivilegeEntity>, IPrivilegeRepository
     {
-        AppDbContext _appDbContext;
-        public PrivilegeRepository(AppDbContext appDbContext) : base(appDbContext)
+        public PrivilegeRepository(AppDbContext context, BaseApplicationSieveProcessor<DataFilterModel, FilterTerm, SortTerm> sieveProcessor, SessionManager sessionManager, IHttpContextAccessor httpContextAccessor) : base(context, sieveProcessor, sessionManager, httpContextAccessor)
         {
-            _appDbContext = (AppDbContext)appDbContext;
         }
 
-        public override IQueryable<PrivilegeEntity> GetAll()
-        {
-            return _context.Set<PrivilegeEntity>().Where(x => x.IsDeleted == false);
-        }
         public override IQueryable<PrivilegeEntity> Where(Expression<Func<PrivilegeEntity, bool>> expression)
         {
             return base.Where(expression).Where(x => x.IsDeleted == false);

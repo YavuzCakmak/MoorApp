@@ -1,19 +1,30 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Moor.Core.Entities.Base;
 using Moor.Core.Repositories;
+using Moor.Core.Session;
+using Moor.Core.Sieve;
+using Moor.Core.Utilities.DataFilter;
+using Sieve.Models;
 using System.Linq.Expressions;
 
 namespace Moor.Repository.GenericRepository
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class GenericRepository<T> : IGenericRepository<T> where T : CoreEntity
     {
         protected readonly AppDbContext _context;
         private readonly DbSet<T> _dbSet;
+        private readonly BaseApplicationSieveProcessor<DataFilterModel, FilterTerm, SortTerm> _sieveProcessor;
+        private readonly SessionManager _sessionManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-
-        public GenericRepository(AppDbContext context)
+        public GenericRepository(AppDbContext context, BaseApplicationSieveProcessor<DataFilterModel, FilterTerm, SortTerm> sieveProcessor, SessionManager sessionManager, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _dbSet = _context.Set<T>();
+            _sieveProcessor = sieveProcessor;
+            _sessionManager = sessionManager;
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task AddAsync(T entity)
         {
@@ -30,9 +41,25 @@ namespace Moor.Repository.GenericRepository
             return await _dbSet.AnyAsync(expression);
         }
 
-        public virtual IQueryable<T> GetAll()
+        public virtual IQueryable<T> GetAll(DataFilterModel dataFilterModel)
         {
-            return _dbSet.AsNoTracking().AsQueryable();
+            IQueryable<T> data;
+
+            try
+            {
+                data = _sieveProcessor.Apply<T>(dataFilterModel, _dbSet.AsNoTracking().Where(x => !x.IsDeleted), applyPagination: false);
+
+                _httpContextAccessor.HttpContext.Response.Headers.Add("X-Total-Count", data.Count().ToString());
+
+                data = _sieveProcessor.Apply<T>(dataFilterModel, data);
+            }
+            catch(Exception ex)
+            {
+                throw ex;// silersen data hata verir.(use of unasigned local variable)
+               // core katmanına özgü bir exception yazılıp atılabilir.
+            }
+
+            return data;
         }
 
         public async Task<T> GetByIdAsync(long id)
