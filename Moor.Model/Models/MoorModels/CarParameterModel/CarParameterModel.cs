@@ -4,8 +4,7 @@ namespace Moor.Model.Models.MoorModels.CarParameterModel
 {
     public class CarParameterModel : BaseModel
     {
-        public string Brand { get; set; }
-        public string Model { get; set; }
-        public string MediaPath { get; set; }
+        public long CarModelId { get; set; }
+        public long CarBrandId { get; set; }
     }
 }

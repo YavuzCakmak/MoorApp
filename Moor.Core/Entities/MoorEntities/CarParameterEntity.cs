@@ -8,15 +8,19 @@ namespace Moor.Core.Entities.MoorEntities
     public class CarParameterEntity : BaseEntity
     {
         [DataFilter]
-        [Column("brand")]
-        public string Brand { get; set; }
+        [Column("car_brand_id")]
+        public long CarBrandId { get; set; }
 
         [DataFilter]
-        [Column("model")]
-        public string Model { get; set; }
+        [Column("car_model_id")]
+        public long CarModelId { get; set; }
 
         [DataFilter]
-        [Column("media_path")]
-        public string MediaPath { get; set; }
+        [ForeignKey("CarBrandId")]
+        public virtual CarBrandEntity CarBrand { get; set; }
+
+        [DataFilter]
+        [ForeignKey("CarModelId")]
+        public virtual CarModelEntity CarModel { get; set; }
     }
 }

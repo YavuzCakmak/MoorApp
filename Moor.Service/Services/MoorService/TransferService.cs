@@ -96,8 +96,8 @@ namespace Moor.Service.Services.MoorService
             transferViewDto.FlightCode = transferPostDto.FlightCode;
             transferViewDto.CityName = cityModel.Name;
             transferViewDto.CountyName = countyName.Name;
-            transferViewDto.CarParameterBrand = carParameterModel.Brand;
-            transferViewDto.CarParameterModel = carParameterModel.Model;
+            //transferViewDto.CarParameterBrand = carParameterModel.Brand;
+            //transferViewDto.CarParameterModel = carParameterModel.Model;
             transferViewDto.Explanation = transferPostDto.Explanation;
             transferViewDto.DirectionType = transferPostDto.DirectionType;
             transferViewDto.ReceptionType = transferPostDto.ReceptionType;
@@ -130,8 +130,8 @@ namespace Moor.Service.Services.MoorService
             transferViewDto.FlightCode = transferEntity.FlightCode;
             transferViewDto.CityName = cityModel.Name;
             transferViewDto.CountyName = countyName.Name;
-            transferViewDto.CarParameterBrand = carParameterModel.Brand;
-            transferViewDto.CarParameterModel = carParameterModel.Model;
+            //transferViewDto.CarParameterBrand = carParameterModel.Brand;
+            //transferViewDto.CarParameterModel = carParameterModel.Model;
             transferViewDto.Explanation = transferEntity.Explanation;
             transferViewDto.DirectionType = transferEntity.DirectionType;
             transferViewDto.ReceptionType = transferEntity.ReceptionType;
@@ -170,8 +170,8 @@ namespace Moor.Service.Services.MoorService
                 transferViewDto.FlightCode = transferEntity.FlightCode;
                 transferViewDto.CityName = cityModel.Name;
                 transferViewDto.CountyName = countyName.Name;
-                transferViewDto.CarParameterBrand = carParameterModel.Brand;
-                transferViewDto.CarParameterModel = carParameterModel.Model;
+                //transferViewDto.CarParameterBrand = carParameterModel.Brand;
+                //transferViewDto.CarParameterModel = carParameterModel.Model;
                 transferViewDto.Explanation = transferEntity.Explanation;
                 transferViewDto.DirectionType = transferEntity.DirectionType;
                 transferViewDto.ReceptionType = transferEntity.ReceptionType;

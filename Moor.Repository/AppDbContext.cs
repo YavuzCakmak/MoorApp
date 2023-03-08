@@ -20,6 +20,8 @@ namespace Moor.Repository
 
         public DbSet<AgencyEntity> Agency { get; set; }
         public DbSet<CarEntity> Car { get; set; }
+        public DbSet<CarBrandEntity> CarBrand { get; set; }
+        public DbSet<CarModelEntity> CarModel { get; set; }
         public DbSet<CarParameterEntity> CarParameter { get; set; }
         public DbSet<CityEntity> City { get; set; }
         public DbSet<CountryEntity> Country { get; set; }

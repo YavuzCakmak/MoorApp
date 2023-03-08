@@ -10,37 +10,32 @@ using Moor.Core.Utilities;
 using Moor.Core.Utilities.DataFilter;
 using Moor.Model.Dtos.MoorDto.CarDto;
 using Moor.Model.Dtos.MoorDto.CarParameterDto;
+using Moor.Model.Models.MoorModels.CarParameterModel;
 using Moor.Service.Models.Dto.ResponseDto;
 using Moor.Service.Services.MoorService;
 using System.Net;
 
 namespace Moor.API.Controllers
 {
-    [ValidateFilter]
     [HasPermission]
     public class CarParametersController : CustomBaseController
     {
         private readonly ICarParameterService _carParameterService;
+        private readonly ICarBrandService _carBrandService;
         private readonly IMapper _mapper;
 
-        public CarParametersController(ICarParameterService carParameterService, IMapper mapper)
+        public CarParametersController(ICarParameterService carParameterService, IMapper mapper, ICarBrandService carBrandService)
         {
             _carParameterService = carParameterService;
             _mapper = mapper;
+            _carBrandService = carBrandService;
         }
 
         [HttpGet]
         public async Task<IActionResult> All([FromQuery] DataFilterModel dataFilterModel)
         {
             var carParameters = await _carParameterService.GetAllAsync(dataFilterModel);
-            if (carParameters.IsNotNullOrEmpty())
-            {
-                return CreateActionResult(CustomResponseDto<List<CarParameterDto>>.Succces((int)HttpStatusCode.OK, _mapper.Map<List<CarParameterDto>>(carParameters)));
-            }
-            else
-            {
-                return CreateActionResult(CustomResponseDto<List<NoContentDto>>.Fail((int)HttpStatusCode.NotFound));
-            }
+            return CreateActionResult(CustomResponseDto<List<CarParameterDto>>.Succces((int)HttpStatusCode.OK, _mapper.Map<List<CarParameterDto>>(carParameters)));
         }
 
         [ServiceFilter(typeof(NotFoundFilter<CarParameterEntity>))]
@@ -52,9 +47,23 @@ namespace Moor.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save(CarParameterDto carParameterDto)
+        public async Task<IActionResult> Save(CarParameterModel carParameterModel)
         {
-            return CreateActionResult(CustomResponseDto<CarParameterDto>.Succces((int)HttpStatusCode.OK, await _carParameterService.Save(carParameterDto)));
+            var dataResult = await _carParameterService.Save(carParameterModel);
+            if (dataResult.IsSuccess)
+            {
+                var carParameterEntity = await _carParameterService.GetByIdAsync(dataResult.PkId);
+                var newCarParameterDto = _mapper.Map<CarParameterDto>(carParameterEntity);
+                if (newCarParameterDto.CarBrandName.IsNullOrEmpty())
+                {
+                    newCarParameterDto.CarBrandName = _carBrandService.Where(x => x.Id == newCarParameterDto.CarBrandId).Select(a=> a.Brand).FirstOrDefault();
+                }
+                return CreateActionResult(CustomResponseDto<CarParameterDto>.Succces((int)HttpStatusCode.OK, newCarParameterDto));
+            }
+            else
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail((int)HttpStatusCode.BadRequest));
+            }
         }
 
         [HttpPut]

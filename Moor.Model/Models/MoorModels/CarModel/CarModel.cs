@@ -6,8 +6,6 @@ namespace Moor.Model.Models.MoorModels.CarModel
 {
     public class CarModel : BaseModel
     {
-        public long CarParameterId { get; set; }
-        public string NumberPlate { get; set; }
-        public CarParameterModel.CarParameterModel CarParameter { get; set; }
+        public string Model { get; set; }
     }
 }

@@ -7,6 +7,5 @@ namespace Moor.Model.Models.MoorModels.DriverModel
     {
         public long PersonnelId { get; set; }
         public decimal Price { get; set; }
-        public virtual PersonnelModel Personnel { get; set; }
     }
 }

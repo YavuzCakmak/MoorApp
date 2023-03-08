@@ -15,8 +15,7 @@ using System.Net;
 
 namespace Moor.API.Controllers
 {
-
-    //[HasPermission]
+    [HasPermission]
     public class CarsController : CustomBaseController
     {
         private readonly ICarService _carService;
@@ -31,9 +30,8 @@ namespace Moor.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All([FromQuery] DataFilterModel dataFilterModel)
         {
-            var cars = await _carService.GetAllAsync(dataFilterModel);
-            var carModels = _mapper.Map<List<CarModel>>(cars);
-            var carDtos = _mapper.Map<List<CarDto>>(carModels);
+            var carEntities = await _carService.GetAllAsync(dataFilterModel);
+            var carDtos = _mapper.Map<List<CarDto>>(carEntities);
             return CreateActionResult(CustomResponseDto<List<CarDto>>.Succces((int)HttpStatusCode.OK, carDtos));
         }
 
@@ -42,30 +40,29 @@ namespace Moor.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(long id)
         {
-            var car = await _carService.GetByIdAsync(id);
-            return CreateActionResult(CustomResponseDto<CarDto>.Succces((int)HttpStatusCode.OK, _mapper.Map<CarDto>(car)));
+            var carEntity = await _carService.GetByIdAsync(id);
+            return CreateActionResult(CustomResponseDto<CarDto>.Succces((int)HttpStatusCode.OK, _mapper.Map<CarDto>(carEntity)));
         }
 
-        [HttpPost]
-        [ValidateFilter]
-        public async Task<IActionResult> Save(CarDto carDto)
-        {
-            return CreateActionResult(CustomResponseDto<CarDto>.Succces((int)HttpStatusCode.OK, await _carService.Save(carDto)));
-        }
-
-        [HttpPut]
-        public async Task<IActionResult> Update(CarDto carDto)
-        {
-            await _carService.UpdateAsync(_mapper.Map<CarEntity>(carDto));
-            return CreateActionResult(CustomResponseDto<CarDto>.Succces((int)HttpStatusCode.OK, _mapper.Map<CarDto>(_carService.GetByIdAsync((long)carDto.Id))));
-        }
-
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> Remove(long id)
+        //[HttpPost]
+        //public async Task<IActionResult> Save(CarDto carDto)
         //{
-        //    //var carEntity = await _carService.GetByIdAsync(id);
-        //    //await _contentService.RemoveAsync(contentModel);
-        //    //return CreateActionResult(CustomResponseDto<NoContentDto>.Succces((int)HttpStatusCode.OK));
+        //    return CreateActionResult(CustomResponseDto<CarDto>.Succces((int)HttpStatusCode.OK, await _carService.Save(carDto)));
         //}
+
+        //[HttpPut]
+        //public async Task<IActionResult> Update(CarDto carDto)
+        //{
+        //    await _carService.UpdateAsync(_mapper.Map<CarEntity>(carDto));
+        //    return CreateActionResult(CustomResponseDto<CarDto>.Succces((int)HttpStatusCode.OK, _mapper.Map<CarDto>(_carService.GetByIdAsync((long)carDto.Id))));
+        //}
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Remove(long id)
+        {
+            var carEntity = await _carService.GetByIdAsync(id);
+            await _carService.RemoveAsync(carEntity);
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Succces((int)HttpStatusCode.OK));
+        }
     }
 }

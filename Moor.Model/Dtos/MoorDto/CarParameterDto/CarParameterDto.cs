@@ -10,8 +10,9 @@ namespace Moor.Model.Dtos.MoorDto.CarParameterDto
     public class CarParameterDto
     {
         public long Id { get; set; }
-        public string Brand { get; set; }
-        public string Model { get; set; }
-        public string MediaPath { get; set; }
+        public long CarModelId { get; set; }
+        public long CarBrandId { get; set; }
+        public string? CarBrandName { get; set; }
+        public string? CarModelName { get; set; }
     }
 }

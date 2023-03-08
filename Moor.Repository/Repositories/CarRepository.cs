@@ -26,7 +26,7 @@ namespace Moor.Repository.Repositories
         {
             IQueryable<CarEntity> data = _sieveProcessor.Apply<CarEntity>(
                 dataFilterModel, 
-                _context.Set<CarEntity>().Where(x => x.IsDeleted == false).Include(x => x.CarParameter),
+                _context.Set<CarEntity>().Where(x => x.IsDeleted == false).Include(x => x.CarParameter).ThenInclude(x=> x.CarBrand).Include(x=> x.CarParameter).ThenInclude(x=> x.CarModel),
                 applyPagination: false);
 
             _httpContextAccessor.HttpContext.Response.Headers.Add("X-Total-Count", data.Count().ToString());

@@ -4,16 +4,20 @@ using Moor.Core.Entities.MoorEntities;
 using Moor.Core.Entities.MoorEntities.AuthorizeEntities;
 using Moor.Core.Extension.String;
 using Moor.Model.Dtos.MoorDto;
+using Moor.Model.Dtos.MoorDto.CarBrandDto;
 using Moor.Model.Dtos.MoorDto.CarDto;
+using Moor.Model.Dtos.MoorDto.CarModelDto;
 using Moor.Model.Dtos.MoorDto.CarParameterDto;
 using Moor.Model.Dtos.MoorDto.CityDto;
 using Moor.Model.Dtos.MoorDto.CountyDto;
 using Moor.Model.Dtos.MoorDto.DistrictDto;
+using Moor.Model.Dtos.MoorDto.DriverDto;
 using Moor.Model.Dtos.MoorDto.PriceDto;
 using Moor.Model.Dtos.MoorDto.TransferDto.TransferPostDto;
 using Moor.Model.Dtos.MoorDto.TransferDto.TransferViewDto;
 using Moor.Model.Model.Authorize;
 using Moor.Model.Models.Base;
+using Moor.Model.Models.MoorModels.CarBrandModel;
 using Moor.Model.Models.MoorModels.CarModel;
 using Moor.Model.Models.MoorModels.CarParameterModel;
 using Moor.Model.Models.MoorModels.CityModel;
@@ -42,21 +46,27 @@ namespace Moor.Service.Mapping
 
             #region CarParameter
             CreateMap<CarParameterEntity, CarParameterModel>().ReverseMap().IncludeBase<BaseModel, BaseEntity>();
-            CreateMap<CarParameterEntity, CarParameterDto>().ReverseMap();
+            CreateMap<CarParameterEntity, CarParameterDto>()
+                .ForMember(x => x.CarBrandName, source => source.MapFrom(src => src.CarBrand.Brand))
+                .ForMember(x => x.CarModelName, source => source.MapFrom(src => src.CarModel.Model))
+                .ReverseMap();
+            #endregion
+
+            #region CarBrand
+            CreateMap<CarBrandEntity, CarBrandModel>().ReverseMap().IncludeBase<BaseModel, BaseEntity>();
+            CreateMap<CarBrandEntity, CarBrandDto>().ReverseMap();
+            #endregion
+
+            #region CarModel
+            CreateMap<CarModelEntity, CarModel>().ReverseMap().IncludeBase<BaseModel, BaseEntity>();
+            CreateMap<CarModelEntity, CarModelDto>().ReverseMap();
             #endregion
 
             #region Car
-            CreateMap<CarModel, CarEntity>()
-                .ForMember(x => x.CarParameterId, source => source.MapFrom(src => src.CarParameter.Id))
-                .IncludeBase<BaseModel, BaseEntity>()
-                .ReverseMap();
-
-            #region CarModel-CarDto
-            CreateMap<CarModel, CarDto>().ReverseMap();
-            #endregion
-
-            #region CarEntity-CarDto
-            CreateMap<CarEntity, CarDto>().ReverseMap();
+            CreateMap<CarEntity, CarDto>()
+               .ForMember(x => x.CarParameterId, source => source.MapFrom(src => src.CarParameter.Id))
+               .ForMember(x => x.CarBrand, source => source.MapFrom(src => src.CarParameter.CarBrand.Brand))
+               .ForMember(x => x.CarModel, source => source.MapFrom(src => src.CarParameter.CarModel.Model));
             #endregion
 
             #endregion
@@ -109,10 +119,16 @@ namespace Moor.Service.Mapping
             CreateMap<TravellerDto, TravellerEntity>().ReverseMap();
             #endregion
 
+            #region Driver
+            CreateMap<DriverEntity, DriverDto>()
+                .ForMember(x=> x.PersonnelId, source => source.MapFrom(src => src.Personnel.Id))
+                .ForMember(x=> x.FirstName, source => source.MapFrom(src => src.Personnel.FirstName))
+                .ForMember(x=> x.LastName, source => source.MapFrom(src => src.Personnel.LastName))
+                .ForMember(x=> x.Price, source => source.MapFrom(src => src.Price))
+                .ReverseMap();
             #endregion
 
             #endregion
-
 
         }
     }
