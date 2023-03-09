@@ -69,6 +69,14 @@ namespace Moor.Service.Mapping
                .ForMember(x => x.CarModel, source => source.MapFrom(src => src.CarParameter.CarModel.Model));
             #endregion
 
+            #region DriverCar 
+            CreateMap<DriverCarEntity, DriverCarDto>()
+              .ForMember(x => x.CarId, source => source.MapFrom(src => src.Car.Id))
+              .ForMember(x => x.CarBrand, source => source.MapFrom(src => src.Car.CarParameter.CarBrand.Brand))
+              .ForMember(x => x.Price, source => source.MapFrom(src => src.Driver.Price))
+              .ForMember(x => x.CarModel, source => source.MapFrom(src => src.Car.CarParameter.CarModel.Model));
+            #endregion
+
             #endregion
 
             #region District

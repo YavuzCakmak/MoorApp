@@ -57,17 +57,22 @@ namespace Moor.API.Controllers
                 return CreateActionResult(CustomResponseDto<DriverDto>.Succces((int)HttpStatusCode.OK, driverDto));
             }
             else
-            {
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Fail((int)HttpStatusCode.BadRequest, dataResult.ErrorMessages));
-            }
         }
 
-        //[HttpPut]
-        //public async Task<IActionResult> Update(DriverModel driverModel)
-        //{
-        //    //await _carService.UpdateAsync(_mapper.Map<CarEntity>(carDto));
-        //    //return CreateActionResult(CustomResponseDto<CarDto>.Succces((int)HttpStatusCode.OK, _mapper.Map<CarDto>(_carService.GetByIdAsync((long)carDto.Id))));
-        //}
+        [HttpPut]
+        public async Task<IActionResult> Update(DriverDto driverDto)
+        {
+            var dataResult = await _driverService.Update(driverDto);
+            if (dataResult.IsSuccess)
+            {
+                var driverEntity = await _driverService.GetByIdAsync(driverDto.Id);
+                var driverNewDto = _mapper.Map<DriverDto>(driverEntity);
+                return CreateActionResult(CustomResponseDto<DriverDto>.Succces((int)HttpStatusCode.OK, driverNewDto));
+            }
+            else
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail((int)HttpStatusCode.BadRequest, dataResult.ErrorMessages));
+        }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Remove(long id)

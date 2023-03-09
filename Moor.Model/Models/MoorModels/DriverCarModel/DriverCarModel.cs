@@ -8,7 +8,5 @@ namespace Moor.Model.Models.MoorModels.DriverCarModel
     {
         public long DriverId { get; set; }
         public long CarId { get; set; }
-        public virtual CarModel.CarModel Car { get; set; }
-        public virtual DriverModel.DriverModel Driver { get; set; }
     }
 }

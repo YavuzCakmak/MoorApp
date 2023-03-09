@@ -26,7 +26,7 @@ namespace Moor.Repository.Repositories
         {
             IQueryable<DriverCarEntity> data = _sieveProcessor.Apply<DriverCarEntity>(
                 dataFilterModel,
-                _context.Set<DriverCarEntity>().Where(x => x.IsDeleted == false).Include(x => x.Driver).Include(x => x.Car),
+                _context.Set<DriverCarEntity>().Where(x => x.IsDeleted == false).Include(x => x.Driver).Include(x => x.Car).ThenInclude(x=> x.CarParameter).ThenInclude(x=> x.CarBrand).Include(X=> X.Car).ThenInclude(x=> x.CarParameter).ThenInclude(x=> x.CarModel),
                 applyPagination: false);
 
             _httpContextAccessor.HttpContext.Response.Headers.Add("X-Total-Count", data.Count().ToString());
@@ -36,7 +36,12 @@ namespace Moor.Repository.Repositories
 
         public override IQueryable<DriverCarEntity> Where(Expression<Func<DriverCarEntity, bool>> expression)
         {
-            return base.Where(expression).Where(x => x.IsDeleted == false).Include(x=> x.Driver).Include(x=> x.Car);
+            return base.Where(expression).Where(x => x.IsDeleted == false).Include(x => x.Driver).Include(x => x.Car).ThenInclude(x => x.CarParameter).ThenInclude(x => x.CarBrand).Include(X => X.Car).ThenInclude(x => x.CarParameter).ThenInclude(x => x.CarModel);
+        }
+
+        public override Task<DriverCarEntity> GetByIdAsync(long id)
+        {
+            return base.GetByIdAsync(id);
         }
     }
 }
