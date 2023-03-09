@@ -49,7 +49,7 @@ namespace Moor.Core.Entities.MoorEntities
 
         [DataFilter]
         [Column("personnel_id")]
-        public long? PersonnelId { get; set; } // PersonnelId olacak 
+        public long? PersonnelId { get; set; } 
 
         [DataFilter]
         [Column("city_id")]

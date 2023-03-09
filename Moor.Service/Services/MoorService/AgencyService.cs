@@ -5,6 +5,9 @@ using Moor.Core.Repositories;
 using Moor.Core.Services.MoorService;
 using Moor.Core.UnitOfWorks;
 using Moor.Service.Services.BaseService;
+using Moor.Model.Utilities;
+using Moor.Model.Models.MoorModels.AgencyModel;
+using Moor.Core.Extension.String;
 
 namespace Moor.Service.Services.MoorService
 {
@@ -17,6 +20,29 @@ namespace Moor.Service.Services.MoorService
         {
             _mapper = mapper;
             _agencyRepository = agencyRepository;
+        }
+
+        public async Task<DataResult> Save(AgencyModel agencyModel)
+        {
+            #region Object
+            DataResult dataResult = new DataResult();
+            #endregion
+
+
+            var agencyEntity = _mapper.Map<AgencyEntity>(agencyModel);
+            var agencyResult = await base.AddAsync(agencyEntity);
+            if (agencyResult.Id.IsNotNull() && agencyResult.Id > 0)
+            {
+                dataResult.PkId = agencyResult.Id;
+                dataResult.IsSuccess = true;
+                return dataResult;
+            }
+            else
+            {
+                dataResult.ErrorMessage = "Acente kayıt edilirken hata oluştu.";
+                dataResult.IsSuccess = false;
+                return dataResult;
+            }
         }
     }
 }

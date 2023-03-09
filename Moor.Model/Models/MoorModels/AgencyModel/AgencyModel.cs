@@ -9,7 +9,6 @@ namespace Moor.Model.Models.MoorModels.AgencyModel
         public string Title { get; set; }
         public string TaxOffice { get; set; }
         public string TaxNumber { get; set; }
-
         public string PhoneNumber { get; set; }
         public string OperationPhoneNumber { get; set; }
         public string MediaPath { get; set; }
@@ -19,8 +18,5 @@ namespace Moor.Model.Models.MoorModels.AgencyModel
         public long PersonnelId { get; set; }
         public long CityId { get; set; }
         public long CountyId { get; set; }
-        public virtual PersonnelModel Personnel { get; set; }
-        public virtual CityModel.CityModel City { get; set; }
-        public virtual CountyModel.CountyModel County { get; set; }
     }
 }

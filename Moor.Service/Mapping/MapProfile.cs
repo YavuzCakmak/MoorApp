@@ -4,6 +4,7 @@ using Moor.Core.Entities.MoorEntities;
 using Moor.Core.Entities.MoorEntities.AuthorizeEntities;
 using Moor.Core.Extension.String;
 using Moor.Model.Dtos.MoorDto;
+using Moor.Model.Dtos.MoorDto.AgencyDto;
 using Moor.Model.Dtos.MoorDto.CarBrandDto;
 using Moor.Model.Dtos.MoorDto.CarDto;
 using Moor.Model.Dtos.MoorDto.CarModelDto;
@@ -17,6 +18,7 @@ using Moor.Model.Dtos.MoorDto.TransferDto.TransferPostDto;
 using Moor.Model.Dtos.MoorDto.TransferDto.TransferViewDto;
 using Moor.Model.Model.Authorize;
 using Moor.Model.Models.Base;
+using Moor.Model.Models.MoorModels.AgencyModel;
 using Moor.Model.Models.MoorModels.CarBrandModel;
 using Moor.Model.Models.MoorModels.CarModel;
 using Moor.Model.Models.MoorModels.CarParameterModel;
@@ -134,6 +136,11 @@ namespace Moor.Service.Mapping
                 .ForMember(x=> x.LastName, source => source.MapFrom(src => src.Personnel.LastName))
                 .ForMember(x=> x.Price, source => source.MapFrom(src => src.Price))
                 .ReverseMap();
+            #endregion
+
+            #region Agency 
+            CreateMap<AgencyEntity, AgencyDto>().ReverseMap();
+            CreateMap<AgencyEntity, AgencyModel>().ReverseMap();
             #endregion
 
             #endregion
