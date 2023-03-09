@@ -35,7 +35,7 @@ namespace Moor.Repository.Repositories
         }
         public override IQueryable<CarEntity> Where(Expression<Func<CarEntity, bool>> expression)
         {
-            return base.Where(expression).Where(x => x.IsDeleted == false).Include(x => x.CarParameter);
+            return base.Where(expression).Where(x => x.IsDeleted == false).Include(x => x.CarParameter).ThenInclude(x => x.CarBrand).Include(x => x.CarParameter).ThenInclude(x => x.CarModel);
         }
     }
 }
