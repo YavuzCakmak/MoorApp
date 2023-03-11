@@ -64,6 +64,14 @@ namespace Moor.Core.Entities.MoorEntities
         public decimal? Amount { get; set; }
 
         [DataFilter]
+        [Column("agency_amount")]
+        public decimal? AgencyAmount { get; set; }
+
+        [DataFilter]
+        [Column("driver_amount")]
+        public decimal? DriverAmount { get; set; }
+
+        [DataFilter]
         [ForeignKey("AgencyId")]
         public virtual AgencyEntity? Agency { get; set; }
         

@@ -28,7 +28,6 @@ namespace Moor.Service.Services.MoorService
             DataResult dataResult = new DataResult();
             #endregion
 
-
             var agencyEntity = _mapper.Map<AgencyEntity>(agencyModel);
             var agencyResult = await base.AddAsync(agencyEntity);
             if (agencyResult.Id.IsNotNull() && agencyResult.Id > 0)

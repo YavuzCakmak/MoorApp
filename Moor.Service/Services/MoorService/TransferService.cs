@@ -12,6 +12,7 @@ using Moor.Model.Dtos.MoorDto.TransferDto.TransferViewDto;
 using Moor.Model.Models.MoorModels.CarParameterModel;
 using Moor.Model.Models.MoorModels.CityModel;
 using Moor.Model.Models.MoorModels.DistrictModel;
+using Moor.Model.Models.MoorModels.DriverModel;
 using Moor.Model.Models.MoorModels.NotificationModel.NotificationPostModel;
 using Moor.Model.Models.MoorModels.TransferModel.TransferChangeModel;
 using Moor.Model.Utilities;
@@ -60,7 +61,9 @@ namespace Moor.Service.Services.MoorService
             {
                 if (transferEntity.DriverId.IsNull() && transferChangeModel.DriverId.IsNotNull() && transferChangeModel.DriverId > 0)
                 {
+                    var driverModel = _driverService.Where(x => x.Id == transferChangeModel.DriverId).FirstOrDefault();
                     transferEntity.DriverId = transferChangeModel.DriverId;
+                    transferEntity.DriverAmount = driverModel.Price;
                     await base.UpdateAsync(transferEntity);
                     dataResult.IsSuccess = true;
                     #region Notification
@@ -75,7 +78,9 @@ namespace Moor.Service.Services.MoorService
                 }
                 else if (transferEntity.DriverId.IsNotNull() && transferChangeModel.DriverId.IsNotNull() && transferChangeModel.DriverId > 0 && transferEntity.DriverId != transferChangeModel.DriverId)
                 {
+                    var driverModel = _driverService.Where(x => x.Id == transferChangeModel.DriverId).FirstOrDefault();
                     transferEntity.DriverId = transferChangeModel.DriverId;
+                    transferEntity.DriverAmount = driverModel.Price;
                     base.UpdateAsync(transferEntity);
                     #region Notification
                     NotificationPostModel notificationPostModel = new NotificationPostModel();
@@ -91,6 +96,7 @@ namespace Moor.Service.Services.MoorService
                 else if (transferEntity.Amount != transferChangeModel.Amount && transferChangeModel.Amount > 0)
                 {
                     transferEntity.Amount = (decimal)transferChangeModel.Amount;
+                    transferEntity.AgencyAmount = (decimal)transferChangeModel.Amount;
                     base.UpdateAsync(transferEntity);
                     dataResult.IsSuccess = true;
                     #region Notification
@@ -154,8 +160,10 @@ namespace Moor.Service.Services.MoorService
                 return transferViewDto;
             }
 
+            // Sadece havalimanından girilince karşılama ücreti olucak ve transfere yansıyacak 
             transferPostDto.Amount = priceModel.Price + agencyModel.ReceptionPrice;
             var transferEntity = _mapper.Map<TransferEntity>(transferPostDto);
+            transferEntity.AgencyAmount = transferPostDto.Amount;
             transferEntity.Status = Convert.ToInt32(TransferStatus.BEKLEMEDE);
             var transferAddResult = await base.AddAsync(transferEntity);
             if (transferAddResult.Id.IsNull())

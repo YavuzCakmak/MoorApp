@@ -21,6 +21,10 @@ namespace Moor.Repository.Repositories
             _httpContextAccessor = httpContextAccessor;
         }
 
+        public override Task<DriverEntity> GetByIdAsync(long id)
+        {
+            return base.GetByIdAsync(id);
+        }
         public override IQueryable<DriverEntity> GetAll(DataFilterModel dataFilterModel)
         {
             IQueryable<DriverEntity> data = _sieveProcessor.Apply<DriverEntity>(

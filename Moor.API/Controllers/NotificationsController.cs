@@ -4,12 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 using Moor.API.Controllers.BaseController;
 using Moor.API.Filters;
 using Moor.Core.Entities.MoorEntities;
+using Moor.Core.Extension.String;
 using Moor.Core.Services.MoorService;
 using Moor.Core.Utilities;
 using Moor.Core.Utilities.DataFilter;
 using Moor.Model.Dtos.MoorDto.CarParameterDto;
 using Moor.Model.Models.MoorModels.CarParameterModel;
 using Moor.Model.Models.MoorModels.NotificationModel;
+using Moor.Model.Models.MoorModels.NotificationModel.NotificationReadModel;
 using Moor.Service.Models.Dto.ResponseDto;
 using System.Net;
 
@@ -32,6 +34,13 @@ namespace Moor.API.Controllers
         {
             var notificationEntities = await _notificationService.GetAllAsync(dataFilterModel);
             return CreateActionResult(CustomResponseDto<List<NotificationModel>>.Succces((int)HttpStatusCode.OK, _mapper.Map<List<NotificationModel>>(notificationEntities)));
+        }
+
+        [HttpPost("Read")]
+        public async Task<IActionResult> Read([FromBody] NotificationReadModel notificationReadModel)
+        {
+            await _notificationService.Read(notificationReadModel);
+            return CreateActionResult(CustomResponseDto<NoContentDto>.Succces((int)HttpStatusCode.OK));
         }
 
         [ServiceFilter(typeof(NotFoundFilter<NotificationEntity>))]

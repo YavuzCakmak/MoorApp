@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moor.API.Controllers.BaseController;
 using Moor.API.Filters;
 using Moor.Core.Entities.MoorEntities;
+using Moor.Core.Extension.String;
 using Moor.Core.Services.MoorService;
 using Moor.Core.Utilities;
 using Moor.Core.Utilities.DataFilter;
@@ -20,12 +21,14 @@ namespace Moor.API.Controllers
     public class DriversController : CustomBaseController
     {
         private readonly IDriverService _driverService;
+        private readonly IPersonnelService _personnelService;
         private readonly IMapper _mapper;
 
-        public DriversController(IDriverService driverService, IMapper mapper)
+        public DriversController(IDriverService driverService, IMapper mapper, IPersonnelService personnelService)
         {
             _driverService = driverService;
             _mapper = mapper;
+            _personnelService = personnelService;
         }
 
         [HttpGet]
@@ -42,6 +45,11 @@ namespace Moor.API.Controllers
         public async Task<IActionResult> GetById(long id)
         {
             var driverEntity = await _driverService.GetByIdAsync(id);
+            if (driverEntity.IsNotNull())
+            {
+                var personnelModel = _personnelService.Where(x => x.Id == driverEntity.PersonnelId).FirstOrDefault();
+                driverEntity.Personnel = personnelModel;
+            }
             return CreateActionResult(CustomResponseDto<DriverDto>.Succces((int)HttpStatusCode.OK, _mapper.Map<DriverDto>(driverEntity)));
         }
 

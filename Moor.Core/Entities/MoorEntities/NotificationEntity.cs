@@ -29,12 +29,15 @@ namespace Moor.Core.Entities.MoorEntities
         public bool IsRead { get; set; }
 
         [DataFilter]
+        [Column("is_first")]
+        public bool IsFirst { get; set; }
+
+        [DataFilter]
         [ForeignKey("TransferId")]
         public virtual TransferEntity Transfer { get; set; }
 
         [DataFilter]
         [ForeignKey("AgencyId")]
         public virtual AgencyEntity Agency { get; set; }
-
     }
 }

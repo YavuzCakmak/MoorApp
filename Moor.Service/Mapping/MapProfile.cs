@@ -135,6 +135,9 @@ namespace Moor.Service.Mapping
                 .ForMember(x => x.PersonnelId, source => source.MapFrom(src => src.Personnel.Id))
                 .ForMember(x => x.FirstName, source => source.MapFrom(src => src.Personnel.FirstName))
                 .ForMember(x => x.LastName, source => source.MapFrom(src => src.Personnel.LastName))
+                .ForMember(x => x.UserName, source => source.MapFrom(src => src.Personnel.UserName))
+                .ForMember(x => x.Password, source => source.MapFrom(src => src.Personnel.Password))
+                .ForMember(x => x.Email, source => source.MapFrom(src => src.Personnel.Email))
                 .ForMember(x => x.Price, source => source.MapFrom(src => src.Price))
                 .ReverseMap();
             #endregion

@@ -7,6 +7,7 @@ using Moor.Core.Services.MoorService;
 using Moor.Core.UnitOfWorks;
 using Moor.Core.Utilities.DataFilter;
 using Moor.Model.Models.MoorModels.NotificationModel.NotificationPostModel;
+using Moor.Model.Models.MoorModels.NotificationModel.NotificationReadModel;
 using Moor.Model.Utilities;
 using Moor.Service.Services.BaseService;
 
@@ -41,6 +42,7 @@ namespace Moor.Service.Services.MoorService
                 notificationEntity.Status = 0;
                 notificationEntity.CreatedDate = DateTime.Now;
                 notificationEntity.IsRead = false;
+                notificationEntity.IsFirst = true;
                 notificationEntity.AgencyId = notificationPostModel.AgencyId;
                 notificationEntity.TransferId = notificationPostModel.TransferId;
                 await base.AddAsync(notificationEntity);
@@ -82,7 +84,7 @@ namespace Moor.Service.Services.MoorService
                 await base.AddAsync(notificationEntity);
                 dataResult.IsSuccess = true;
                 return dataResult;
-            } 
+            }
             if (notificationPostModel.IsStatus)
             {
                 notificationPostModel.Explanation = $"{notificationPostModel.AgencyName} - {notificationPostModel.TransferId}'Nolu transferin statüsü güncellendi.";
@@ -94,6 +96,22 @@ namespace Moor.Service.Services.MoorService
                 await base.AddAsync(notificationEntity);
                 dataResult.IsSuccess = true;
                 return dataResult;
+            }
+            return dataResult;
+        }
+
+        public async Task<DataResult> Read(NotificationReadModel notificationReadModel)
+        {
+            DataResult dataResult = new DataResult();
+            dataResult.IsSuccess = true;
+            var notificationEnties = base.Where(x => x.AgencyId == notificationReadModel.AgencyId && x.IsRead == false && x.IsFirst == false && notificationReadModel.NotificationsIds.Contains(x.Id)).ToList();
+            if (notificationEnties.IsNotNullOrEmpty())
+            {
+                foreach (var notificationEntity in notificationEnties)
+                {
+                    notificationEntity.IsRead = true;
+                    await base.UpdateAsync(notificationEntity);
+                }
             }
             return dataResult;
         }
