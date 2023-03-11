@@ -26,6 +26,7 @@ using Moor.Model.Models.MoorModels.CityModel;
 using Moor.Model.Models.MoorModels.CountryModel;
 using Moor.Model.Models.MoorModels.CountyModel;
 using Moor.Model.Models.MoorModels.DistrictModel;
+using Moor.Model.Models.MoorModels.NotificationModel;
 using Moor.Model.Models.MoorModels.TransferModel;
 
 namespace Moor.Service.Mapping
@@ -131,11 +132,19 @@ namespace Moor.Service.Mapping
 
             #region Driver
             CreateMap<DriverEntity, DriverDto>()
-                .ForMember(x=> x.PersonnelId, source => source.MapFrom(src => src.Personnel.Id))
-                .ForMember(x=> x.FirstName, source => source.MapFrom(src => src.Personnel.FirstName))
-                .ForMember(x=> x.LastName, source => source.MapFrom(src => src.Personnel.LastName))
-                .ForMember(x=> x.Price, source => source.MapFrom(src => src.Price))
+                .ForMember(x => x.PersonnelId, source => source.MapFrom(src => src.Personnel.Id))
+                .ForMember(x => x.FirstName, source => source.MapFrom(src => src.Personnel.FirstName))
+                .ForMember(x => x.LastName, source => source.MapFrom(src => src.Personnel.LastName))
+                .ForMember(x => x.Price, source => source.MapFrom(src => src.Price))
                 .ReverseMap();
+            #endregion
+
+            #region Notification 
+            CreateMap<NotificationEntity, NotificationModel>()
+                .ForMember(x => x.Id, source => source.MapFrom(src => src.Id))
+                .ForMember(x => x.TransferId, source => source.MapFrom(src => src.TransferId))
+                .ForMember(x => x.AgencyId, source => source.MapFrom(src => src.AgencyId))
+                .ForMember(x => x.Explanation, source => source.MapFrom(src => src.Explanation)).IncludeBase<BaseEntity, BaseModel>().ReverseMap();
             #endregion
 
             #region Agency 

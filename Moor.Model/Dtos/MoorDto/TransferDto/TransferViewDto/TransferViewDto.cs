@@ -20,8 +20,14 @@ namespace Moor.Model.Dtos.MoorDto.TransferDto.TransferViewDto
         public string Explanation { get; set; }
         public int ReceptionType { get; set; }
         public int DirectionType { get; set; }
+        public LookupObjectModel Status { get; set; }
         public DateTime? DepartureDate { get; set; }
         public DateTime? ReturnDate { get; set; }
         public decimal Price { get; set; }
+    }
+    public class LookupObjectModel
+    {
+        public int? Ordinal { get; set; }
+        public string Text { get; set; }
     }
 }

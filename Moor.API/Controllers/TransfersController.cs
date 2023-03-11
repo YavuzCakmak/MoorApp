@@ -10,6 +10,8 @@ using Moor.Core.Utilities.DataFilter;
 using Moor.Model.Dtos.MoorDto.TransferDto.TransferPostDto;
 using Moor.Model.Dtos.MoorDto.TransferDto.TransferViewDto;
 using Moor.Model.Models.MoorModels.TransferModel;
+using Moor.Model.Models.MoorModels.TransferModel.TransferChangeModel;
+using Moor.Model.Utilities;
 using Moor.Service.Models.Dto.ResponseDto;
 using System.Net;
 
@@ -43,6 +45,17 @@ namespace Moor.API.Controllers
             var transferViewModel = await _transferService.MapTransferViewDto(transferEntity);
             return CreateActionResult(CustomResponseDto<TransferViewDto>.Succces((int)HttpStatusCode.OK, transferViewModel));
         }
+
+        [HttpPost("ChangeTransferStatus")]
+        public async Task<IActionResult> ChangeTransferStatus([FromBody] TransferChangeModel transferChangeModel)
+        {
+            var dataResult = await _transferService.ChangeTransferStatus(transferChangeModel);
+            if (dataResult.IsSuccess)
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Succces((int)HttpStatusCode.OK));
+            else
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail((int)HttpStatusCode.BadRequest, dataResult.ErrorMessage));
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> Save(TransferPostDto transferPostDto)

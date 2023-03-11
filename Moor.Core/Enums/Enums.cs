@@ -24,4 +24,12 @@ namespace Moor.Core.Enums
         TEK_YON = 1,
         GİDİS_DONUS = 2
     }
+
+    public enum TransferStatus
+    {
+        BEKLEMEDE = 0,
+        IPTAL = 1,
+        NON_SHOW = 2,
+        TAMAMLANDI = 3,
+    }
 }

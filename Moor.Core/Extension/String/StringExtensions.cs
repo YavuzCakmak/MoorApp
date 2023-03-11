@@ -127,6 +127,16 @@ namespace Moor.Core.Extension.String
             return System.Convert.ToBase64String(input.HexStringToHex());
         }
 
+        public static byte[] ToByteArray(this string text, Encoding encoding = null)
+        {
+            if (encoding == null)
+            {
+                encoding = Encoding.UTF8;
+            }
+
+            return string.IsNullOrEmpty(text) ? null : encoding.GetBytes(text);
+        }
+
         public static byte[] HexStringToHex(this string inputHex)
         {
             try

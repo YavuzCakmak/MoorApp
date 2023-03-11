@@ -19,6 +19,7 @@ namespace Moor.Repository
         #endregion
 
         public DbSet<AgencyEntity> Agency { get; set; }
+        public DbSet<NotificationEntity> Notification { get; set; }
         public DbSet<CarEntity> Car { get; set; }
         public DbSet<CarBrandEntity> CarBrand { get; set; }
         public DbSet<CarModelEntity> CarModel { get; set; }

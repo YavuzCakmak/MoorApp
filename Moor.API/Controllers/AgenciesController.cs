@@ -20,7 +20,7 @@ using System.Net;
 
 namespace Moor.API.Controllers
 {
-    //[HasPermission]
+    [HasPermission]
     public class AgenciesController : CustomBaseController
     {
         private readonly IAgencyService _agencyService;
