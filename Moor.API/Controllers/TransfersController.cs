@@ -9,15 +9,20 @@ using Moor.Core.Utilities;
 using Moor.Core.Utilities.DataFilter;
 using Moor.Model.Dtos.MoorDto.TransferDto.TransferPostDto;
 using Moor.Model.Dtos.MoorDto.TransferDto.TransferViewDto;
+using Moor.Model.Models.MoorModels.AgencyModel.AgencyWalletModel;
+using Moor.Model.Models.MoorModels.AgencyModel.DebitForAgencyModel;
+using Moor.Model.Models.MoorModels.DriverModel.DebitForDriverModel;
+using Moor.Model.Models.MoorModels.DriverModel.DriverWalletModel;
 using Moor.Model.Models.MoorModels.TransferModel;
 using Moor.Model.Models.MoorModels.TransferModel.TransferChangeModel;
 using Moor.Model.Utilities;
 using Moor.Service.Models.Dto.ResponseDto;
+using Moor.Service.Services.MoorService;
 using System.Net;
 
 namespace Moor.API.Controllers
 {
-    [HasPermission]
+    //[HasPermission]
     public class TransfersController : CustomBaseController
     {
         private readonly ITransferService _transferService;
@@ -46,6 +51,41 @@ namespace Moor.API.Controllers
             return CreateActionResult(CustomResponseDto<TransferViewDto>.Succces((int)HttpStatusCode.OK, transferViewModel));
         }
 
+        [HttpGet("GetDriverWallet")]
+        public async Task<IActionResult> GetDriverWallet([FromQuery] long driverId)
+        {
+            var driverWallet = _transferService.GetDriverWallet(driverId).Result;
+            return CreateActionResult(CustomResponseDto<DriverWalletModel>.Succces((int)HttpStatusCode.OK, driverWallet));
+        }
+
+        [HttpGet("GetAgencyWallet")]
+        public async Task<IActionResult> GetAgencyWallet([FromQuery] long agencyId)
+        {
+            var agencyWallet = _transferService.GetAgencyWallet(agencyId).Result;
+            return CreateActionResult(CustomResponseDto<AgencyWalletModel>.Succces((int)HttpStatusCode.OK, agencyWallet));
+        }
+
+        [HttpPost("AddDebitForDriver")]
+        public async Task<IActionResult> AddDebitForDriver([FromBody] DebitForDriverModel debitForDriverModel)
+        {
+            var dataResult = await _transferService.AddDebitForDriver(debitForDriverModel);
+            if (dataResult.IsSuccess)
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Succces((int)HttpStatusCode.OK));
+            else
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail((int)HttpStatusCode.BadRequest, dataResult.ErrorMessage));
+        }
+
+        [HttpPost("AddDebitForAgency")]
+        public async Task<IActionResult> AddDebitForAgency([FromBody] DebitForAgencyModel debitForAgencyModel)
+        {
+            var dataResult = await _transferService.AddDebitForAgency(debitForAgencyModel);
+            if (dataResult.IsSuccess)
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Succces((int)HttpStatusCode.OK));
+            else
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail((int)HttpStatusCode.BadRequest, dataResult.ErrorMessage));
+        }
+
+
         [HttpPost("ChangeTransferStatus")]
         public async Task<IActionResult> ChangeTransferStatus([FromBody] TransferChangeModel transferChangeModel)
         {
@@ -55,7 +95,6 @@ namespace Moor.API.Controllers
             else
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Fail((int)HttpStatusCode.BadRequest, dataResult.ErrorMessage));
         }
-
 
         [HttpPost]
         public async Task<IActionResult> Save(TransferPostDto transferPostDto)

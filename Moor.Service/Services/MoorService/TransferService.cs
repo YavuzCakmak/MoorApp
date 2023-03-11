@@ -9,10 +9,14 @@ using Moor.Core.Services.MoorService;
 using Moor.Core.UnitOfWorks;
 using Moor.Model.Dtos.MoorDto.TransferDto.TransferPostDto;
 using Moor.Model.Dtos.MoorDto.TransferDto.TransferViewDto;
+using Moor.Model.Models.MoorModels.AgencyModel.AgencyWalletModel;
+using Moor.Model.Models.MoorModels.AgencyModel.DebitForAgencyModel;
 using Moor.Model.Models.MoorModels.CarParameterModel;
 using Moor.Model.Models.MoorModels.CityModel;
 using Moor.Model.Models.MoorModels.DistrictModel;
 using Moor.Model.Models.MoorModels.DriverModel;
+using Moor.Model.Models.MoorModels.DriverModel.DebitForDriverModel;
+using Moor.Model.Models.MoorModels.DriverModel.DriverWalletModel;
 using Moor.Model.Models.MoorModels.NotificationModel.NotificationPostModel;
 using Moor.Model.Models.MoorModels.TransferModel.TransferChangeModel;
 using Moor.Model.Utilities;
@@ -50,6 +54,8 @@ namespace Moor.Service.Services.MoorService
             _notificationService = notificationService;
         }
 
+
+        #region Transfer
         public async Task<DataResult> ChangeTransferStatus(TransferChangeModel transferChangeModel)
         {
             #region Objects
@@ -209,6 +215,7 @@ namespace Moor.Service.Services.MoorService
 
             return transferViewDto;
         }
+
         public async Task<TransferViewDto> MapTransferViewDto(TransferEntity transferEntity)
         {
             #region Objects
@@ -283,6 +290,103 @@ namespace Moor.Service.Services.MoorService
             }
             return transferViewDtos;
         }
+        #endregion
+
+        #region WalletViewService
+        public async Task<AgencyWalletModel> GetAgencyWallet(long agencyId)
+        {
+            AgencyWalletModel agencyWalletModel = new AgencyWalletModel();
+            var driverTransfer = base.Where(x => x.AgencyId == agencyId).ToList();
+            if (driverTransfer.IsNotNullOrEmpty())
+            {
+                agencyWalletModel.AgencyTotalAmount = (decimal)driverTransfer.Sum(x => x.AgencyAmount);
+            }
+            return agencyWalletModel;
+        }
+
+        public async Task<DriverWalletModel> GetDriverWallet(long driverId)
+        {
+            DriverWalletModel driverWalletModel = new DriverWalletModel();
+            var driverTransfer = base.Where(x => x.DriverId == driverId).ToList();
+            if (driverTransfer.IsNotNullOrEmpty())
+            {
+                driverWalletModel.DriverTotalAmount = (decimal)driverTransfer.Sum(x => x.DriverAmount);
+            }
+            return driverWalletModel;
+        }
+        #endregion
+
+        #region WalletEditService
+        public async Task<DataResult> AddDebitForDriver(DebitForDriverModel debitForDriverModel)
+        {
+            #region Objects
+            DataResult dataResult = new DataResult();
+            #endregion
+            if (debitForDriverModel.TransferId.IsNotNull() && debitForDriverModel.DriverId.IsNotNull() && debitForDriverModel.Amount.IsNotNull())
+            {
+                var transferModel = base.Where(x => x.Id == debitForDriverModel.TransferId && x.DriverId == debitForDriverModel.DriverId).FirstOrDefault();
+                if (transferModel.IsNotNull())
+                {
+                    transferModel.DriverAmount = transferModel.DriverAmount + debitForDriverModel.Amount;
+                    if (transferModel.DriverAmount < 0)
+                    {
+                        dataResult.IsSuccess = false;
+                        dataResult.ErrorMessage = "Hatalı tutar girişi yaptınız.";
+                        return dataResult;
+                    }
+                    else
+                    {
+                        await base.UpdateAsync(transferModel);
+                        dataResult.IsSuccess = true;
+                        return dataResult;
+                    }
+                }
+                else
+                {
+                    dataResult.IsSuccess = false;
+                    dataResult.ErrorMessage = "Transfer bilgisi bulunamadı.";
+                    return dataResult;
+                }
+            }
+            return dataResult;
+        }
+
+        public async Task<DataResult> AddDebitForAgency(DebitForAgencyModel debitForAgencyModel)
+        {
+            #region Objects
+            DataResult dataResult = new DataResult();
+            #endregion
+            if (debitForAgencyModel.TransferId.IsNotNull() && debitForAgencyModel.AgencyId.IsNotNull() && debitForAgencyModel.Amount.IsNotNull())
+            {
+                var transferModel = base.Where(x => x.Id == debitForAgencyModel.TransferId && x.AgencyId == debitForAgencyModel.AgencyId).FirstOrDefault();
+                if (transferModel.IsNotNull())
+                {
+                    transferModel.AgencyAmount = transferModel.AgencyAmount + debitForAgencyModel.Amount;
+                    if (transferModel.AgencyAmount < 0)
+                    {
+                        dataResult.IsSuccess = false;
+                        dataResult.ErrorMessage = "Hatalı tutar girişi yaptınız.";
+                        return dataResult;
+                    }
+                    else
+                    {
+                        await base.UpdateAsync(transferModel);
+                        dataResult.IsSuccess = true;
+                        return dataResult;
+                    }
+                }
+                else
+                {
+                    dataResult.IsSuccess = false;
+                    dataResult.ErrorMessage = "Transfer bilgisi bulunamadı.";
+                    return dataResult;
+                }
+            }
+            return dataResult;
+        }
+        #endregion
+
+
         private LookupObjectModel GetLookup(int transferStatus)
         {
             LookupObjectModel lookupObjectModel = new LookupObjectModel();
@@ -312,5 +416,7 @@ namespace Moor.Service.Services.MoorService
             }
             return lookupObjectModel;
         }
+
+        
     }
 }

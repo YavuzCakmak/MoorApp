@@ -12,6 +12,7 @@ using Moor.Model.Dtos.MoorDto.CarDto;
 using Moor.Model.Dtos.MoorDto.DriverDto;
 using Moor.Model.Models.MoorModels.CarModel;
 using Moor.Model.Models.MoorModels.DriverModel;
+using Moor.Model.Models.MoorModels.DriverModel.DriverWalletModel;
 using Moor.Service.Models.Dto.ResponseDto;
 using System.Net;
 
@@ -37,12 +38,6 @@ namespace Moor.API.Controllers
             var driverEntities = await _driverService.GetAllAsync(dataFilterModel);
             var driverDtos = _mapper.Map<List<DriverDto>>(driverEntities);
             return CreateActionResult(CustomResponseDto<List<DriverDto>>.Succces((int)HttpStatusCode.OK, driverDtos));
-        }
-
-        [HttpGet("GetDriverWallet")]
-        public async Task<IActionResult> GetDriverWallet([FromQuery] long driverId)
-        {
-            return CreateActionResult(CustomResponseDto<DriverDto>.Succces((int)HttpStatusCode.OK));
         }
 
         [ServiceFilter(typeof(NotFoundFilter<DriverEntity>))]

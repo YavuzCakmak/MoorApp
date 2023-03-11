@@ -17,7 +17,7 @@ using System.Net;
 
 namespace Moor.API.Controllers
 {
-    //[HasPermission]
+    [HasPermission]
     public class NotificationsController : CustomBaseController
     {
         private readonly INotificationService _notificationService;

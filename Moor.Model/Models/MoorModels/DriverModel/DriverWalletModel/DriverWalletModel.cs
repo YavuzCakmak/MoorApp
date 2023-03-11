@@ -8,9 +8,7 @@ namespace Moor.Model.Models.MoorModels.DriverModel.DriverWalletModel
 {
     public class DriverWalletModel
     {
-        public long TransferId { get; set; }
-        public long DriverAmount { get; set; }
-        public string AgencyName { get; set; }
+        public decimal DriverTotalAmount { get; set; }
 
     }
 }
