@@ -11,6 +11,7 @@ namespace Moor.Model.Models.MoorModels.NotificationModel
     {
         public long? TransferId { get; set; }
         public long? AgencyId { get; set; }
+        public long? IsRead { get; set; }
         public string? Explanation { get; set; }
     }
 }

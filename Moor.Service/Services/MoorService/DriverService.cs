@@ -19,13 +19,25 @@ namespace Moor.Service.Services.MoorService
     {
         private readonly IPersonnelService _personnelService;
         private readonly IDriverRepository _driverRepository;
+        private readonly ITransferService _transferService;
         private readonly IMapper _mapper;
 
-        public DriverService(IGenericRepository<DriverEntity> repository, IUnitOfWork unitOfWork, IMapper mapper, IDriverRepository driverRepository, IPersonnelService personnelService) : base(repository, unitOfWork)
+        public DriverService(IGenericRepository<DriverEntity> repository, IUnitOfWork unitOfWork, IMapper mapper, IDriverRepository driverRepository, IPersonnelService personnelService, ITransferService transferService) : base(repository, unitOfWork)
         {
             _mapper = mapper;
             _driverRepository = driverRepository;
             _personnelService = personnelService;
+            _transferService = transferService;
+        }
+
+        public async Task<DataResult> GetDriverWallet(long driverId)
+        {
+            DataResult dataResult = new DataResult();
+            var driverTransfer = _transferService.Where(x => x.DriverId == driverId).ToList();
+            if (driverTransfer.IsNotNullOrEmpty())
+            {
+            }
+            return dataResult;
         }
 
         public async Task<DataResult> Save(DriverModel driverModel)

@@ -39,6 +39,11 @@ namespace Moor.API.Controllers
             return CreateActionResult(CustomResponseDto<List<DriverDto>>.Succces((int)HttpStatusCode.OK, driverDtos));
         }
 
+        [HttpGet("GetDriverWallet")]
+        public async Task<IActionResult> GetDriverWallet([FromQuery] long driverId)
+        {
+            return CreateActionResult(CustomResponseDto<DriverDto>.Succces((int)HttpStatusCode.OK));
+        }
 
         [ServiceFilter(typeof(NotFoundFilter<DriverEntity>))]
         [HttpGet("{id}")]

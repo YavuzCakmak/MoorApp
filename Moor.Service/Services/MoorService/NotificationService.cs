@@ -104,13 +104,29 @@ namespace Moor.Service.Services.MoorService
         {
             DataResult dataResult = new DataResult();
             dataResult.IsSuccess = true;
-            var notificationEnties = base.Where(x => x.AgencyId == notificationReadModel.AgencyId && x.IsRead == false && x.IsFirst == false && notificationReadModel.NotificationsIds.Contains(x.Id)).ToList();
-            if (notificationEnties.IsNotNullOrEmpty())
+
+            if (notificationReadModel.IsFirst == true)
             {
-                foreach (var notificationEntity in notificationEnties)
+                var notificationEnties = base.Where(x => notificationReadModel.NotificationsIds.Contains(x.Id)).ToList();
+                if (notificationEnties.IsNotNullOrEmpty())
                 {
-                    notificationEntity.IsRead = true;
-                    await base.UpdateAsync(notificationEntity);
+                    foreach (var notificationEntity in notificationEnties)
+                    {
+                        notificationEntity.IsRead = true;
+                        await base.UpdateAsync(notificationEntity);
+                    }
+                }
+            }
+            else
+            {
+                var notificationEnties = base.Where(x => x.AgencyId == notificationReadModel.AgencyId && x.IsRead == false && x.IsFirst == false && notificationReadModel.NotificationsIds.Contains(x.Id)).ToList();
+                if (notificationEnties.IsNotNullOrEmpty())
+                {
+                    foreach (var notificationEntity in notificationEnties)
+                    {
+                        notificationEntity.IsRead = true;
+                        await base.UpdateAsync(notificationEntity);
+                    }
                 }
             }
             return dataResult;

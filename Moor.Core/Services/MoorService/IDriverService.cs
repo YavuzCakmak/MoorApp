@@ -11,6 +11,7 @@ namespace Moor.Core.Services.MoorService
     public interface IDriverService : IService<DriverEntity>
     {
         public Task<DataResult> Save(DriverModel driverModel);
+        public Task<DataResult> GetDriverWallet(long driverId);
         public Task<DataResult> Update(DriverDto driverDto);
     }
 }
