@@ -18,8 +18,8 @@ namespace Moor.Model.Dtos.MoorDto.TransferDto.TransferViewDto
         public string CarParameterBrand { get; set; }
         public string CarParameterModel { get; set; }
         public string Explanation { get; set; }
-        public int ReceptionType { get; set; }
-        public int DirectionType { get; set; }
+        public int? ReceptionType { get; set; }
+        public int? DirectionType { get; set; }
         public LookupObjectModel Status { get; set; }
         public DateTime? DepartureDate { get; set; }
         public DateTime? ReturnDate { get; set; }

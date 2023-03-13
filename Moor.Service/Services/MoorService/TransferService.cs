@@ -266,7 +266,7 @@ namespace Moor.Service.Services.MoorService
 
                 if (transferEntity.DriverId.IsNotNull())
                 {
-                    var driverModel = _driverService.GetByIdAsync((long)transferEntity.DriverId).Result;
+                    var driverModel = _driverService.Where(x => x.Id == transferEntity.DriverId).FirstOrDefault();
                     transferViewDto.DriverName = $"{driverModel.Personnel.FirstName} {driverModel.Personnel.LastName} ";
                 }
 
@@ -422,6 +422,6 @@ namespace Moor.Service.Services.MoorService
             return lookupObjectModel;
         }
 
-        
+
     }
 }
