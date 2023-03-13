@@ -10,6 +10,7 @@ namespace Moor.Model.Models.MoorModels.TransferModel.TransferGetByIdModel
 {
     public class TransferGetByIdModel
     {
+        public long Id { get; set; }
         public string DistrictName { get; set; }
         public string Location { get; set; }
         public string FlightCode { get; set; }

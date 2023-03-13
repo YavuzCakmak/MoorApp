@@ -238,6 +238,7 @@ namespace Moor.Service.Services.MoorService
                 transferViewDto.DriverName = $"{driverModel.Personnel.FirstName} {driverModel.Personnel.LastName} ";
             }
 
+            transferViewDto.Id = transferEntity.Id;
             transferViewDto.CreatedDate = transferEntity.CreatedDate;
             transferViewDto.DistrictName = districtModel.Name;
             transferViewDto.Location = transferEntity.Location;
@@ -277,6 +278,7 @@ namespace Moor.Service.Services.MoorService
                 var countyName = _countyService.GetByIdAsync((long)transferEntity.CountyId).Result;
                 var carParameterModel = _carParameterService.Where(x => x.Id == transferEntity.CarParameterId).FirstOrDefault();
 
+                transferViewDto.Id = transferEntity.Id;
                 transferViewDto.CreatedDate = transferEntity.CreatedDate;
                 transferViewDto.DistrictName = districtModel.Name;
                 transferViewDto.Location = transferEntity.Location;
@@ -437,11 +439,11 @@ namespace Moor.Service.Services.MoorService
             transferGetByIdModel.CreatedDate = transferEntity.CreatedDate;
             if (transferEntity.DriverId.IsNotNull())
             {
-                var driverModel = _driverService.Where(x=> x.Id == (long)transferEntity.DriverId).FirstOrDefault();
+                var driverModel = _driverService.Where(x => x.Id == (long)transferEntity.DriverId).FirstOrDefault();
                 transferGetByIdModel.DriverName = $"{driverModel.Personnel.FirstName} {driverModel.Personnel.LastName} ";
             }
             transferGetByIdModel.Price = (decimal)transferEntity.Amount;
-
+            transferGetByIdModel.Id = transferEntity.Id;
             var carParameterModel = _carParameterService.Where(x => x.Id == transferEntity.CarParameterId).FirstOrDefault();
             transferGetByIdModel.CarBrand = carParameterModel.CarBrand.Brand;
             transferGetByIdModel.CarModel = carParameterModel.CarModel.Model;
