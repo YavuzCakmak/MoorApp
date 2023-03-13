@@ -236,6 +236,7 @@ namespace Moor.Service.Services.MoorService
                 transferViewDto.DriverName = $"{driverModel.Personnel.FirstName} {driverModel.Personnel.LastName} ";
             }
 
+            transferViewDto.CreatedDate = transferEntity.CreatedDate;
             transferViewDto.DistrictName = districtModel.Name;
             transferViewDto.Location = transferEntity.Location;
             transferViewDto.FlightCode = transferEntity.FlightCode;
@@ -274,6 +275,7 @@ namespace Moor.Service.Services.MoorService
                 var countyName = _countyService.GetByIdAsync((long)transferEntity.CountyId).Result;
                 var carParameterModel = _carParameterService.Where(x => x.Id == transferEntity.CarParameterId).FirstOrDefault();
 
+                transferViewDto.CreatedDate = transferEntity.CreatedDate;
                 transferViewDto.DistrictName = districtModel.Name;
                 transferViewDto.Location = transferEntity.Location;
                 transferViewDto.FlightCode = transferEntity.FlightCode;
