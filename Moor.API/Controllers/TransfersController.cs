@@ -15,6 +15,7 @@ using Moor.Model.Models.MoorModels.DriverModel.DebitForDriverModel;
 using Moor.Model.Models.MoorModels.DriverModel.DriverWalletModel;
 using Moor.Model.Models.MoorModels.TransferModel;
 using Moor.Model.Models.MoorModels.TransferModel.TransferChangeModel;
+using Moor.Model.Models.MoorModels.TransferModel.TransferGetByIdModel;
 using Moor.Model.Utilities;
 using Moor.Service.Models.Dto.ResponseDto;
 using Moor.Service.Services.MoorService;
@@ -22,7 +23,7 @@ using System.Net;
 
 namespace Moor.API.Controllers
 {
-    //[HasPermission]
+    [HasPermission]
     public class TransfersController : CustomBaseController
     {
         private readonly ITransferService _transferService;
@@ -49,6 +50,13 @@ namespace Moor.API.Controllers
             var transferEntity = await _transferService.GetByIdAsync(id);
             var transferViewModel = await _transferService.MapTransferViewDto(transferEntity);
             return CreateActionResult(CustomResponseDto<TransferViewDto>.Succces((int)HttpStatusCode.OK, transferViewModel));
+        }
+
+        [HttpGet("GetTransferDetail")]
+        public async Task<IActionResult> GetTransferDetail([FromQuery] long transferId)
+        {
+            var transferGetByIdModel = _transferService.GetTransferDetail(transferId).Result;
+            return CreateActionResult(CustomResponseDto<TransferGetByIdModel>.Succces((int)HttpStatusCode.OK, transferGetByIdModel));
         }
 
         [HttpGet("GetDriverWallet")]

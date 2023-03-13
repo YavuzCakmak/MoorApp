@@ -7,6 +7,7 @@ using Moor.Model.Models.MoorModels.AgencyModel.DebitForAgencyModel;
 using Moor.Model.Models.MoorModels.DriverModel.DebitForDriverModel;
 using Moor.Model.Models.MoorModels.DriverModel.DriverWalletModel;
 using Moor.Model.Models.MoorModels.TransferModel.TransferChangeModel;
+using Moor.Model.Models.MoorModels.TransferModel.TransferGetByIdModel;
 using Moor.Model.Utilities;
 
 namespace Moor.Core.Services.MoorService
@@ -14,6 +15,7 @@ namespace Moor.Core.Services.MoorService
     public interface ITransferService : IService<TransferEntity>
     {
         public Task<DriverWalletModel> GetDriverWallet(long driverId);
+        public Task<TransferGetByIdModel> GetTransferDetail(long transferId);
         public Task<DataResult> AddDebitForDriver(DebitForDriverModel debitForDriverModel);
         public Task<DataResult> AddDebitForAgency(DebitForAgencyModel debitForAgencyModel);
         public Task<AgencyWalletModel> GetAgencyWallet(long agencyId);

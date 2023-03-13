@@ -7,6 +7,7 @@ using Moor.Core.Repositories;
 using Moor.Core.Repositories.MoorRepository;
 using Moor.Core.Services.MoorService;
 using Moor.Core.UnitOfWorks;
+using Moor.Model.Dtos.MoorDto;
 using Moor.Model.Dtos.MoorDto.TransferDto.TransferPostDto;
 using Moor.Model.Dtos.MoorDto.TransferDto.TransferViewDto;
 using Moor.Model.Models.MoorModels.AgencyModel.AgencyWalletModel;
@@ -19,6 +20,7 @@ using Moor.Model.Models.MoorModels.DriverModel.DebitForDriverModel;
 using Moor.Model.Models.MoorModels.DriverModel.DriverWalletModel;
 using Moor.Model.Models.MoorModels.NotificationModel.NotificationPostModel;
 using Moor.Model.Models.MoorModels.TransferModel.TransferChangeModel;
+using Moor.Model.Models.MoorModels.TransferModel.TransferGetByIdModel;
 using Moor.Model.Utilities;
 using Moor.Service.Services.BaseService;
 using Org.BouncyCastle.Math.EC.Rfc7748;
@@ -232,7 +234,7 @@ namespace Moor.Service.Services.MoorService
 
             if (transferEntity.DriverId.IsNotNull())
             {
-                var driverModel = _driverService.GetByIdAsync((long)transferEntity.DriverId).Result;
+                var driverModel = _driverService.Where(x => x.Id == transferEntity.DriverId).FirstOrDefault();
                 transferViewDto.DriverName = $"{driverModel.Personnel.FirstName} {driverModel.Personnel.LastName} ";
             }
 
@@ -391,7 +393,6 @@ namespace Moor.Service.Services.MoorService
         }
         #endregion
 
-
         private LookupObjectModel GetLookup(int transferStatus)
         {
             LookupObjectModel lookupObjectModel = new LookupObjectModel();
@@ -422,6 +423,36 @@ namespace Moor.Service.Services.MoorService
             return lookupObjectModel;
         }
 
+        public async Task<TransferGetByIdModel> GetTransferDetail(long transferId)
+        {
+            #region Object
+            TransferGetByIdModel transferGetByIdModel = new TransferGetByIdModel();
+            #endregion
+            var transferEntity = base.Where(x => x.Id == transferId).FirstOrDefault();
+            var districtModel = _districtService.GetByIdAsync((long)transferEntity.DisctrictId).Result;
 
+            transferGetByIdModel.DistrictName = districtModel.Name;
+            transferGetByIdModel.Location = transferEntity.Location;
+            transferGetByIdModel.Status = GetLookup(transferEntity.Status);
+            transferGetByIdModel.CreatedDate = transferEntity.CreatedDate;
+            if (transferEntity.DriverId.IsNotNull())
+            {
+                var driverModel = _driverService.Where(x=> x.Id == (long)transferEntity.DriverId).FirstOrDefault();
+                transferGetByIdModel.DriverName = $"{driverModel.Personnel.FirstName} {driverModel.Personnel.LastName} ";
+            }
+            transferGetByIdModel.Price = (decimal)transferEntity.Amount;
+
+            var carParameterModel = _carParameterService.Where(x => x.Id == transferEntity.CarParameterId).FirstOrDefault();
+            transferGetByIdModel.CarBrand = carParameterModel.CarBrand.Brand;
+            transferGetByIdModel.CarModel = carParameterModel.CarModel.Model;
+
+            var travellers = _travellerService.Where(x => x.TransferId == transferEntity.Id).ToList();
+            var travellersDto = _mapper.Map<List<TravellerDto>>(travellers);
+            foreach (var travellerEntity in travellersDto)
+            {
+                transferGetByIdModel.Traveller.Add(travellerEntity);
+            }
+            return transferGetByIdModel;
+        }
     }
 }
