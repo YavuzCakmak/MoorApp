@@ -99,8 +99,16 @@ namespace Moor.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Save(TransferPostDto transferPostDto)
         {
-            var transferViewDto = await _transferService.CreateTransfer(transferPostDto);
-            return CreateActionResult(CustomResponseDto<TransferViewDto>.Succces((int)HttpStatusCode.OK, transferViewDto));
+            var dataResult = await _transferService.CreateTransfer(transferPostDto);
+            if (dataResult.IsSuccess)
+            {
+                var transferEntity = _transferService.Where(x => x.Id == dataResult.PkId).FirstOrDefault();
+                var transferViewDto = await _transferService.MapTransferViewDto(transferEntity);
+                return CreateActionResult(CustomResponseDto<TransferViewDto>.Succces((int)HttpStatusCode.OK, transferViewDto));
+            }
+            else
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail((int)HttpStatusCode.BadRequest, dataResult.ErrorMessage));
+
         }
 
         [HttpPut]

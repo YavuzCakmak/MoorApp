@@ -17,7 +17,7 @@ namespace Moor.Core.Services.MoorService
         public Task<DataResult> AddDebitForDriver(DebitForDriverModel debitForDriverModel);
         public Task<DataResult> AddDebitForAgency(DebitForAgencyModel debitForAgencyModel);
         public Task<AgencyWalletModel> GetAgencyWallet(long agencyId);
-        public Task<TransferViewDto> CreateTransfer(TransferPostDto transferPostDto);
+        public Task<DataResult> CreateTransfer(TransferPostDto transferPostDto);
         public Task<DataResult> ChangeTransferStatus(TransferChangeModel transferChangeModel);
         public Task<List<TransferViewDto>> MapTransferViewDtos(List<TransferEntity> transferEntities);
         public Task<TransferViewDto> MapTransferViewDto(TransferEntity transferEntity);

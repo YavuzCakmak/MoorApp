@@ -139,31 +139,32 @@ namespace Moor.Service.Services.MoorService
             }
             return dataResult;
         }
-        public async Task<TransferViewDto> CreateTransfer(TransferPostDto transferPostDto)
+        public async Task<DataResult> CreateTransfer(TransferPostDto transferPostDto)
         {
             #region Objects
             TransferViewDto transferViewDto = new TransferViewDto();
+            DataResult dataResult = new DataResult();
             #endregion
 
             var agencyModel = await _agencyService.GetByIdAsync(transferPostDto.AgencyId);
             if (agencyModel.IsNull())
             {
-                transferViewDto.IsSucces = false;
-                transferViewDto.ErrorMessage = "Acente Bulunamadı.";
-                return transferViewDto;
+                dataResult.IsSuccess = false;
+                dataResult.ErrorMessage = "Acente Bulunamadı.";
+                return dataResult;
             }
             if (transferPostDto.TravellerDtos.IsNullOrEmpty())
             {
-                transferViewDto.IsSucces = false;
-                transferViewDto.ErrorMessage = "Yolcu Kayıt Etmek Zorunludur.";
-                return transferViewDto;
+                dataResult.IsSuccess = false;
+                dataResult.ErrorMessage = "Yolcu Kayıt Etmek Zorunludur.";
+                return dataResult;
             }
             var priceModel = _priceService.Where(x => x.CarParameterId == transferPostDto.CarParameterId && x.DistrictId == transferPostDto.DisctrictId).FirstOrDefault();
             if (priceModel.IsNull())
             {
-                transferViewDto.IsSucces = false;
-                transferViewDto.ErrorMessage = "Bölge ve Modele göre fiyatlandırma mevcut değildir.";
-                return transferViewDto;
+                dataResult.IsSuccess = false;
+                dataResult.ErrorMessage = "Bölge ve Modele göre fiyatlandırma mevcut değildir.";
+                return dataResult;
             }
 
             // Sadece havalimanından girilince karşılama ücreti olucak ve transfere yansıyacak 
@@ -174,9 +175,9 @@ namespace Moor.Service.Services.MoorService
             var transferAddResult = await base.AddAsync(transferEntity);
             if (transferAddResult.Id.IsNull())
             {
-                transferViewDto.IsSucces = false;
-                transferViewDto.ErrorMessage = "Transfer Kayıt Edilirken Hata Oluştu.";
-                return transferViewDto;
+                dataResult.IsSuccess = false;
+                dataResult.ErrorMessage = "Transfer Kayıt Edilirken Hata Oluştu.";
+                return dataResult;
             }
             foreach (var travellerDto in transferPostDto.TravellerDtos)
             {
@@ -203,6 +204,8 @@ namespace Moor.Service.Services.MoorService
             transferViewDto.DepartureDate = transferPostDto.DepartureDate;
             transferViewDto.Price = (decimal)transferPostDto.Amount;
             transferViewDto.IsSucces = true;
+            dataResult.IsSuccess = true;
+            dataResult.PkId = transferAddResult.Id;
 
             #region Notification
             NotificationPostModel notificationPostModel = new NotificationPostModel();
@@ -210,10 +213,10 @@ namespace Moor.Service.Services.MoorService
             notificationPostModel.TransferId = transferAddResult.Id;
             notificationPostModel.AgencyName = agencyModel.Name;
             notificationPostModel.IsFirst = true;
-            _notificationService.CreateNotification(notificationPostModel);
+            await _notificationService.CreateNotification(notificationPostModel);
             #endregion
 
-            return transferViewDto;
+            return dataResult;
         }
 
         public async Task<TransferViewDto> MapTransferViewDto(TransferEntity transferEntity)
