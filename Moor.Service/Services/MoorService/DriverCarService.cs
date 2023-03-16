@@ -9,6 +9,9 @@ using Moor.Model.Utilities;
 using Moor.Model.Models.MoorModels.DriverCarModel;
 using Moor.Core.Extension.String;
 using Moor.Core.Enums;
+using Moor.Core.Entities.MoorEntities.AuthorizeEntities;
+using Moor.Model.Models.MoorModels.DriverModel;
+using Moor.Service.Utilities.AuthorizeHelpers;
 
 namespace Moor.Service.Services.MoorService
 {
@@ -16,54 +19,107 @@ namespace Moor.Service.Services.MoorService
     {
         private readonly ICarService _carService;
         private readonly IDriverService _driverService;
+        private readonly IPersonnelService _personnelService;
+        private readonly IPersonnelRoleService _personnelRoleService;
         private readonly IDriverCarRepository _driverCarRepository;
         private readonly IMapper _mapper;
 
-        public DriverCarService(IGenericRepository<DriverCarEntity> repository, IUnitOfWork unitOfWork, IMapper mapper, IDriverCarRepository driverCarRepository, ICarService carService, IDriverService driverService) : base(repository, unitOfWork)
+        public DriverCarService(IGenericRepository<DriverCarEntity> repository, IUnitOfWork unitOfWork, IMapper mapper, IDriverCarRepository driverCarRepository, ICarService carService, IDriverService driverService, IPersonnelService personnelService, IPersonnelRoleService personnelRoleService) : base(repository, unitOfWork)
         {
             _mapper = mapper;
             _driverCarRepository = driverCarRepository;
             _carService = carService;
             _driverService = driverService;
+            _personnelService = personnelService;
+            _personnelRoleService = personnelRoleService;
         }
 
-        public async Task<DataResult> Save(DriverCarModel driverCarModel)
+        public async Task<DataResult> Save(DriverModel driverModel)
         {
             #region
             DataResult dataResult = new DataResult();
+            DriverEntity driverEntity = new DriverEntity();
             DriverCarEntity driverCarEntity = new DriverCarEntity();
+            CarEntity carEntity = new CarEntity();
             #endregion
 
-            var carModel = await _carService.GetByIdAsync(driverCarModel.CarId);
-            if (driverCarModel.IsNotNull())
+            #region DriverPersonnel
+            var hashedPassword = HashingHelper.CreatePasswordHash(driverModel.PersonnelModel.Password);
+            var personnelEntity = _personnelService.AddAsync(new PersonnelEntity
             {
-                var driverModel = await _driverService.GetByIdAsync(driverCarModel.DriverId);
-                if (driverModel.IsNotNull())
+                Email = driverModel.PersonnelModel.Email,
+                FirstName = driverModel.PersonnelModel.FirstName,
+                Password = hashedPassword,
+                UserName = driverModel.PersonnelModel.UserName,
+                Status = ((int)Status.AKTIF),
+                LastName = driverModel.PersonnelModel.LastName,
+            });
+            #endregion
+
+            if (personnelEntity.Result.IsNotNull() && personnelEntity.Result.Id.IsNotNull())
+            {
+                PersonnelRoleEntity personnelRoleEntity = new PersonnelRoleEntity();
+                personnelRoleEntity.IsDeleted = false;
+                personnelRoleEntity.RoleId = 88;
+                personnelRoleEntity.PersonnelId = personnelEntity.Result.Id;
+                var personnelRole = await _personnelRoleService.AddAsync(personnelRoleEntity);
+            }
+            else
+            {
+                return new DataResult
                 {
-                    driverCarEntity.Status = Convert.ToInt32(Status.AKTIF);
-                    driverCarEntity.IsDeleted = false;
-                    driverCarEntity.DriverId = driverCarModel.DriverId;
-                    driverCarEntity.CarId = driverCarModel.CarId;
-                    var driverCarResult = await base.AddAsync(driverCarEntity);
-                    if (driverCarResult.IsNotNull() && driverCarResult.Id.IsNotNull())
+                    IsSuccess = false,
+                    ErrorMessage = "Kullanıcı Kaydı sırasında hata oluştu."
+                };
+            }
+
+            carEntity.CarParameterId = driverModel.CarParameterId;
+            carEntity.NumberPlate = driverModel.Plate;
+            carEntity.Status = ((int)Status.AKTIF);
+            carEntity.CreatedDate = DateTime.Now;
+            carEntity.IsDeleted = false;
+
+            var carEntityResult = await _carService.AddAsync(carEntity);
+            if (carEntityResult.Id.IsNotNull())
+            {
+                driverEntity.Status = ((int)Status.AKTIF);
+                driverEntity.CreatedDate = DateTime.Now;
+                driverEntity.IsDeleted = false;
+                driverEntity.PersonnelId = personnelEntity.Result.Id;
+                driverEntity.Price = driverModel.Price;
+                var driverEntityResult = await _driverService.AddAsync(driverEntity);
+                if (driverEntityResult.Id.IsNotNull())
+                {
+                    driverCarEntity.Status = ((int)Status.AKTIF);
+                    driverCarEntity.CreatedDate = DateTime.Now;
+                    driverCarEntity.DriverId = driverEntityResult.Id;
+                    driverCarEntity.CarId = carEntityResult.Id;
+                    var driverCarEntityResult = await base.AddAsync(driverCarEntity);
+                    if (driverCarEntityResult.IsNotNull() && driverCarEntityResult.Id.IsNotNull())
                     {
-                        dataResult.PkId = driverCarResult.Id;
-                        dataResult.IsSuccess = true;
-                        return dataResult;
+                        return new DataResult
+                        {
+                            IsSuccess = true,
+                            PkId = driverEntityResult.Id
+                        };
                     }
                 }
                 else
                 {
-                    dataResult.IsSuccess = false;
-                    dataResult.ErrorMessage = "Araç bilgisi Bulunamadı.";
-                    return dataResult;
+                    return new DataResult
+                    {
+                        IsSuccess = false,
+                        ErrorMessage = "Şoför Kaydı sırasında hata oluştu."
+                    };
                 }
             }
             else
             {
-                dataResult.IsSuccess = false;
-                dataResult.ErrorMessage = "Araç bilgisi Bulunamadı.";
-                return dataResult;
+                return new DataResult
+                {
+                    IsSuccess = false,
+                    ErrorMessage = "Araç oluşturulurken hata oluştu."
+                };
             }
             return dataResult;
         }

@@ -5,7 +5,12 @@ namespace Moor.Model.Models.MoorModels.DriverModel
 {
     public class DriverModel : BaseModel
     {
-        public long PersonnelId { get; set; }
+        #region CarObject
+        public long CarParameterId { get; set; }
+        public string Plate { get; set; }
+        #endregion
+        
+        public PersonnelModel PersonnelModel{ get; set; }
         public decimal Price { get; set; }
     }
 }

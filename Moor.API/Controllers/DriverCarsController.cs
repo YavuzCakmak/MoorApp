@@ -10,7 +10,9 @@ using Moor.Core.Utilities;
 using Moor.Core.Utilities.DataFilter;
 using Moor.Model.Dtos.MoorDto;
 using Moor.Model.Dtos.MoorDto.CarBrandDto;
+using Moor.Model.Dtos.MoorDto.DriverDto;
 using Moor.Model.Models.MoorModels.DriverCarModel;
+using Moor.Model.Models.MoorModels.DriverModel;
 using Moor.Service.Models.Dto.ResponseDto;
 using Moor.Service.Services.MoorService;
 using System.Net;
@@ -21,12 +23,14 @@ namespace Moor.API.Controllers
     public class DriverCarsController : CustomBaseController
     {
         private readonly IDriverCarService _driverCarService;
+        private readonly IDriverService _driverService;
         private readonly IMapper _mapper;
 
-        public DriverCarsController(IDriverCarService driverCarService, IMapper mapper)
+        public DriverCarsController(IDriverCarService driverCarService, IMapper mapper, IDriverService driverService)
         {
             _driverCarService = driverCarService;
             _mapper = mapper;
+            _driverService = driverService;
         }
 
         [HttpGet]
@@ -46,22 +50,17 @@ namespace Moor.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save(DriverCarModel driverCarModel)
+        public async Task<IActionResult> Save(DriverModel driverModel)
         {
-            var dataResult = await _driverCarService.Save(driverCarModel);
+            var dataResult = await _driverCarService.Save(driverModel);
             if (dataResult.IsSuccess)
             {
-                var driverCarEntity = _driverCarService.Where(x=> x.Id == dataResult.PkId).FirstOrDefault();
-                var driverCarDto = _mapper.Map<DriverCarDto>(driverCarEntity);
-                return CreateActionResult(CustomResponseDto<DriverCarDto>.Succces((int)HttpStatusCode.OK, _mapper.Map<DriverCarDto>(driverCarDto)));
+                var driverEntity = _driverService.Where(x => x.Id == dataResult.PkId).FirstOrDefault();
+                var driverDto = _mapper.Map<DriverDto>(driverEntity);
+                return CreateActionResult(CustomResponseDto<DriverDto>.Succces((int)HttpStatusCode.OK, driverDto));
             }
             else
-            {
-                if (dataResult.ErrorMessage.IsNotNullOrEmpty())
-                    return CreateActionResult(CustomResponseDto<NoContentDto>.Fail((int)HttpStatusCode.BadRequest, dataResult.ErrorMessage));
-                else
-                    return CreateActionResult(CustomResponseDto<NoContentDto>.Fail((int)HttpStatusCode.BadRequest));
-            }
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail((int)HttpStatusCode.BadRequest, dataResult.ErrorMessages));
         }
 
         [HttpDelete("{id}")]
