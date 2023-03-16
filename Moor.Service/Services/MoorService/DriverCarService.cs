@@ -49,6 +49,7 @@ namespace Moor.Service.Services.MoorService
             {
                 Email = driverModel.PersonnelModel.Email,
                 FirstName = driverModel.PersonnelModel.FirstName,
+                MediaPath = string.Empty,
                 Password = hashedPassword,
                 UserName = driverModel.PersonnelModel.UserName,
                 Status = ((int)Status.AKTIF),
