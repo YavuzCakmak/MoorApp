@@ -29,6 +29,7 @@ namespace Moor.Repository.Repositories
                 applyPagination: false);
 
             _httpContextAccessor.HttpContext.Response.Headers.Add("X-Total-Count", data.Count().ToString());
+            _httpContextAccessor.HttpContext.Response.Headers.Add("access-control-expose-headers", "X-Total-Count");
 
             return _sieveProcessor.Apply<CarBrandEntity>(dataFilterModel, data);
         }

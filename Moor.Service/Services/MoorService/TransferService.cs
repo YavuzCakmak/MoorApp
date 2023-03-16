@@ -279,6 +279,7 @@ namespace Moor.Service.Services.MoorService
                 var carParameterModel = _carParameterService.Where(x => x.Id == transferEntity.CarParameterId).FirstOrDefault();
 
                 transferViewDto.Id = transferEntity.Id;
+                transferViewDto.AgencyName = transferEntity.Agency.Name;
                 transferViewDto.CreatedDate = transferEntity.CreatedDate;
                 transferViewDto.DistrictName = districtModel.Name;
                 transferViewDto.Location = transferEntity.Location;

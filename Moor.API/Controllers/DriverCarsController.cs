@@ -64,14 +64,6 @@ namespace Moor.API.Controllers
             }
         }
 
-        //        [HttpPut]
-        //        public async Task<IActionResult> Update(CarBrandDto carBrandDto)
-        //        {
-        //            await _carBrandService.UpdateAsync(_mapper.Map<CarBrandEntity>(carBrandDto));
-        //            var carBrandEntity = await _carBrandService.GetByIdAsync((long)carBrandDto.Id);
-        //            return CreateActionResult(CustomResponseDto<CarBrandDto>.Succces((int)HttpStatusCode.OK, _mapper.Map<CarBrandDto>(carBrandEntity)));
-        //        }
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> Remove(long id)
         {

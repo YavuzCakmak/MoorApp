@@ -10,6 +10,7 @@ namespace Moor.Model.Dtos.MoorDto.TransferDto.TransferViewDto
     public class TransferViewDto : BaseDto.BaseDto
     {
         public long Id { get; set; }
+        public string AgencyName { get; set; }
         public string? DriverName { get; set; }
         public string DistrictName { get; set; }
         public string CityName { get; set; }
