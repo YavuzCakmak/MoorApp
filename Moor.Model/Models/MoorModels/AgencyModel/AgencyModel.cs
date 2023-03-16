@@ -13,10 +13,12 @@ namespace Moor.Model.Models.MoorModels.AgencyModel
         public string OperationPhoneNumber { get; set; }
         public string MediaPath { get; set; }
         public string Email { get; set; }
+        public string AgencyEmail { get; set; }
         public string Details { get; set; }
         public decimal ReceptionPrice { get; set; }
         public long PersonnelId { get; set; }
-        public long CityId { get; set; }
-        public long CountyId { get; set; }
+        public long? CityId { get; set; }
+        public PersonnelModel PersonnelModel { get; set; } = new PersonnelModel();
+        public long? CountyId { get; set; }
     }
 }
