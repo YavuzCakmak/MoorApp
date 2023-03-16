@@ -45,6 +45,7 @@ namespace Moor.Service.Services.MoorService
                 Email = agencyModel.PersonnelModel.Email,
                 FirstName = agencyModel.PersonnelModel.FirstName,
                 Password = hashedPassword,
+                MediaPath = agencyModel.PersonnelModel.MediaPath,
                 UserName = agencyModel.PersonnelModel.UserName,
                 Status = ((int)Status.AKTIF),
                 LastName = agencyModel.PersonnelModel.LastName,
@@ -69,16 +70,16 @@ namespace Moor.Service.Services.MoorService
             }
             agency.PersonnelId = personnelEntity.Result.Id;
             agency.Status = ((int)Status.AKTIF);
-            agency.Details = agencyModel.Details;
+            agency.Details = agencyModel.AgencyDetails;
             agency.CityId = agencyModel.CityId;
             agency.CountyId = agencyModel.CountyId;
             agency.CreatedDate = DateTime.Now;
             agency.Email = agencyModel.AgencyEmail;
-            agency.Name = agencyModel.Name;
-            agency.MediaPath = string.Empty;
+            agency.Name = agencyModel.AgencyName;
+            agency.MediaPath = agencyModel.AgencyMediaPath;
             agency.OperationPhoneNumber = agencyModel.OperationPhoneNumber;
-            agency.PhoneNumber = agencyModel.PhoneNumber;
-            agency.ReceptionPrice = agencyModel.ReceptionPrice;
+            agency.PhoneNumber = agencyModel.AgencyPhoneNumber;
+            agency.ReceptionPrice = (decimal)agencyModel.ReceptionPrice;
             agency.TaxNumber = agencyModel.TaxNumber;
             agency.TaxOffice = agencyModel.TaxOffice;
             agency.Title = agencyModel.Title;
