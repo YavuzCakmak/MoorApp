@@ -12,7 +12,6 @@ namespace Moor.Model.Models.MoorModels.AgencyModel
         public string PhoneNumber { get; set; }
         public string OperationPhoneNumber { get; set; }
         public string MediaPath { get; set; }
-        public string Email { get; set; }
         public string AgencyEmail { get; set; }
         public string Details { get; set; }
         public decimal ReceptionPrice { get; set; }
