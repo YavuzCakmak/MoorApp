@@ -424,6 +424,12 @@ namespace Moor.Service.Services.MoorService
                 lookupObjectModel.Ordinal = Convert.ToInt32(TransferStatus.TAMAMLANDI);
                 return lookupObjectModel;
             }
+            if (transferStatus == 4)
+            {
+                lookupObjectModel.Text = "YOLCU GELMEDI";
+                lookupObjectModel.Ordinal = Convert.ToInt32(TransferStatus.YOLCU_GELMEDI);
+                return lookupObjectModel;
+            }
             return lookupObjectModel;
         }
 

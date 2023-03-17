@@ -27,9 +27,10 @@ namespace Moor.Core.Enums
 
     public enum TransferStatus
     {
-        BEKLEMEDE = 0,                                      
+        BEKLEMEDE = 0,                                                                            
         IPTAL = 1,
         NON_SHOW = 2,
         TAMAMLANDI = 3,
+        YOLCU_GELMEDI = 4
     }
 }
