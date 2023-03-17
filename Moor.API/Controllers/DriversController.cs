@@ -53,21 +53,6 @@ namespace Moor.API.Controllers
             return CreateActionResult(CustomResponseDto<DriverDto>.Succces((int)HttpStatusCode.OK, _mapper.Map<DriverDto>(driverEntity)));
         }
 
-        //[HttpPost]
-        //[ValidateFilter]
-        //public async Task<IActionResult> Save(DriverModel driverModel)
-        //{
-        //    //var dataResult = await _driverService.Save(driverModel);
-        //    //if (dataResult.IsSuccess)
-        //    //{
-        //    //    var driverEntity = _driverService.Where(x => x.Id == dataResult.PkId).FirstOrDefault();
-        //    //    var driverDto = _mapper.Map<DriverDto>(driverEntity);
-        //    //    return CreateActionResult(CustomResponseDto<DriverDto>.Succces((int)HttpStatusCode.OK, driverDto));
-        //    //}
-        //    //else
-        //    //    return CreateActionResult(CustomResponseDto<NoContentDto>.Fail((int)HttpStatusCode.BadRequest, dataResult.ErrorMessages));
-        //}
-
         [HttpPut]
         public async Task<IActionResult> Update(DriverDto driverDto)
         {

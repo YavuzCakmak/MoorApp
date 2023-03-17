@@ -25,7 +25,9 @@ namespace Moor.Model.Dtos.MoorDto.TransferDto.TransferViewDto
         public LookupObjectModel Status { get; set; }
         public DateTime? DepartureDate { get; set; }
         public DateTime? ReturnDate { get; set; }
-        public decimal Price { get; set; }
+        public decimal? Price { get; set; }
+        public decimal? AgencyAmount { get; set; }
+        public decimal? DriverAmount { get; set; }
         public DateTime? CreatedDate { get; set; }
     }
     public class LookupObjectModel

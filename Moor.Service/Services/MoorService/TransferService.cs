@@ -237,6 +237,7 @@ namespace Moor.Service.Services.MoorService
             {
                 var driverModel = _driverService.Where(x => x.Id == transferEntity.DriverId).FirstOrDefault();
                 transferViewDto.DriverName = $"{driverModel.Personnel.FirstName} {driverModel.Personnel.LastName} ";
+                transferViewDto.DriverAmount = driverModel.Price;
             }
 
             transferViewDto.Id = transferEntity.Id;
@@ -254,6 +255,7 @@ namespace Moor.Service.Services.MoorService
             transferViewDto.ReturnDate = transferEntity.ReturnDate;
             transferViewDto.DepartureDate = transferEntity.DepartureDate;
             transferViewDto.Price = (decimal)transferEntity.Amount;
+            transferViewDto.AgencyAmount = (decimal)transferEntity.AgencyAmount;
             transferViewDto.Status = GetLookup(transferEntity.Status);
             transferViewDto.IsSucces = true;
             return transferViewDto;
@@ -272,6 +274,7 @@ namespace Moor.Service.Services.MoorService
                 {
                     var driverModel = _driverService.Where(x => x.Id == transferEntity.DriverId).FirstOrDefault();
                     transferViewDto.DriverName = $"{driverModel.Personnel.FirstName} {driverModel.Personnel.LastName} ";
+                    transferViewDto.DriverAmount = driverModel.Price;
                 }
 
                 var districtModel = _districtService.GetByIdAsync((long)transferEntity.DisctrictId).Result;
@@ -297,6 +300,7 @@ namespace Moor.Service.Services.MoorService
                 transferViewDto.DepartureDate = transferEntity.DepartureDate;
                 transferViewDto.Price = (decimal)transferEntity.Amount;
                 transferViewDto.IsSucces = true;
+                transferViewDto.AgencyAmount = (decimal)transferEntity.AgencyAmount;
                 transferViewDtos.Add(transferViewDto);
             }
             return transferViewDtos;

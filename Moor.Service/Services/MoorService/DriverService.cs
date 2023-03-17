@@ -31,18 +31,6 @@ namespace Moor.Service.Services.MoorService
         public async Task<DataResult> Update(DriverDto driverDto)
         {
             DataResult dataResult = new DataResult();
-            // TO-DO YAPILACAK
-            //var personnelEntity = _personnelService.Where(x => x.Id == driverDto.PersonnelId).FirstOrDefault();
-            //if (personnelEntity != null)
-            //{
-            //    personnelEntity.UpdateDate = DateTime.Now;
-            //    personnelEntity.Status = Convert.ToInt32(Status.AKTIF);
-            //    personnelEntity.Email = driverDto.Email;
-            //    personnelEntity.FirstName = driverDto.FirstName;
-            //    personnelEntity.LastName = driverDto.LastName;
-            //    personnelEntity.Password = HashingHelper.CreatePasswordHash(driverDto.Password);
-            //    await _personnelService.UpdateAsync(personnelEntity);
-            //}
             var driverEntity = base.Where(x => x.Id == driverDto.Id).FirstOrDefault();
             if (driverEntity.IsNotNull())
             {
