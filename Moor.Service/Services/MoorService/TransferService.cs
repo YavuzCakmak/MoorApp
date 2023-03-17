@@ -62,6 +62,7 @@ namespace Moor.Service.Services.MoorService
         {
             #region Objects
             DataResult dataResult = new DataResult();
+            dataResult.IsSuccess = true;
             #endregion
 
             var transferEntity = base.Where(x => x.Id == transferChangeModel.TransferId).FirstOrDefault();
@@ -101,7 +102,7 @@ namespace Moor.Service.Services.MoorService
                     dataResult.IsSuccess = true;
                     return dataResult;
                 }
-                else if (transferEntity.Amount != transferChangeModel.Amount && transferChangeModel.Amount > 0)
+                else if (transferChangeModel.Amount.IsNotNull() && transferEntity.Amount != transferChangeModel.Amount && transferChangeModel.Amount > 0)
                 {
                     transferEntity.Amount = (decimal)transferChangeModel.Amount;
                     transferEntity.AgencyAmount = (decimal)transferChangeModel.Amount;
@@ -117,7 +118,7 @@ namespace Moor.Service.Services.MoorService
                     #endregion
                     return dataResult;
                 }
-                else if (transferEntity.Status != transferChangeModel.Status && transferChangeModel.Status != 0)
+                else if (transferChangeModel.Status.IsNotNull() && transferEntity.Status != transferChangeModel.Status && transferChangeModel.Status != 0)
                 {
                     transferEntity.Status = (int)transferChangeModel.Status;
                     base.UpdateAsync(transferEntity);

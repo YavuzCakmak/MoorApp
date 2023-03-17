@@ -33,7 +33,7 @@ namespace Moor.Core.Entities.MoorEntities
 
         [DataFilter]
         [Column("media_path")]
-        public string MediaPath { get; set; }
+        public string? MediaPath { get; set; }
 
         [DataFilter]
         [Column("email")]

@@ -35,7 +35,7 @@ namespace Moor.Service.Services.MoorService
         private readonly TokenHelper _tokenHelper;
 
 
-        public AuthorizeService(IUnitOfWork unitOfWork, IPersonnelService personnelService, IPersonnelRoleService personnelRoleService, IRolePrivilegeService rolePrivilegeService, TokenHelper tokenHelper, IMapper mapper, IAgencyService agencyService)
+        public AuthorizeService(IUnitOfWork unitOfWork, IPersonnelService personnelService, IPersonnelRoleService personnelRoleService, IRolePrivilegeService rolePrivilegeService, TokenHelper tokenHelper, IMapper mapper, IAgencyService agencyService, IDriverService driverService)
         {
             _personnelService = personnelService;
             _personnelRoleService = personnelRoleService;
@@ -43,6 +43,7 @@ namespace Moor.Service.Services.MoorService
             _tokenHelper = tokenHelper;
             _mapper = mapper;
             _agencyService = agencyService;
+            _driverService = driverService;
         }
 
         public LoginResponseModel Login(LoginModel loginModel)
