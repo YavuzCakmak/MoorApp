@@ -5,6 +5,7 @@ namespace Moor.Model.Models.MoorModels.AgencyModel
 {
     public class AgencyModel 
     {
+        public long Id { get; set; }
         public string? AgencyName { get; set; }
         public string? AgencyEmail { get; set; }
         public string? Title { get; set; }

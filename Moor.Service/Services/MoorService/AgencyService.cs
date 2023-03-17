@@ -32,7 +32,6 @@ namespace Moor.Service.Services.MoorService
 
         public async Task<DataResult> Save(AgencyModel agencyModel)
         {
-
             #region Object
             DataResult dataResult = new DataResult();
             AgencyEntity agency = new AgencyEntity();
@@ -98,5 +97,10 @@ namespace Moor.Service.Services.MoorService
                 return dataResult;
             }
         }
+
+        //public Task<DataResult> Update(AgencyModel agencyModel)
+        //{
+            
+        //}
     }
 }

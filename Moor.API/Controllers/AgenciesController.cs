@@ -11,6 +11,7 @@ using Moor.Core.Utilities.DataFilter;
 using Moor.Model.Dtos.MoorDto.AgencyDto;
 using Moor.Model.Dtos.MoorDto.CarDto;
 using Moor.Model.Dtos.MoorDto.DriverDto;
+using Moor.Model.Model.Authorize;
 using Moor.Model.Models.MoorModels.AgencyModel;
 using Moor.Model.Models.MoorModels.CarModel;
 using Moor.Model.Utilities;
@@ -20,22 +21,31 @@ using System.Net;
 
 namespace Moor.API.Controllers
 {
-    [HasPermission]
+    //[HasPermission]
     public class AgenciesController : CustomBaseController
     {
         private readonly IAgencyService _agencyService;
+        private readonly IPersonnelService _personnelService;
+        private readonly ITransferService _transferService;
         private readonly IMapper _mapper;
 
-        public AgenciesController(IAgencyService agencyService, IMapper mapper)
+        public AgenciesController(IAgencyService agencyService, IMapper mapper, IPersonnelService personnelService, ITransferService transferService)
         {
             _agencyService = agencyService;
             _mapper = mapper;
+            _personnelService = personnelService;
+            _transferService = transferService;
         }
         [HttpGet]
         public async Task<IActionResult> All([FromQuery] DataFilterModel dataFilterModel)
         {
             var agencyEntities = await _agencyService.GetAllAsync(dataFilterModel);
             var agencyDtos = _mapper.Map<List<AgencyDto>>(agencyEntities);
+            foreach (var agencyDto in agencyDtos)
+            {
+                var agencyTotalPrice = _transferService.Where(x => x.AgencyId == agencyDto.Id).Sum(x => x.AgencyAmount);
+                agencyDto.AgencyTotalPrice = agencyTotalPrice;
+            }
             return CreateActionResult(CustomResponseDto<List<AgencyDto>>.Succces((int)HttpStatusCode.OK, agencyDtos));
         }
 
@@ -43,8 +53,29 @@ namespace Moor.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(long id)
         {
+            #region Objects 
+            AgencyModel agencyModel = new AgencyModel();
+            PersonnelModel personnelModel = new PersonnelModel();
+            #endregion
+
             var agencyEntity = await _agencyService.GetByIdAsync(id);
-            return CreateActionResult(CustomResponseDto<AgencyDto>.Succces((int)HttpStatusCode.OK, _mapper.Map<AgencyDto>(agencyEntity)));
+            if (agencyEntity.IsNotNull())
+            {
+                agencyModel.Id = agencyEntity.Id;
+                agencyModel.AgencyName = agencyEntity.Name;
+                agencyModel.AgencyEmail = agencyEntity.Email;
+                agencyModel.Title = agencyEntity.Title;
+                agencyModel.TaxOffice = agencyEntity.TaxOffice;
+                agencyModel.TaxNumber = agencyEntity.TaxNumber;
+                agencyModel.AgencyPhoneNumber = agencyEntity.PhoneNumber;
+                agencyModel.OperationPhoneNumber = agencyEntity.OperationPhoneNumber;
+                agencyModel.AgencyMediaPath = agencyEntity.MediaPath;
+                agencyModel.AgencyDetails = agencyEntity.Details;
+                agencyModel.ReceptionPrice = agencyEntity.ReceptionPrice;
+                agencyModel.CityId = agencyEntity.CityId;
+                agencyModel.CountyId = agencyEntity.CountyId;
+            }
+            return CreateActionResult(CustomResponseDto<AgencyModel>.Succces((int)HttpStatusCode.OK, agencyModel));
         }
 
         [HttpPost]
@@ -68,9 +99,27 @@ namespace Moor.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(CarDto CarDto)
+        public async Task<IActionResult> Update(AgencyModel agencyModel)
         {
-            return CreateActionResult(CustomResponseDto<CarDto>.Succces((int)HttpStatusCode.OK));
+            #region Objects 
+            #endregion
+
+            var agencyEntity = await _agencyService.GetByIdAsync(agencyModel.Id);
+            agencyEntity.Id = agencyModel.Id;
+            agencyEntity.Name = agencyModel.AgencyName;
+            agencyEntity.Email = agencyModel.AgencyEmail;
+            agencyEntity.Title = agencyModel.Title;
+            agencyEntity.TaxOffice = agencyModel.TaxOffice;
+            agencyEntity.TaxNumber = agencyModel.TaxNumber;
+            agencyEntity.PhoneNumber = agencyModel.AgencyPhoneNumber;
+            agencyEntity.OperationPhoneNumber = agencyModel.OperationPhoneNumber;
+            agencyEntity.MediaPath = agencyModel.AgencyMediaPath;
+            agencyEntity.Details = agencyModel.AgencyDetails;
+            agencyEntity.ReceptionPrice = (decimal)agencyModel.ReceptionPrice;
+            agencyEntity.CityId = agencyModel.CityId;
+            agencyEntity.CountyId = agencyModel.CountyId;
+            await _agencyService.UpdateAsync(agencyEntity);
+            return CreateActionResult(CustomResponseDto<AgencyModel>.Succces((int)HttpStatusCode.OK));
         }
 
         [HttpDelete("{id}")]

@@ -148,7 +148,7 @@ namespace Moor.Service.Services.MoorService
             {
                 PersonnelRoleEntity personnelRoleEntity = new PersonnelRoleEntity();
                 personnelRoleEntity.IsDeleted = false;
-                personnelRoleEntity.RoleId = personnelModel.RoleId;
+                personnelRoleEntity.RoleId = (long)personnelModel.RoleId;
                 personnelRoleEntity.PersonnelId = dataResult.Result.Id;
                 personnelRole = await _personnelRoleService.AddAsync(personnelRoleEntity);
             }

@@ -9,5 +9,6 @@ namespace Moor.Core.Services.MoorService
     public interface IAgencyService : IService<AgencyEntity>
     {
         public Task<DataResult> Save(AgencyModel agencyModel);
+        //public Task<DataResult> Update(AgencyModel agencyModel);
     }
 }

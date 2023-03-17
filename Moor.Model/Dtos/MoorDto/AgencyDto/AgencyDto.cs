@@ -23,5 +23,7 @@ namespace Moor.Model.Dtos.MoorDto.AgencyDto
         public string Email { get; set; }
         public string Details { get; set; }
         public decimal ReceptionPrice { get; set; }
+
+        public decimal? AgencyTotalPrice { get; set; }
     }
 }

@@ -31,6 +31,10 @@ namespace Moor.Core.Entities.MoorEntities.AuthorizeEntities
         public string? MediaPath { get; set; }
 
         [DataFilter]
+        [Column("phone_number")]
+        public string? PhoneNumber { get; set; }
+
+        [DataFilter]
         [Column("email")]
         public string? Email { get; set; }
 
