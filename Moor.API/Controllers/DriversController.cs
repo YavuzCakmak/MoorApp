@@ -8,12 +8,14 @@ using Moor.Core.Extension.String;
 using Moor.Core.Services.MoorService;
 using Moor.Core.Utilities;
 using Moor.Core.Utilities.DataFilter;
+using Moor.Model.Dtos.MoorDto.AgencyDto;
 using Moor.Model.Dtos.MoorDto.CarDto;
 using Moor.Model.Dtos.MoorDto.DriverDto;
 using Moor.Model.Models.MoorModels.CarModel;
 using Moor.Model.Models.MoorModels.DriverModel;
 using Moor.Model.Models.MoorModels.DriverModel.DriverWalletModel;
 using Moor.Service.Models.Dto.ResponseDto;
+using Moor.Service.Services.MoorService;
 using System.Net;
 
 namespace Moor.API.Controllers
@@ -22,14 +24,16 @@ namespace Moor.API.Controllers
     public class DriversController : CustomBaseController
     {
         private readonly IDriverService _driverService;
+        private readonly ITransferService _transferService;
         private readonly IPersonnelService _personnelService;
         private readonly IMapper _mapper;
 
-        public DriversController(IDriverService driverService, IMapper mapper, IPersonnelService personnelService)
+        public DriversController(IDriverService driverService, IMapper mapper, IPersonnelService personnelService, ITransferService transferService)
         {
             _driverService = driverService;
             _mapper = mapper;
             _personnelService = personnelService;
+            _transferService = transferService;
         }
 
         [HttpGet]
@@ -37,6 +41,14 @@ namespace Moor.API.Controllers
         {
             var driverEntities = await _driverService.GetAllAsync(dataFilterModel);
             var driverDtos = _mapper.Map<List<DriverDto>>(driverEntities);
+            if (driverDtos.IsNotNullOrEmpty())
+            {
+                foreach (var driverDto in driverDtos)
+                {
+                    var driverTotalPrice = _transferService.Where(x => x.DriverId == driverDto.Id).Sum(x => x.DriverAmount);
+                    driverDto.DriverTotalPrice = driverTotalPrice;
+                }
+            }
             return CreateActionResult(CustomResponseDto<List<DriverDto>>.Succces((int)HttpStatusCode.OK, driverDtos));
         }
 

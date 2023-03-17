@@ -34,7 +34,7 @@ namespace Moor.Service.Services.MoorService
             var driverEntity = base.Where(x => x.Id == driverDto.Id).FirstOrDefault();
             if (driverEntity.IsNotNull())
             {
-                driverEntity.Price = driverDto.Price;
+                driverEntity.Price = (decimal)driverDto.Price;
                 await base.UpdateAsync(driverEntity);
                 dataResult.IsSuccess = true;
                 return dataResult;
