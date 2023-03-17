@@ -90,7 +90,7 @@ namespace Moor.Service.Services.MoorService
                     var driverModel = _driverService.Where(x => x.Id == transferChangeModel.DriverId).FirstOrDefault();
                     transferEntity.DriverId = transferChangeModel.DriverId;
                     transferEntity.DriverAmount = driverModel.Price;
-                    base.UpdateAsync(transferEntity);
+                    await base.UpdateAsync(transferEntity);
                     #region Notification
                     NotificationPostModel notificationPostModel = new NotificationPostModel();
                     notificationPostModel.TransferId = transferChangeModel.TransferId;
@@ -106,7 +106,7 @@ namespace Moor.Service.Services.MoorService
                 {
                     transferEntity.Amount = (decimal)transferChangeModel.Amount;
                     transferEntity.AgencyAmount = (decimal)transferChangeModel.Amount;
-                    base.UpdateAsync(transferEntity);
+                    await base.UpdateAsync(transferEntity);
                     dataResult.IsSuccess = true;
                     #region Notification
                     NotificationPostModel notificationPostModel = new NotificationPostModel();
@@ -121,7 +121,7 @@ namespace Moor.Service.Services.MoorService
                 else if (transferChangeModel.Status.IsNotNull() && transferEntity.Status != transferChangeModel.Status && transferChangeModel.Status != 0)
                 {
                     transferEntity.Status = (int)transferChangeModel.Status;
-                    base.UpdateAsync(transferEntity);
+                    await base.UpdateAsync(transferEntity);
                     dataResult.IsSuccess = true;
                     #region Notification
                     NotificationPostModel notificationPostModel = new NotificationPostModel();
