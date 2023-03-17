@@ -75,7 +75,7 @@ namespace Moor.Service.Services.MoorService
             }
             if (notificationPostModel.IsAmount)
             {
-                notificationPostModel.Explanation = $"{notificationPostModel.AgencyName} - {notificationPostModel.TransferId} 'Nolu transferin ücreti değiştirildi.";
+                notificationEntity.Explanation = $"{notificationPostModel.AgencyName} - {notificationPostModel.TransferId} 'Nolu transferin ücreti değiştirildi.";
                 notificationEntity.Status = 0;
                 notificationEntity.CreatedDate = DateTime.Now;
                 notificationEntity.IsRead = false;
@@ -87,7 +87,7 @@ namespace Moor.Service.Services.MoorService
             }
             if (notificationPostModel.IsStatus)
             {
-                notificationPostModel.Explanation = $"{notificationPostModel.AgencyName} - {notificationPostModel.TransferId} 'Nolu transferin statüsü güncellendi.";
+                notificationEntity.Explanation = $"{notificationPostModel.AgencyName} - {notificationPostModel.TransferId} 'Nolu transferin statüsü güncellendi.";
                 notificationEntity.Status = 0;
                 notificationEntity.CreatedDate = DateTime.Now;
                 notificationEntity.IsRead = false;
