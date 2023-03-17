@@ -12,6 +12,7 @@ namespace Moor.Model.Dtos.MoorDto.AgencyDto
 {
     public class AgencyDto
     {
+        public long Id { get; set; }    
         public string Name { get; set; }
         public string Title { get; set; }
         public string TaxOffice { get; set; }
