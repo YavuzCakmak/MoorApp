@@ -102,7 +102,7 @@ namespace Moor.Service.Services.MoorService
                     dataResult.IsSuccess = true;
                     return dataResult;
                 }
-                else if (transferChangeModel.Amount.IsNotNull() && transferEntity.Amount != transferChangeModel.Amount && transferChangeModel.Amount > 0)
+                else if (transferChangeModel.Amount.IsNotNull() && transferEntity.Amount != transferChangeModel.Amount)
                 {
                     transferEntity.Amount = (decimal)transferChangeModel.Amount;
                     transferEntity.AgencyAmount = (decimal)transferChangeModel.Amount;
