@@ -132,6 +132,28 @@ namespace Moor.Service.Services.MoorService
                 };
             }
 
+
+            string base64Data = personnelModel.MediaPath; // Base64 kodu
+            string fileName = $"{Guid.NewGuid()}.png"; // Dosya adı
+            string directoryPath = @"C:\Users\90551\Desktop\V3\DosyaYolu"; // Klasör yolu
+
+            byte[] bytes = Convert.FromBase64String(base64Data);
+
+            // Klasörü kontrol edin ve oluşturun
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+
+            // Dosyayı kaydetmek için bir FileStream kullanın
+            using (FileStream stream = new FileStream(Path.Combine(directoryPath, fileName), FileMode.Create))
+            {
+                stream.Write(bytes, 0, bytes.Length);
+            }
+
+            // Dosya yoluyla birlikte geri dönün
+            string filePath = Path.Combine(directoryPath, fileName);
+
             var hashedPassword = HashingHelper.CreatePasswordHash(personnelModel.Password);
 
             var dataResult = _personnelService.AddAsync(new PersonnelEntity
@@ -139,6 +161,7 @@ namespace Moor.Service.Services.MoorService
                 Email = personnelModel.Email,
                 FirstName = personnelModel.FirstName,
                 Password = hashedPassword,
+                MediaPath = filePath,
                 UserName = personnelModel.UserName,
                 Status = ((int)Status.AKTIF), //Default Aktif
                 LastName = personnelModel.LastName,
