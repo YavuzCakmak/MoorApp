@@ -12,6 +12,7 @@ using Moor.Core.Enums;
 using Moor.Core.Entities.MoorEntities.AuthorizeEntities;
 using Moor.Model.Models.MoorModels.DriverModel;
 using Moor.Service.Utilities.AuthorizeHelpers;
+using Moor.Model.Model.Authorize;
 
 namespace Moor.Service.Services.MoorService
 {
@@ -44,12 +45,34 @@ namespace Moor.Service.Services.MoorService
             #endregion
 
             #region DriverPersonnel
+
+            string base64Data = driverModel.PersonnelModel.MediaPath.IsNotNullOrEmpty() ? driverModel.PersonnelModel.MediaPath : string.Empty ; // Base64 kodu
+            string fileName = $"{Guid.NewGuid()}.png"; // Dosya adı
+            string directoryPath = @"C:\Users\Administrator\Desktop\Dosyalar"; // Klasör yolu
+
+            byte[] bytes = Convert.FromBase64String(base64Data);
+
+            // Klasörü kontrol edin ve oluşturun
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+
+            // Dosyayı kaydetmek için bir FileStream kullanın
+            using (FileStream stream = new FileStream(Path.Combine(directoryPath, fileName), FileMode.Create))
+            {
+                stream.Write(bytes, 0, bytes.Length);
+            }
+
+            // Dosya yoluyla birlikte geri dönün
+            string filePath = Path.Combine(directoryPath, fileName);
+
             var hashedPassword = HashingHelper.CreatePasswordHash(driverModel.PersonnelModel.Password);
             var personnelEntity = _personnelService.AddAsync(new PersonnelEntity
             {
                 Email = driverModel.PersonnelModel.Email,
                 FirstName = driverModel.PersonnelModel.FirstName,
-                MediaPath = string.Empty,
+                MediaPath = filePath.IsNotNullOrEmpty() ? filePath : string.Empty,
                 Password = hashedPassword,
                 UserName = driverModel.PersonnelModel.UserName,
                 Status = ((int)Status.AKTIF),
