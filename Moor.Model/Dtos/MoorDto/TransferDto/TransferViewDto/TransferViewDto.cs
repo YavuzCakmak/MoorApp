@@ -33,6 +33,7 @@ namespace Moor.Model.Dtos.MoorDto.TransferDto.TransferViewDto
         public decimal? AgencyAmount { get; set; }
         public decimal? DriverAmount { get; set; }
         public DateTime? CreatedDate { get; set; }
+        public List<TravellerDto> TravellerDtos { get; set; } = new List<TravellerDto>();
     }
     public class LookupObjectModel
     {

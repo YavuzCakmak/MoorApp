@@ -285,6 +285,7 @@ namespace Moor.Service.Services.MoorService
             {
                 TransferViewDto transferViewDto = new TransferViewDto();
 
+                var travellers = _travellerService.Where(x => x.TransferId == transferEntity.Id).ToList();
                 if (transferEntity.DriverId.IsNotNull())
                 {
                     var driverModel = _driverService.Where(x => x.Id == transferEntity.DriverId).FirstOrDefault();
@@ -318,6 +319,14 @@ namespace Moor.Service.Services.MoorService
                     stream.Read(bytes, 0, bytes.Length);
                     string base64Data = Convert.ToBase64String(bytes);
                     transferViewDto.AgencyMediaPath = base64Data;
+                }
+                if (travellers.IsNotNullOrEmpty())
+                {
+                    foreach (var item in travellers)
+                    {
+                        var dto = _mapper.Map<TravellerDto>(item);
+                        transferViewDto.TravellerDtos.Add(dto);
+                    }
                 }
                 transferViewDto.CreatedDate = transferEntity.CreatedDate;
                 transferViewDto.DistrictName = districtModel.Name;
