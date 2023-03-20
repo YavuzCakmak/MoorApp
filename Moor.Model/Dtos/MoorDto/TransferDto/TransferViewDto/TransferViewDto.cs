@@ -11,6 +11,7 @@ namespace Moor.Model.Dtos.MoorDto.TransferDto.TransferViewDto
     {
         public long Id { get; set; }
         public string AgencyName { get; set; }
+        public string AgencyMediaPath { get; set; }
         public string? DriverName { get; set; }
         public string? DriverMediaPath { get; set; }
         public string? DriverPhoneNumber { get; set; }

@@ -312,6 +312,13 @@ namespace Moor.Service.Services.MoorService
 
                 transferViewDto.Id = transferEntity.Id;
                 transferViewDto.AgencyName = transferEntity.Agency.Name;
+                using (FileStream stream = new FileStream(transferEntity.Agency.MediaPath, FileMode.Open))
+                {
+                    byte[] bytes = new byte[stream.Length];
+                    stream.Read(bytes, 0, bytes.Length);
+                    string base64Data = Convert.ToBase64String(bytes);
+                    transferViewDto.AgencyMediaPath = base64Data;
+                }
                 transferViewDto.CreatedDate = transferEntity.CreatedDate;
                 transferViewDto.DistrictName = districtModel.Name;
                 transferViewDto.Location = transferEntity.Location;
