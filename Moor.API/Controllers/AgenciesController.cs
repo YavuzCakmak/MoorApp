@@ -11,9 +11,11 @@ using Moor.Core.Utilities.DataFilter;
 using Moor.Model.Dtos.MoorDto.AgencyDto;
 using Moor.Model.Dtos.MoorDto.CarDto;
 using Moor.Model.Dtos.MoorDto.DriverDto;
+using Moor.Model.Dtos.MoorDto.TransferDto.TransferViewDto;
 using Moor.Model.Model.Authorize;
 using Moor.Model.Models.MoorModels.AgencyModel;
 using Moor.Model.Models.MoorModels.CarModel;
+using Moor.Model.Models.MoorModels.DriverModel;
 using Moor.Model.Utilities;
 using Moor.Service.Models.Dto.ResponseDto;
 using Moor.Service.Services.MoorService;
@@ -43,6 +45,13 @@ namespace Moor.API.Controllers
             var agencyDtos = _mapper.Map<List<AgencyDto>>(agencyEntities);
             foreach (var agencyDto in agencyDtos)
             {
+                using (FileStream stream = new FileStream(agencyDto.MediaPath, FileMode.Open))
+                {
+                    byte[] bytes = new byte[stream.Length];
+                    stream.Read(bytes, 0, bytes.Length);
+                    string base64Data = Convert.ToBase64String(bytes);
+                    agencyDto.MediaPath = base64Data;
+                }
                 var agencyTotalPrice = _transferService.Where(x => x.AgencyId == agencyDto.Id).Sum(x => x.AgencyAmount);
                 agencyDto.AgencyTotalPrice = agencyTotalPrice;
             }

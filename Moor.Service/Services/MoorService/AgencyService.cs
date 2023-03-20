@@ -12,6 +12,7 @@ using Moor.Core.Entities.MoorEntities.AuthorizeEntities;
 using Moor.Core.Enums;
 using Moor.Model.Model.Authorize;
 using Moor.Service.Utilities.AuthorizeHelpers;
+using Moor.Model.Models.MoorModels.DriverModel;
 
 namespace Moor.Service.Services.MoorService
 {
@@ -37,6 +38,28 @@ namespace Moor.Service.Services.MoorService
             AgencyEntity agency = new AgencyEntity();
             #endregion
 
+            string base64Data = agencyModel.PersonnelModel.MediaPath.IsNotNullOrEmpty() ? agencyModel.PersonnelModel.MediaPath : string.Empty; // Base64 kodu
+            string fileName = $"{Guid.NewGuid()}.png"; // Dosya adı
+            string directoryPath = @"C:\Users\Dosyalar"; // Klasör yolu
+
+            byte[] bytes = Convert.FromBase64String(base64Data);
+
+            // Klasörü kontrol edin ve oluşturun
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+
+            // Dosyayı kaydetmek için bir FileStream kullanın
+            using (FileStream stream = new FileStream(Path.Combine(directoryPath, fileName), FileMode.Create))
+            {
+                stream.Write(bytes, 0, bytes.Length);
+            }
+
+            // Dosya yoluyla birlikte geri dönün
+            string filePath = Path.Combine(directoryPath, fileName);
+
+
             #region AgencyPersonnel
             var hashedPassword = HashingHelper.CreatePasswordHash(agencyModel.PersonnelModel.Password);
             var personnelEntity = _personnelService.AddAsync(new PersonnelEntity
@@ -44,7 +67,7 @@ namespace Moor.Service.Services.MoorService
                 Email = agencyModel.PersonnelModel.Email,
                 FirstName = agencyModel.PersonnelModel.FirstName,
                 Password = hashedPassword,
-                MediaPath = agencyModel.PersonnelModel.MediaPath,
+                MediaPath = filePath,
                 UserName = agencyModel.PersonnelModel.UserName,
                 Status = ((int)Status.AKTIF),
                 LastName = agencyModel.PersonnelModel.LastName,
@@ -67,6 +90,25 @@ namespace Moor.Service.Services.MoorService
                     ErrorMessage = "Kullanıcı Kaydı sırasında hata oluştu."
                 };
             }
+
+            string agencyBase64Data = agencyModel.AgencyMediaPath.IsNotNullOrEmpty() ? agencyModel.AgencyMediaPath : string.Empty; // Base64 kodu
+            string agencyfileName = $"{Guid.NewGuid()}.png"; 
+            string agencydirectoryPath = @"C:\Users\Dosyalar"; 
+
+            byte[] agencybytes = Convert.FromBase64String(agencyBase64Data);
+
+            if (!Directory.Exists(agencydirectoryPath))
+            {
+                Directory.CreateDirectory(agencydirectoryPath);
+            }
+
+            using (FileStream stream = new FileStream(Path.Combine(agencydirectoryPath, agencyfileName), FileMode.Create))
+            {
+                stream.Write(bytes, 0, bytes.Length);
+            }
+            string agencyfilePath = Path.Combine(directoryPath, agencyfileName);
+
+
             agency.PersonnelId = personnelEntity.Result.Id;
             agency.Status = ((int)Status.AKTIF);
             agency.Details = agencyModel.AgencyDetails;
@@ -75,7 +117,7 @@ namespace Moor.Service.Services.MoorService
             agency.CreatedDate = DateTime.Now;
             agency.Email = agencyModel.AgencyEmail;
             agency.Name = agencyModel.AgencyName;
-            agency.MediaPath = agencyModel.AgencyMediaPath;
+            agency.MediaPath = agencyfilePath;
             agency.OperationPhoneNumber = agencyModel.OperationPhoneNumber;
             agency.PhoneNumber = agencyModel.AgencyPhoneNumber;
             agency.ReceptionPrice = (decimal)agencyModel.ReceptionPrice;
