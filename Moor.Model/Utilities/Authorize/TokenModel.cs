@@ -10,6 +10,8 @@ namespace Moor.Model.Utilities.TokenModel
         public string RefreshTokenEndDate { get; set; }
         public string ValidTo { get; set; }
         public long? AgencyId { get; set; }
+        public string? AgencyMedia { get; set; }
+        public string? DriverMedia { get; set; }
         public long? DriverId { get; set; }
         public List<Role> Roles { get; set; }
     }

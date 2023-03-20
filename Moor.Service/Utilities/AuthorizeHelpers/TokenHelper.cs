@@ -111,6 +111,8 @@ namespace Moor.Service.Utilities.AuthorizeHelpers
                 new Claim("RefreshToken", personnelToken.RefreshToken),
                 new Claim("RefreshTokenEndDate", personnelToken.RefreshTokenEndDate),
                 new Claim("AgencyId", personnelToken.AgencyId.ToString()),
+                new Claim("AgencyMedia", !string.IsNullOrEmpty(personnelToken.AgencyMedia) ?personnelToken.AgencyMedia.ToString()  : string.Empty),
+                new Claim("DriverMedia", !string.IsNullOrEmpty(personnelToken.DriverMedia) ?personnelToken.DriverMedia.ToString()  : string.Empty),
                 new Claim("DriverId", personnelToken.DriverId.ToString()),
                 new Claim("ValidTo", personnelToken.ValidTo),
                 new Claim("Roles", JsonConvert.SerializeObject(personnelToken.Roles), JsonClaimValueTypes.JsonArray)

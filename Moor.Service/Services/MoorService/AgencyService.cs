@@ -69,6 +69,7 @@ namespace Moor.Service.Services.MoorService
                 Password = hashedPassword,
                 MediaPath = filePath,
                 UserName = agencyModel.PersonnelModel.UserName,
+                PhoneNumber = agencyModel.PersonnelModel.PhoneNumber,
                 Status = ((int)Status.AKTIF),
                 LastName = agencyModel.PersonnelModel.LastName,
             });
@@ -104,7 +105,7 @@ namespace Moor.Service.Services.MoorService
 
             using (FileStream stream = new FileStream(Path.Combine(agencydirectoryPath, agencyfileName), FileMode.Create))
             {
-                stream.Write(bytes, 0, bytes.Length);
+                stream.Write(agencybytes, 0, agencybytes.Length);
             }
             string agencyfilePath = Path.Combine(directoryPath, agencyfileName);
 

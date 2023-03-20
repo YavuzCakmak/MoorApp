@@ -21,6 +21,9 @@ using Moor.Core.Repositories.MoorRepository;
 using Org.BouncyCastle.Asn1.Pkcs;
 using Moor.Core.Extension.String;
 using Moor.Core.Enums;
+using Moor.Model.Dtos.MoorDto.TransferDto.TransferViewDto;
+using Moor.Model.Models.MoorModels.DriverModel;
+using Moor.Model.Models.MoorModels.AgencyModel;
 
 namespace Moor.Service.Services.MoorService
 {
@@ -100,13 +103,35 @@ namespace Moor.Service.Services.MoorService
             tokenModel.Roles = roleDtos.ToList();
             tokenModel.Username = personnel.UserName;
 
-            if (personnelRoles.Any(x=> x.RoleId == (long)Roles.ACENTE))
+
+            if (personnelRoles.Any(x => x.RoleId == (long)Roles.ACENTE))
             {
-                tokenModel.AgencyId = _agencyService.Where(x => x.PersonnelId == personnel.Id).Select(x=> x.Id).FirstOrDefault();
+                var agencyModel = _agencyService.Where(x => x.PersonnelId == personnel.Id).FirstOrDefault();
+                tokenModel.AgencyId = agencyModel.Id;
+                var agencyMedia = agencyModel.MediaPath.IsNotNullOrEmpty() ? agencyModel.MediaPath : string.Empty;
+
+                using (FileStream stream = new FileStream(agencyMedia, FileMode.Open))
+                {
+                    byte[] bytes = new byte[stream.Length];
+                    stream.Read(bytes, 0, bytes.Length);
+                    string base64Data = Convert.ToBase64String(bytes);
+                    tokenModel.AgencyMedia = base64Data;
+                }
             }
             else if (personnelRoles.Any(x => x.RoleId == (long)Roles.SOFOR))
             {
-                tokenModel.DriverId = _driverService.Where(x => x.PersonnelId == personnel.Id).Select(x => x.Id).FirstOrDefault();
+                var driverModel = _driverService.Where(x => x.PersonnelId == personnel.Id).FirstOrDefault();
+                tokenModel.DriverId = driverModel.Id;
+
+                var personnelMedia = personnel.MediaPath.IsNotNullOrEmpty() ? personnel.MediaPath : string.Empty;
+
+                using (FileStream stream = new FileStream(personnelMedia, FileMode.Open))
+                {
+                    byte[] bytes = new byte[stream.Length];
+                    stream.Read(bytes, 0, bytes.Length);
+                    string base64Data = Convert.ToBase64String(bytes);
+                    tokenModel.DriverMedia = base64Data;
+                }
             }
 
             return new LoginResponseModel
@@ -121,7 +146,7 @@ namespace Moor.Service.Services.MoorService
             #region
             PersonnelRoleEntity personnelRole = new PersonnelRoleEntity();
             #endregion
-            
+
             var personnel = _personnelService.Where(x => x.UserName == personnelModel.UserName || x.Email == personnelModel.Email).ToList();
             if (personnel is not null && personnel.Count > 0)
             {
