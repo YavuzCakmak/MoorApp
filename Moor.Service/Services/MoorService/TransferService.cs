@@ -245,6 +245,14 @@ namespace Moor.Service.Services.MoorService
                 transferViewDto.DriverPhoneNumber = driverModel.Personnel.PhoneNumber;
                 transferViewDto.Plate = driverCarModel.Car.NumberPlate;
                 transferViewDto.DriverMediaPath = driverModel.Personnel.MediaPath.IsNotNullOrEmpty() ? driverModel.Personnel.MediaPath : string.Empty;
+
+                using (FileStream stream = new FileStream(driverModel.Personnel.MediaPath, FileMode.Open))
+                {
+                    byte[] bytes = new byte[stream.Length];
+                    stream.Read(bytes, 0, bytes.Length);
+                    string base64Data = Convert.ToBase64String(bytes);
+                    transferViewDto.DriverMediaPath = base64Data;
+                }
             }
 
             transferViewDto.Id = transferEntity.Id;
@@ -285,7 +293,16 @@ namespace Moor.Service.Services.MoorService
                     transferViewDto.DriverAmount = driverModel.Price;
                     transferViewDto.DriverPhoneNumber = driverModel.Personnel.PhoneNumber;
                     transferViewDto.Plate = driverCarModel.Car.NumberPlate;
+
                     transferViewDto.DriverMediaPath = driverModel.Personnel.MediaPath.IsNotNullOrEmpty() ? driverModel.Personnel.MediaPath : string.Empty;
+
+                    using (FileStream stream = new FileStream(driverModel.Personnel.MediaPath, FileMode.Open))
+                    {
+                        byte[] bytes = new byte[stream.Length];
+                        stream.Read(bytes, 0, bytes.Length);
+                        string base64Data = Convert.ToBase64String(bytes);
+                        transferViewDto.DriverMediaPath = base64Data;
+                    }
                 }
 
                 var districtModel = _districtService.GetByIdAsync((long)transferEntity.DisctrictId).Result;
