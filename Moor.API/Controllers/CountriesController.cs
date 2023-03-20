@@ -16,7 +16,7 @@ using System.Net;
 
 namespace Moor.API.Controllers
 {
-    [HasPermission]
+    //[HasPermission]
     public class CountriesController : CustomBaseController
     {
         private readonly ICountryService _countryService;

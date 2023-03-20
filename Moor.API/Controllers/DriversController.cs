@@ -20,7 +20,7 @@ using System.Net;
 
 namespace Moor.API.Controllers
 {
-    [HasPermission]
+    //[HasPermission]
     public class DriversController : CustomBaseController
     {
         private readonly IDriverService _driverService;

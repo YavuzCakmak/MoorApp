@@ -18,7 +18,7 @@ using System.Net;
 
 namespace Moor.API.Controllers
 {
-    [HasPermission]
+    //[HasPermission]
     public class PriciesController : CustomBaseController
     {
         private readonly IPriceService _priceService;

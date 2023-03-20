@@ -17,7 +17,7 @@ using System.Net;
 
 namespace Moor.API.Controllers
 {
-    [HasPermission]
+    //[HasPermission]
     public class CarBrandsController : CustomBaseController
     {
         private readonly ICarBrandService _carBrandService;

@@ -16,7 +16,7 @@ using System.Net;
 
 namespace Moor.API.Controllers
 {
-    [HasPermission]
+    //[HasPermission]
     public class DistrictiesController : CustomBaseController
     {
         private readonly IDistrictService _districtService;
