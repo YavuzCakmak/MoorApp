@@ -12,6 +12,9 @@ namespace Moor.Model.Dtos.MoorDto.TransferDto.TransferViewDto
         public long Id { get; set; }
         public string AgencyName { get; set; }
         public string? DriverName { get; set; }
+        public string? DriverMediaPath { get; set; }
+        public string? DriverPhoneNumber { get; set; }
+        public string Plate { get; set; }
         public string DistrictName { get; set; }
         public string CityName { get; set; }
         public string CountyName { get; set; }

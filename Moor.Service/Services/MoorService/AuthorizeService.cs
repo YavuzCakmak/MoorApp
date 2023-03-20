@@ -135,7 +135,7 @@ namespace Moor.Service.Services.MoorService
 
             string base64Data = personnelModel.MediaPath; // Base64 kodu
             string fileName = $"{Guid.NewGuid()}.png"; // Dosya adı
-            string directoryPath = @"C:\Users\Administrator\Desktop\Dosyalar"; // Klasör yolu
+            string directoryPath = @"C:\Users\Dosyalar"; // Klasör yolu
 
             byte[] bytes = Convert.FromBase64String(base64Data);
 

@@ -15,6 +15,7 @@ using Moor.Model.Models.MoorModels.AgencyModel.DebitForAgencyModel;
 using Moor.Model.Models.MoorModels.CarParameterModel;
 using Moor.Model.Models.MoorModels.CityModel;
 using Moor.Model.Models.MoorModels.DistrictModel;
+using Moor.Model.Models.MoorModels.DriverCarModel;
 using Moor.Model.Models.MoorModels.DriverModel;
 using Moor.Model.Models.MoorModels.DriverModel.DebitForDriverModel;
 using Moor.Model.Models.MoorModels.DriverModel.DriverWalletModel;
@@ -33,6 +34,7 @@ namespace Moor.Service.Services.MoorService
         private readonly INotificationService _notificationService;
         private readonly IAgencyService _agencyService;
         private readonly IDriverService _driverService;
+        private readonly IDriverCarService _driverCarService;
         private readonly ICityService _cityService;
         private readonly IPriceService _priceService;
         private readonly ICarParameterService _carParameterService;
@@ -41,7 +43,7 @@ namespace Moor.Service.Services.MoorService
         private readonly ITransferRepository _transferRepository;
         private readonly IMapper _mapper;
 
-        public TransferService(IGenericRepository<TransferEntity> repository, IUnitOfWork unitOfWork, IMapper mapper, ITransferRepository transferRepository, IDistrictService districtService, IAgencyService agencyService, ICityService cityService, ICarParameterService carParameterService, IPriceService priceService, ITravellerService travellerService, ICountyService countyService, IDriverService driverService, INotificationService notificationService) : base(repository, unitOfWork)
+        public TransferService(IGenericRepository<TransferEntity> repository, IUnitOfWork unitOfWork, IMapper mapper, ITransferRepository transferRepository, IDistrictService districtService, IAgencyService agencyService, ICityService cityService, ICarParameterService carParameterService, IPriceService priceService, ITravellerService travellerService, ICountyService countyService, IDriverService driverService, INotificationService notificationService, IDriverCarService driverCarService) : base(repository, unitOfWork)
         {
             _mapper = mapper;
             _transferRepository = transferRepository;
@@ -54,6 +56,7 @@ namespace Moor.Service.Services.MoorService
             _countyService = countyService;
             _driverService = driverService;
             _notificationService = notificationService;
+            _driverCarService = driverCarService;
         }
 
 
@@ -236,8 +239,12 @@ namespace Moor.Service.Services.MoorService
             if (transferEntity.DriverId.IsNotNull())
             {
                 var driverModel = _driverService.Where(x => x.Id == transferEntity.DriverId).FirstOrDefault();
+                var driverCarModel = _driverCarService.Where(x => x.DriverId == transferEntity.DriverId).FirstOrDefault();
                 transferViewDto.DriverName = $"{driverModel.Personnel.FirstName} {driverModel.Personnel.LastName} ";
                 transferViewDto.DriverAmount = driverModel.Price;
+                transferViewDto.DriverPhoneNumber = driverModel.Personnel.PhoneNumber;
+                transferViewDto.Plate = driverCarModel.Car.NumberPlate;
+                transferViewDto.DriverMediaPath = driverModel.Personnel.MediaPath.IsNotNullOrEmpty() ? driverModel.Personnel.MediaPath : string.Empty;
             }
 
             transferViewDto.Id = transferEntity.Id;
@@ -273,8 +280,12 @@ namespace Moor.Service.Services.MoorService
                 if (transferEntity.DriverId.IsNotNull())
                 {
                     var driverModel = _driverService.Where(x => x.Id == transferEntity.DriverId).FirstOrDefault();
+                    var driverCarModel = _driverCarService.Where(x => x.DriverId == transferEntity.DriverId).FirstOrDefault();
                     transferViewDto.DriverName = $"{driverModel.Personnel.FirstName} {driverModel.Personnel.LastName} ";
                     transferViewDto.DriverAmount = driverModel.Price;
+                    transferViewDto.DriverPhoneNumber = driverModel.Personnel.PhoneNumber;
+                    transferViewDto.Plate = driverCarModel.Car.NumberPlate;
+                    transferViewDto.DriverMediaPath = driverModel.Personnel.MediaPath.IsNotNullOrEmpty() ? driverModel.Personnel.MediaPath : string.Empty;
                 }
 
                 var districtModel = _districtService.GetByIdAsync((long)transferEntity.DisctrictId).Result;
