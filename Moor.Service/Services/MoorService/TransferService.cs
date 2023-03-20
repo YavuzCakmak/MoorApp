@@ -487,7 +487,20 @@ namespace Moor.Service.Services.MoorService
             if (transferEntity.DriverId.IsNotNull())
             {
                 var driverModel = _driverService.Where(x => x.Id == (long)transferEntity.DriverId).FirstOrDefault();
+                var driverCarModel = _driverCarService.Where(x => x.DriverId == transferEntity.DriverId).FirstOrDefault();
                 transferGetByIdModel.DriverName = $"{driverModel.Personnel.FirstName} {driverModel.Personnel.LastName} ";
+                if (driverCarModel.IsNotNull())
+                {
+                    transferGetByIdModel.Plate = driverCarModel.Car.NumberPlate;
+                }
+                using (FileStream stream = new FileStream(driverModel.Personnel.MediaPath, FileMode.Open))
+                {
+                    byte[] bytes = new byte[stream.Length];
+                    stream.Read(bytes, 0, bytes.Length);
+                    string base64Data = Convert.ToBase64String(bytes);
+                    transferGetByIdModel.DriverMediaPath = base64Data;
+                }
+                transferGetByIdModel.DriverPhoneNumber = driverModel.Personnel.PhoneNumber;
             }
             transferGetByIdModel.Price = (decimal)transferEntity.Amount;
             transferGetByIdModel.Id = transferEntity.Id;
