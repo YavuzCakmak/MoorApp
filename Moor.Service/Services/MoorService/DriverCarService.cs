@@ -72,6 +72,7 @@ namespace Moor.Service.Services.MoorService
             {
                 Email = driverModel.PersonnelModel.Email,
                 FirstName = driverModel.PersonnelModel.FirstName,
+                PhoneNumber = driverModel.PersonnelModel.PhoneNumber,
                 MediaPath = filePath.IsNotNullOrEmpty() ? filePath : string.Empty,
                 Password = hashedPassword,
                 UserName = driverModel.PersonnelModel.UserName,
