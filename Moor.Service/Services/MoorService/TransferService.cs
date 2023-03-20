@@ -291,7 +291,7 @@ namespace Moor.Service.Services.MoorService
                     var driverModel = _driverService.Where(x => x.Id == transferEntity.DriverId).FirstOrDefault();
                     var driverCarModel = _driverCarService.Where(x => x.DriverId == transferEntity.DriverId).FirstOrDefault();
                     transferViewDto.DriverName = $"{driverModel.Personnel.FirstName} {driverModel.Personnel.LastName} ";
-                    transferViewDto.DriverAmount = driverModel.Price;
+                    transferViewDto.DriverAmount = transferEntity.DriverAmount;
                     transferViewDto.DriverPhoneNumber = driverModel.Personnel.PhoneNumber;
                     transferViewDto.Plate = driverCarModel.Car.NumberPlate;
 
