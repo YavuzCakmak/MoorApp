@@ -355,7 +355,7 @@ namespace Moor.Service.Services.MoorService
         public async Task<AgencyWalletModel> GetAgencyWallet(long agencyId)
         {
             AgencyWalletModel agencyWalletModel = new AgencyWalletModel();
-            var driverTransfer = base.Where(x => x.AgencyId == agencyId).ToList();
+            var driverTransfer = base.Where(x => x.AgencyId == agencyId && x.Status != Convert.ToInt32(TransferStatus.IPTAL)).ToList();
             if (driverTransfer.IsNotNullOrEmpty())
             {
                 agencyWalletModel.AgencyTotalAmount = (decimal)driverTransfer.Sum(x => x.AgencyAmount);
@@ -366,7 +366,7 @@ namespace Moor.Service.Services.MoorService
         public async Task<DriverWalletModel> GetDriverWallet(long driverId)
         {
             DriverWalletModel driverWalletModel = new DriverWalletModel();
-            var driverTransfer = base.Where(x => x.DriverId == driverId).ToList();
+            var driverTransfer = base.Where(x => x.DriverId == driverId && x.Status != Convert.ToInt32(TransferStatus.IPTAL)).ToList();
             if (driverTransfer.IsNotNullOrEmpty())
             {
                 driverWalletModel.DriverTotalAmount = (decimal)driverTransfer.Sum(x => x.DriverAmount);
