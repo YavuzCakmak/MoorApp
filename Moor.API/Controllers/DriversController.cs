@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moor.API.Controllers.BaseController;
 using Moor.API.Filters;
 using Moor.Core.Entities.MoorEntities;
+using Moor.Core.Enums;
 using Moor.Core.Extension.String;
 using Moor.Core.Services.MoorService;
 using Moor.Core.Utilities;
@@ -45,7 +46,7 @@ namespace Moor.API.Controllers
             {
                 foreach (var driverDto in driverDtos)
                 {
-                    var driverTotalPrice = _transferService.Where(x => x.DriverId == driverDto.Id).Sum(x => x.DriverAmount);
+                    var driverTotalPrice = _transferService.Where(x => x.DriverId == driverDto.Id && x.Status != Convert.ToInt32(TransferStatus.IPTAL)).Sum(x => x.DriverAmount);
                     driverDto.DriverTotalPrice = driverTotalPrice;
                 }
             }
