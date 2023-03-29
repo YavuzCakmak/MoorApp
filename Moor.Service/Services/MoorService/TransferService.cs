@@ -172,9 +172,14 @@ namespace Moor.Service.Services.MoorService
                 dataResult.ErrorMessage = "Bölge ve Modele göre fiyatlandırma mevcut değildir.";
                 return dataResult;
             }
-
-            // Sadece havalimanından girilince karşılama ücreti olucak ve transfere yansıyacak 
-            transferPostDto.Amount = priceModel.Price + agencyModel.ReceptionPrice;
+            if (transferPostDto.DirectionType == Convert.ToInt32(DirectionType.TEK_YON))
+            {
+                transferPostDto.Amount = priceModel.Price;
+            }
+            else
+            {
+                transferPostDto.Amount = priceModel.Price + agencyModel.ReceptionPrice;
+            }
             var transferEntity = _mapper.Map<TransferEntity>(transferPostDto);
             transferEntity.AgencyAmount = transferPostDto.Amount;
             transferEntity.Status = Convert.ToInt32(TransferStatus.BEKLEMEDE);
