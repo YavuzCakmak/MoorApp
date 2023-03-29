@@ -175,7 +175,7 @@ namespace Moor.Service.Services.MoorService
             if (transferPostDto.DirectionType == Convert.ToInt32(DirectionType.TEK_YON))
             {
                 transferPostDto.Amount = priceModel.Price;
-                transferPostDto.FlightCode = string.Empty;
+                transferPostDto.FlightCode = "UCUS KODU YOK";
                 transferPostDto.ReceptionType = 3;
             }
             else
@@ -498,6 +498,7 @@ namespace Moor.Service.Services.MoorService
 
             transferGetByIdModel.DistrictName = districtModel.Name;
             transferGetByIdModel.Location = transferEntity.Location;
+            transferGetByIdModel.FlightCode = transferEntity.FlightCode;
             transferGetByIdModel.Status = GetLookup(transferEntity.Status);
             transferGetByIdModel.CreatedDate = transferEntity.CreatedDate;
             if (transferEntity.DriverId.IsNotNull())
