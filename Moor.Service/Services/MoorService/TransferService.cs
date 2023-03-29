@@ -175,6 +175,8 @@ namespace Moor.Service.Services.MoorService
             if (transferPostDto.DirectionType == Convert.ToInt32(DirectionType.TEK_YON))
             {
                 transferPostDto.Amount = priceModel.Price;
+                transferPostDto.FlightCode = string.Empty;
+                transferPostDto.ReceptionType = 3;
             }
             else
             {
