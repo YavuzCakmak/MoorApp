@@ -28,12 +28,16 @@ namespace Moor.Core.Entities.MoorEntities
         public long? CountyId { get; set; }
 
         [DataFilter]
-        [Column("car_parameter_id")]        
+        [Column("car_parameter_id")]
         public long? CarParameterId { get; set; }
 
         [DataFilter]
         [Column("location")]
         public string? Location { get; set; }
+
+        [DataFilter]
+        [Column("location_free")]
+        public string? LocationFree { get; set; }
 
         [DataFilter]
         [Column("flight_code")]
@@ -74,7 +78,7 @@ namespace Moor.Core.Entities.MoorEntities
         [DataFilter]
         [ForeignKey("AgencyId")]
         public virtual AgencyEntity? Agency { get; set; }
-        
+
         [DataFilter]
         [ForeignKey("DriverId")]
         public virtual DriverEntity? Driver { get; set; }

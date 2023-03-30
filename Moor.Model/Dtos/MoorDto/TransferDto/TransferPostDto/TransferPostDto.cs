@@ -15,6 +15,7 @@ namespace Moor.Model.Dtos.MoorDto.TransferDto.TransferPostDto
         public long CityId { get; set; }
         public long CountyId { get; set; }
         public string Location { get; set; }
+        public string LocationFree { get; set; }
         public string FlightCode { get; set; }
         public long CarParameterId { get; set; }
         public int ReceptionType { get; set; }
