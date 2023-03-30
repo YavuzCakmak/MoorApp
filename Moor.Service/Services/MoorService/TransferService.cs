@@ -183,6 +183,7 @@ namespace Moor.Service.Services.MoorService
                 transferPostDto.Amount = priceModel.Price + agencyModel.ReceptionPrice;
             }
             var transferEntity = _mapper.Map<TransferEntity>(transferPostDto);
+            transferEntity.CreatedDate = transferPostDto.ReturnDate.Value;
             transferEntity.AgencyAmount = transferPostDto.Amount;
             transferEntity.Status = Convert.ToInt32(TransferStatus.BEKLEMEDE);
             var transferAddResult = await base.AddAsync(transferEntity);
