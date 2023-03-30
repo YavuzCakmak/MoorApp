@@ -53,7 +53,7 @@ namespace Moor.API.Controllers
                     string base64Data = Convert.ToBase64String(bytes);
                     agencyDto.MediaPath = base64Data;
                 }
-                var agencyTotalPrice = _transferService.Where(x => x.AgencyId == agencyDto.Id && x.Status != Convert.ToInt32(TransferStatus.IPTAL)).Sum(x => x.AgencyAmount);
+                var agencyTotalPrice = _transferService.Where(x => x.AgencyId == agencyDto.Id && x.Status == Convert.ToInt32(TransferStatus.TAMAMLANDI)).Sum(x => x.AgencyAmount);
                 agencyDto.AgencyTotalPrice = agencyTotalPrice;
             }
             return CreateActionResult(CustomResponseDto<List<AgencyDto>>.Succces((int)HttpStatusCode.OK, agencyDtos));
