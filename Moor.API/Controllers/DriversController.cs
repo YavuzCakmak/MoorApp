@@ -46,7 +46,7 @@ namespace Moor.API.Controllers
             {
                 foreach (var driverDto in driverDtos)
                 {
-                    var driverTotalPrice = _transferService.Where(x => x.DriverId == driverDto.Id && x.Status == Convert.ToInt32(TransferStatus.IPTAL)).Sum(x => x.DriverAmount);
+                    var driverTotalPrice = _transferService.Where(x => x.DriverId == driverDto.Id && x.Status == Convert.ToInt32(TransferStatus.TAMAMLANDI)).Sum(x => x.DriverAmount);
                     driverDto.DriverTotalPrice = driverTotalPrice;
                 }
             }
