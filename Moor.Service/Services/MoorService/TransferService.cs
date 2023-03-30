@@ -203,14 +203,14 @@ namespace Moor.Service.Services.MoorService
             var countyName = _countyService.GetByIdAsync(transferPostDto.CountyId).Result;
             var carParameterModel = _carParameterService.Where(x => x.Id == transferPostDto.CarParameterId).FirstOrDefault();
 
-            transferViewDto.DistrictName = districtModel.Name;
-            transferViewDto.Location = transferPostDto.Location;
-            transferViewDto.FlightCode = transferPostDto.FlightCode;
-            transferViewDto.CityName = cityModel.Name;
-            transferViewDto.CountyName = countyName.Name;
-            transferViewDto.CarParameterBrand = carParameterModel.CarBrand.Brand;
-            transferViewDto.CarParameterModel = carParameterModel.CarModel.Model;
-            transferViewDto.Explanation = transferPostDto.Explanation;
+            transferViewDto.DistrictName = districtModel.Name.IsNotNullOrEmpty() ? districtModel.Name : "";
+            transferViewDto.Location = transferPostDto.Location.IsNotNullOrEmpty() ? transferPostDto.Location : "";
+            transferViewDto.FlightCode = transferPostDto.FlightCode.IsNotNullOrEmpty() ? transferPostDto.FlightCode : "";
+            transferViewDto.CityName = cityModel.Name.IsNotNullOrEmpty() ? cityModel.Name : "";
+            transferViewDto.CountyName = countyName.Name.IsNotNullOrEmpty() ? countyName.Name : "";
+            transferViewDto.CarParameterBrand = carParameterModel.CarBrand.Brand.IsNotNullOrEmpty() ? carParameterModel.CarBrand.Brand : "";
+            transferViewDto.CarParameterModel = carParameterModel.CarModel.Model.IsNotNullOrEmpty() ? carParameterModel.CarModel.Model : "";
+            transferViewDto.Explanation = transferPostDto.Explanation.IsNotNullOrEmpty() ? transferPostDto.Explanation : ""; ;
             transferViewDto.DirectionType = transferPostDto.DirectionType;
             transferViewDto.ReceptionType = transferPostDto.ReceptionType;
             transferViewDto.ReturnDate = transferPostDto.ReturnDate;
@@ -362,7 +362,7 @@ namespace Moor.Service.Services.MoorService
         public async Task<AgencyWalletModel> GetAgencyWallet(long agencyId)
         {
             AgencyWalletModel agencyWalletModel = new AgencyWalletModel();
-            var driverTransfer = base.Where(x => x.AgencyId == agencyId && x.Status != Convert.ToInt32(TransferStatus.IPTAL)).ToList();
+            var driverTransfer = base.Where(x => x.AgencyId == agencyId && x.Status == Convert.ToInt32(TransferStatus.TAMAMLANDI)).ToList();
             if (driverTransfer.IsNotNullOrEmpty())
             {
                 agencyWalletModel.AgencyTotalAmount = (decimal)driverTransfer.Sum(x => x.AgencyAmount);
@@ -373,7 +373,7 @@ namespace Moor.Service.Services.MoorService
         public async Task<DriverWalletModel> GetDriverWallet(long driverId)
         {
             DriverWalletModel driverWalletModel = new DriverWalletModel();
-            var driverTransfer = base.Where(x => x.DriverId == driverId && x.Status != Convert.ToInt32(TransferStatus.IPTAL)).ToList();
+            var driverTransfer = base.Where(x => x.DriverId == driverId && x.Status == Convert.ToInt32(TransferStatus.TAMAMLANDI)).ToList();
             if (driverTransfer.IsNotNullOrEmpty())
             {
                 driverWalletModel.DriverTotalAmount = (decimal)driverTransfer.Sum(x => x.DriverAmount);
@@ -496,9 +496,9 @@ namespace Moor.Service.Services.MoorService
             var transferEntity = base.Where(x => x.Id == transferId).FirstOrDefault();
             var districtModel = _districtService.GetByIdAsync((long)transferEntity.DisctrictId).Result;
 
-            transferGetByIdModel.DistrictName = districtModel.Name;
-            transferGetByIdModel.Location = transferEntity.Location;
-            transferGetByIdModel.FlightCode = transferEntity.FlightCode;
+            transferGetByIdModel.DistrictName = districtModel.Name.IsNotNullOrEmpty() ? districtModel.Name : "";
+            transferGetByIdModel.Location = transferEntity.Location.IsNotNullOrEmpty() ? transferEntity.Location : "";
+            transferGetByIdModel.FlightCode = transferEntity.FlightCode.IsNotNullOrEmpty() ? transferEntity.FlightCode : "";
             transferGetByIdModel.Status = GetLookup(transferEntity.Status);
             transferGetByIdModel.CreatedDate = transferEntity.CreatedDate;
             if (transferEntity.DriverId.IsNotNull())
@@ -517,7 +517,7 @@ namespace Moor.Service.Services.MoorService
                     string base64Data = Convert.ToBase64String(bytes);
                     transferGetByIdModel.DriverMediaPath = base64Data;
                 }
-                transferGetByIdModel.DriverPhoneNumber = driverModel.Personnel.PhoneNumber;
+                transferGetByIdModel.DriverPhoneNumber = driverModel.Personnel.PhoneNumber.IsNotNullOrEmpty() ? driverModel.Personnel.PhoneNumber : "";
             }
             transferGetByIdModel.Price = (decimal)transferEntity.Amount;
             transferGetByIdModel.Id = transferEntity.Id;
