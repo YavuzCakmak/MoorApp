@@ -507,7 +507,7 @@ namespace Moor.Service.Services.MoorService
             var transferEntity = base.Where(x => x.Id == transferId).FirstOrDefault();
             var districtModel = _districtService.GetByIdAsync((long)transferEntity.DisctrictId).Result;
 
-            transferGetByIdModel.Explanation = transferEntity.Explanation.IsNotNullOrEmpty() ? transferEntity.Explanation;
+            transferGetByIdModel.Explanation = transferEntity.Explanation.IsNotNullOrEmpty() ? transferEntity.Explanation : "";
             transferGetByIdModel.DistrictName = districtModel.Name.IsNotNullOrEmpty() ? districtModel.Name : "";
             transferGetByIdModel.Location = transferEntity.Location.IsNotNullOrEmpty() ? transferEntity.Location : "";
             transferGetByIdModel.FlightCode = transferEntity.FlightCode.IsNotNullOrEmpty() ? transferEntity.FlightCode : "";
