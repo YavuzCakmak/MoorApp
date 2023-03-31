@@ -510,6 +510,7 @@ namespace Moor.Service.Services.MoorService
             transferGetByIdModel.DistrictName = districtModel.Name.IsNotNullOrEmpty() ? districtModel.Name : "";
             transferGetByIdModel.Location = transferEntity.Location.IsNotNullOrEmpty() ? transferEntity.Location : "";
             transferGetByIdModel.FlightCode = transferEntity.FlightCode.IsNotNullOrEmpty() ? transferEntity.FlightCode : "";
+            transferGetByIdModel.DirectionType = transferEntity.DirectionType;
             transferGetByIdModel.Status = GetLookup(transferEntity.Status);
             transferGetByIdModel.CreatedDate = transferEntity.CreatedDate;
             if (transferEntity.DriverId.IsNotNull())

@@ -19,6 +19,7 @@ namespace Moor.Model.Models.MoorModels.TransferModel.TransferGetByIdModel
         public string? DriverPhoneNumber { get; set; }
         public string? Plate { get; set; }
         public string? DriverMediaPath { get; set; }
+        public int? DirectionType { get; set; }
         public decimal Price { get; set; }
         public string CarModel { get; set; }
         public string CarBrand { get; set; }
