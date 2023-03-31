@@ -341,6 +341,11 @@ namespace Moor.Service.Services.MoorService
                         transferViewDto.TravellerDtos.Add(dto);
                     }
                 }
+
+                if (transferEntity.LocationFree.IsNotNullOrEmpty())
+                {
+                    transferViewDto.LocationFree = transferEntity.LocationFree;
+                }
                 transferViewDto.CreatedDate = transferEntity.CreatedDate;
                 transferViewDto.DistrictName = districtModel.Name;
                 transferViewDto.Location = transferEntity.Location;

@@ -20,6 +20,7 @@ namespace Moor.Model.Dtos.MoorDto.TransferDto.TransferViewDto
         public string CityName { get; set; }
         public string CountyName { get; set; }
         public string Location { get; set; }
+        public string LocationFree { get; set; }
         public string FlightCode { get; set; }
         public string CarParameterBrand { get; set; }
         public string CarParameterModel { get; set; }
