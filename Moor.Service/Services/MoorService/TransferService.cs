@@ -258,8 +258,17 @@ namespace Moor.Service.Services.MoorService
             #endregion
 
             var districtModel = _districtService.GetByIdAsync((long)transferEntity.DisctrictId).Result;
-            var cityModel = _cityService.GetByIdAsync((long)transferEntity.CityId).Result;
-            var countyName = _countyService.GetByIdAsync((long)transferEntity.CountyId).Result;
+            if (transferEntity.CityId.IsNotNull())
+            {
+                var cityModel = _cityService.GetByIdAsync((long)transferEntity.CityId).Result;
+                transferViewDto.CityName = cityModel.Name;
+            }
+            if (transferEntity.CountyId.IsNotNull())
+            {
+                var countyName = _countyService.GetByIdAsync((long)transferEntity.CountyId).Result;
+                transferViewDto.CountyName = countyName.Name;
+            }
+
             var carParameterModel = _carParameterService.Where(x => x.Id == transferEntity.CarParameterId).FirstOrDefault();
 
             if (transferEntity.DriverId.IsNotNull())
@@ -286,8 +295,6 @@ namespace Moor.Service.Services.MoorService
             transferViewDto.DistrictName = districtModel.Name;
             transferViewDto.Location = transferEntity.Location;
             transferViewDto.FlightCode = transferEntity.FlightCode;
-            transferViewDto.CityName = cityModel.Name;
-            transferViewDto.CountyName = countyName.Name;
             transferViewDto.CarParameterBrand = carParameterModel.CarBrand.Brand;
             transferViewDto.CarParameterModel = carParameterModel.CarModel.Model;
             transferViewDto.Explanation = transferEntity.Explanation;
