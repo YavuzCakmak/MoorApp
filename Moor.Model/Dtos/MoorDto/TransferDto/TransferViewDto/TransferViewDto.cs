@@ -17,8 +17,8 @@ namespace Moor.Model.Dtos.MoorDto.TransferDto.TransferViewDto
         public string? DriverPhoneNumber { get; set; }
         public string Plate { get; set; }
         public string DistrictName { get; set; }
-        public string CityName { get; set; }
-        public string CountyName { get; set; }
+        public string? CityName { get; set; }
+        public string? CountyName { get; set; }
         public string Location { get; set; }
         public string LocationFree { get; set; }
         public string FlightCode { get; set; }
