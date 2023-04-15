@@ -9,7 +9,7 @@ namespace Moor.Core.Entities.MoorEntities
     {
         [DataFilter]
         [Column("agency_id")]
-        public long AgencyId { get; set; }
+        public long? AgencyId { get; set; }
 
         [DataFilter]
         [Column("driver_id")]

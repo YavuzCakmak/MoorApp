@@ -10,6 +10,7 @@ using Moor.Core.UnitOfWorks;
 using Moor.Model.Dtos.MoorDto;
 using Moor.Model.Dtos.MoorDto.TransferDto.TransferPostDto;
 using Moor.Model.Dtos.MoorDto.TransferDto.TransferViewDto;
+using Moor.Model.Models.MoorModels.AgencyModel;
 using Moor.Model.Models.MoorModels.AgencyModel.AgencyWalletModel;
 using Moor.Model.Models.MoorModels.AgencyModel.DebitForAgencyModel;
 using Moor.Model.Models.MoorModels.CarParameterModel;
@@ -20,8 +21,10 @@ using Moor.Model.Models.MoorModels.DriverModel;
 using Moor.Model.Models.MoorModels.DriverModel.DebitForDriverModel;
 using Moor.Model.Models.MoorModels.DriverModel.DriverWalletModel;
 using Moor.Model.Models.MoorModels.NotificationModel.NotificationPostModel;
+using Moor.Model.Models.MoorModels.TransferModel.GetTransferUpdateModel;
 using Moor.Model.Models.MoorModels.TransferModel.TransferChangeModel;
 using Moor.Model.Models.MoorModels.TransferModel.TransferGetByIdModel;
+using Moor.Model.Models.MoorModels.TransferModel.TransferUpdateModel;
 using Moor.Model.Utilities;
 using Moor.Service.Services.BaseService;
 using Org.BouncyCastle.Math.EC.Rfc7748;
@@ -182,11 +185,15 @@ namespace Moor.Service.Services.MoorService
             {
                 transferPostDto.Amount = priceModel.Price + agencyModel.ReceptionPrice;
             }
-           
+
             var transferEntity = _mapper.Map<TransferEntity>(transferPostDto);
             if (transferPostDto.LocationFree.IsNotNullOrEmpty())
             {
                 transferEntity.LocationFree = transferPostDto.LocationFree;
+            }
+            else
+            {
+                transferEntity.LocationFree = string.Empty;
             }
             transferEntity.CreatedDate = transferPostDto.ReturnDate.Value;
             transferEntity.AgencyAmount = transferPostDto.Amount;
@@ -205,15 +212,21 @@ namespace Moor.Service.Services.MoorService
             var travellerEntities = _mapper.Map<List<TravellerEntity>>(transferPostDto.TravellerDtos);
             var travellerAddResult = await _travellerService.AddRangeAsync(travellerEntities);
             var districtModel = _districtService.GetByIdAsync(transferPostDto.DisctrictId).Result;
-            var cityModel = _cityService.GetByIdAsync(transferPostDto.CityId).Result;
-            var countyName = _countyService.GetByIdAsync(transferPostDto.CountyId).Result;
+            if (transferPostDto.CityId.IsNotNull())
+            {
+                var cityModel = _cityService.GetByIdAsync((long)transferPostDto.CityId).Result;
+                transferViewDto.CityName = cityModel.Name.IsNotNullOrEmpty() ? cityModel.Name : "";
+            }
+            if (transferPostDto.CountyId.IsNotNull())
+            {
+                var countyName = _countyService.GetByIdAsync((long)transferPostDto.CountyId).Result;
+                transferViewDto.CountyName = countyName.Name.IsNotNullOrEmpty() ? countyName.Name : "";
+            }
             var carParameterModel = _carParameterService.Where(x => x.Id == transferPostDto.CarParameterId).FirstOrDefault();
-
             transferViewDto.DistrictName = districtModel.Name.IsNotNullOrEmpty() ? districtModel.Name : "";
             transferViewDto.Location = transferPostDto.Location.IsNotNullOrEmpty() ? transferPostDto.Location : "";
             transferViewDto.FlightCode = transferPostDto.FlightCode.IsNotNullOrEmpty() ? transferPostDto.FlightCode : "";
-            transferViewDto.CityName = cityModel.Name.IsNotNullOrEmpty() ? cityModel.Name : "";
-            transferViewDto.CountyName = countyName.Name.IsNotNullOrEmpty() ? countyName.Name : "";
+
             transferViewDto.CarParameterBrand = carParameterModel.CarBrand.Brand.IsNotNullOrEmpty() ? carParameterModel.CarBrand.Brand : "";
             transferViewDto.CarParameterModel = carParameterModel.CarModel.Model.IsNotNullOrEmpty() ? carParameterModel.CarModel.Model : "";
             transferViewDto.Explanation = transferPostDto.Explanation.IsNotNullOrEmpty() ? transferPostDto.Explanation : ""; ;
@@ -545,6 +558,101 @@ namespace Moor.Service.Services.MoorService
                 transferGetByIdModel.Traveller.Add(travellerEntity);
             }
             return transferGetByIdModel;
+        }
+
+        public async Task<GetTransferUpdateModel> GetTransferUpdateModel(long transferId)
+        {
+            GetTransferUpdateModel getTransferUpdateModel = new GetTransferUpdateModel();
+            var transferEntity = base.Where(x => x.Id == transferId).FirstOrDefault();
+            if (transferEntity.IsNotNull())
+            {
+                getTransferUpdateModel.Id = transferId;
+                getTransferUpdateModel.CreateDate = transferEntity.CreatedDate;
+                getTransferUpdateModel.LocationFree = transferEntity.LocationFree.IsNotNullOrEmpty() ? transferEntity.LocationFree : string.Empty;
+                getTransferUpdateModel.Location = transferEntity.Location.IsNotNullOrEmpty() ? transferEntity.Location : string.Empty;
+                getTransferUpdateModel.DirectionType = transferEntity.DirectionType;
+                var districtModel = _districtService.Where(x => x.Id == transferEntity.DisctrictId).FirstOrDefault();
+                if (districtModel.IsNotNull())
+                {
+                    getTransferUpdateModel.DistrictName = districtModel.Name;
+                    getTransferUpdateModel.DistrictId = transferEntity.DisctrictId;
+                }
+                getTransferUpdateModel.FlightCode = transferEntity.FlightCode.IsNotNullOrEmpty() ? transferEntity.FlightCode : "UCUS KODU YOK";
+
+                var travellers = _travellerService.Where(x => x.TransferId == transferId).ToList();
+                if (travellers.IsNotNullOrEmpty())
+                {
+                    var travellerDtos = _mapper.Map<List<TravellerDto>>(travellers);
+                    getTransferUpdateModel.TravellerDtos = travellerDtos;
+                }
+            }
+            return getTransferUpdateModel;
+        }
+
+        public async Task<DataResult> UpdateTransfer(TransferUpdateModel transferUpdateModel)
+        {
+            DataResult dataResult = new DataResult();
+            var transferModel = base.Where(x => x.Id == transferUpdateModel.Id).FirstOrDefault();
+            if (transferModel.IsNotNull())
+            {
+                transferModel.CreatedDate = (DateTime)transferUpdateModel.CreateDate;
+                transferModel.Location = transferUpdateModel.Location.IsNotNullOrEmpty() ? transferUpdateModel.Location : transferModel.Location;
+                transferModel.LocationFree = transferUpdateModel.LocationFree.IsNotNullOrEmpty() ? transferUpdateModel.LocationFree : transferModel.Location;
+                transferModel.FlightCode = transferUpdateModel.FlightCode.IsNotNullOrEmpty() ? transferUpdateModel.FlightCode : transferModel.FlightCode;
+                transferModel.DirectionType = transferUpdateModel.DirectionType.IsNotNull() ? transferUpdateModel.DirectionType : transferModel.DirectionType;
+                transferModel.DisctrictId = transferUpdateModel.DistrictId.IsNotNull() ? transferUpdateModel.DistrictId : transferModel.DisctrictId;
+
+                var travellerModels = _travellerService.Where(x => x.TransferId == transferUpdateModel.Id).ToList();
+                if (travellerModels.IsNotNullOrEmpty() && transferUpdateModel.TravellerDtos.IsNotNullOrEmpty())
+                {
+                    foreach (var traveller in travellerModels)
+                    {
+                        var currentTraveller = transferUpdateModel.TravellerDtos.Find(x => x.Id == traveller.Id);
+                        if (currentTraveller.IsNotNull())
+                        {
+                            traveller.TransferId = transferUpdateModel.Id;
+                            traveller.FirstName = currentTraveller.FirstName.IsNotNullOrEmpty() ? currentTraveller.FirstName : traveller.FirstName;
+                            traveller.LastName = currentTraveller.LastName.IsNotNullOrEmpty() ? currentTraveller.LastName : traveller.LastName;
+                            traveller.UpdateDate = DateTime.Now;
+                            await _travellerService.UpdateAsync(traveller);
+                        }
+                    }
+                }
+
+                var agencyModel = await _agencyService.GetByIdAsync((long)transferModel.AgencyId);
+                if (agencyModel.IsNull())
+                {
+                    dataResult.IsSuccess = false;
+                    dataResult.ErrorMessage = "Acente Bulunamadı.";
+                    return dataResult;
+                }
+                var priceModel = _priceService.Where(x => x.CarParameterId == transferModel.CarParameterId && x.DistrictId == transferModel.DisctrictId).FirstOrDefault();
+
+                if (priceModel.IsNotNull())
+                {
+                    if (transferUpdateModel.DirectionType == Convert.ToInt32(DirectionType.TEK_YON))
+                    {
+                        transferModel.Amount = priceModel.Price;
+                        transferModel.FlightCode = "UCUS KODU YOK";
+                        transferModel.ReceptionType = 3;
+                    }
+                    else
+                    {
+                        transferModel.Amount = priceModel.Price + agencyModel.ReceptionPrice;
+                    }
+                }
+
+                transferModel.AgencyAmount = transferModel.Amount;
+                base.UpdateAsync(transferModel);
+                dataResult.IsSuccess = true;
+                return dataResult;
+            }
+            else
+            {
+                dataResult.IsSuccess = false;
+                dataResult.ErrorMessage = "Transfer Bulunamadı";
+            }
+            return dataResult;
         }
     }
 }

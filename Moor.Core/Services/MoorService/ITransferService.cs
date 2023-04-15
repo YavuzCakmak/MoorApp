@@ -6,8 +6,10 @@ using Moor.Model.Models.MoorModels.AgencyModel.AgencyWalletModel;
 using Moor.Model.Models.MoorModels.AgencyModel.DebitForAgencyModel;
 using Moor.Model.Models.MoorModels.DriverModel.DebitForDriverModel;
 using Moor.Model.Models.MoorModels.DriverModel.DriverWalletModel;
+using Moor.Model.Models.MoorModels.TransferModel.GetTransferUpdateModel;
 using Moor.Model.Models.MoorModels.TransferModel.TransferChangeModel;
 using Moor.Model.Models.MoorModels.TransferModel.TransferGetByIdModel;
+using Moor.Model.Models.MoorModels.TransferModel.TransferUpdateModel;
 using Moor.Model.Utilities;
 
 namespace Moor.Core.Services.MoorService
@@ -23,5 +25,7 @@ namespace Moor.Core.Services.MoorService
         public Task<DataResult> ChangeTransferStatus(TransferChangeModel transferChangeModel);
         public Task<List<TransferViewDto>> MapTransferViewDtos(List<TransferEntity> transferEntities);
         public Task<TransferViewDto> MapTransferViewDto(TransferEntity transferEntity);
+        public Task<GetTransferUpdateModel> GetTransferUpdateModel(long transferId);
+        public Task<DataResult> UpdateTransfer(TransferUpdateModel transferUpdateModel);
     }
 }

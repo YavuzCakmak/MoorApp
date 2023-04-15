@@ -8,7 +8,8 @@ namespace Moor.Model.Dtos.MoorDto
 {
     public class TravellerDto
     {
-        public long TransferId { get; set; }
+        public long? Id { get; set; }
+        public long? TransferId { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? Email { get; set; }

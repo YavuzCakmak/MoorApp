@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moor.API.Controllers.BaseController;
 using Moor.API.Filters;
 using Moor.Core.Entities.MoorEntities;
+using Moor.Core.Extension.String;
 using Moor.Core.Services.MoorService;
 using Moor.Core.Utilities;
 using Moor.Core.Utilities.DataFilter;
@@ -14,8 +15,10 @@ using Moor.Model.Models.MoorModels.AgencyModel.DebitForAgencyModel;
 using Moor.Model.Models.MoorModels.DriverModel.DebitForDriverModel;
 using Moor.Model.Models.MoorModels.DriverModel.DriverWalletModel;
 using Moor.Model.Models.MoorModels.TransferModel;
+using Moor.Model.Models.MoorModels.TransferModel.GetTransferUpdateModel;
 using Moor.Model.Models.MoorModels.TransferModel.TransferChangeModel;
 using Moor.Model.Models.MoorModels.TransferModel.TransferGetByIdModel;
+using Moor.Model.Models.MoorModels.TransferModel.TransferUpdateModel;
 using Moor.Model.Utilities;
 using Moor.Service.Models.Dto.ResponseDto;
 using Moor.Service.Services.MoorService;
@@ -50,6 +53,18 @@ namespace Moor.API.Controllers
             var transferEntity = await _transferService.GetByIdAsync(id);
             var transferViewModel = await _transferService.MapTransferViewDto(transferEntity);
             return CreateActionResult(CustomResponseDto<TransferViewDto>.Succces((int)HttpStatusCode.OK, transferViewModel));
+        }
+
+        [HttpGet("GetTransferUpdateModel")]
+        public async Task<IActionResult> GetTransferUpdateModel([FromQuery]long transferId)
+        {
+            var getTransferUpdateModel = await _transferService.GetTransferUpdateModel(transferId);
+            if (getTransferUpdateModel.IsNotNull())
+            {
+                return CreateActionResult(CustomResponseDto<GetTransferUpdateModel>.Succces((int)HttpStatusCode.OK, getTransferUpdateModel));
+            }
+            else
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail((int)HttpStatusCode.BadRequest));
         }
 
         [HttpGet("GetTransferDetail")]
@@ -117,6 +132,16 @@ namespace Moor.API.Controllers
             else
                 return CreateActionResult(CustomResponseDto<NoContentDto>.Fail((int)HttpStatusCode.BadRequest, dataResult.ErrorMessage));
 
+        }
+
+        [HttpPut("UpdateTransfer")]
+        public async Task<IActionResult> UpdateTransfer(TransferUpdateModel transferUpdateModel)
+        {
+            var dataResult = await _transferService.UpdateTransfer(transferUpdateModel);
+            if (dataResult.IsSuccess)
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Succces((int)HttpStatusCode.OK));
+            else
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail((int)HttpStatusCode.BadRequest, dataResult.ErrorMessage));
         }
 
         [HttpPut]
