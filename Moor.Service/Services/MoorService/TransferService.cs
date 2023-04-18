@@ -624,7 +624,6 @@ namespace Moor.Service.Services.MoorService
                         var currentTraveller = transferUpdateModel.TravellerDtos.Find(x => x.Id == traveller.Id);
                         if (currentTraveller.IsNotNull())
                         {
-                            traveller.TransferId = transferUpdateModel.Id;
                             traveller.FirstName = currentTraveller.FirstName.IsNotNullOrEmpty() ? currentTraveller.FirstName : traveller.FirstName;
                             traveller.LastName = currentTraveller.LastName.IsNotNullOrEmpty() ? currentTraveller.LastName : traveller.LastName;
                             traveller.UpdateDate = DateTime.Now;
