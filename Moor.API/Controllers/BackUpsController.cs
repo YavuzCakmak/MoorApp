@@ -26,11 +26,19 @@ namespace Moor.API.Controllers
             {
                 BackupDatabase();
                 nextRun = schedule.GetNextOccurrence(DateTime.Now);
-            }, null, nextRun - DateTime.Now, TimeSpan.FromDays(1));
+            }, null, nextRun - DateTime.Now, TimeSpan.FromMinutes(1));
+        }
+
+        [HttpGet("BackUp")]
+        public void BackUp()
+        {
+            BackupDatabase();
         }
 
         static void BackupDatabase()
         {
+
+            //"ConnectionStrings": { "SqlConnection": "Server=127.0.0.1;Port=3306;Database=moor;Uid=Admin;Pwd=3X1Dkbp9#0UaKc4Ee9pY;" },
             string server = "127.0.0.1";
             string database = "moor";
             string user = "root";
