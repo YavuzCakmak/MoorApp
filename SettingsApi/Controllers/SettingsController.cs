@@ -26,8 +26,8 @@ namespace CommonApi.Controllers
         {
             string server = "127.0.0.1";
             string database = "moor";
-            string user = "Admin";
-            string password = "3X1Dkbp9#0UaKc4Ee9pY";
+            string user = "root";
+            string password = "MpuH8QHcFniDNQv";
 
             string backupDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Backup");
             string backupFileName = "VeritabaniYedekleri-" + DateTime.Now.ToString("yyyy-MM-dd") + ".sql";
