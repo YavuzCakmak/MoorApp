@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moor.Repository", "Moor.Rep
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moor.API", "Moor.API\Moor.API.csproj", "{6E477092-1C78-4806-B795-83D4EBEA26AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moor.Model", "Moor.Model\Moor.Model.csproj", "{F42CF38E-F531-4484-8955-5D43EBF26E0D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moor.Model", "Moor.Model\Moor.Model.csproj", "{F42CF38E-F531-4484-8955-5D43EBF26E0D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SettingsApi", "SettingsApi\SettingsApi.csproj", "{5815F9FB-59D1-4C95-BE6C-8068CFD23F2F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{F42CF38E-F531-4484-8955-5D43EBF26E0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F42CF38E-F531-4484-8955-5D43EBF26E0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F42CF38E-F531-4484-8955-5D43EBF26E0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5815F9FB-59D1-4C95-BE6C-8068CFD23F2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5815F9FB-59D1-4C95-BE6C-8068CFD23F2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5815F9FB-59D1-4C95-BE6C-8068CFD23F2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5815F9FB-59D1-4C95-BE6C-8068CFD23F2F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
