@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Net.Mail;
+using System.Text;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.AspNetCore.Mvc;
@@ -17,8 +18,7 @@ namespace Moor.API.Controllers
         public BackUpsController()
         {
             // Crontab ifadesini ayarlayın (örneğin, her sabah saat 4'te çalışacak şekilde ayarlanmıştır)
-            var schedule = CrontabSchedule.Parse("*/1 * * * *");
-            //var schedule = NCrontab.CrontabSchedule.Parse("0 4 * * *");
+            var schedule = CrontabSchedule.Parse("0 4 * * *");
 
             // Yeniden başlatma durumunda programın doğru çalışmasını sağlamak için sonraki yedeklemeleri planlı hale getirin
             var nextRun = schedule.GetNextOccurrence(DateTime.Now);
@@ -26,7 +26,7 @@ namespace Moor.API.Controllers
             {
                 BackupDatabase();
                 nextRun = schedule.GetNextOccurrence(DateTime.Now);
-            }, null, nextRun - DateTime.Now, TimeSpan.FromMinutes(1));
+            }, null, nextRun - DateTime.Now, TimeSpan.FromDays(1));
         }
 
         [HttpGet("BackUp")]
@@ -38,7 +38,6 @@ namespace Moor.API.Controllers
         static void BackupDatabase()
         {
 
-            //"ConnectionStrings": { "SqlConnection": "Server=127.0.0.1;Port=3306;Database=moor;Uid=Admin;Pwd=3X1Dkbp9#0UaKc4Ee9pY;" },
             string server = "127.0.0.1";
             string database = "moor";
             string user = "root";
@@ -65,8 +64,13 @@ namespace Moor.API.Controllers
             // mysqldump komutunu çalıştır
             Process process = Process.Start(psi);
 
+            //using (StreamWriter output = new StreamWriter(backupFilePath))
+            //{
+            //    output.Write(process.StandardOutput.ReadToEnd());
+            //}
+
             // yedek dosyasını oluştur
-            using (StreamWriter output = new StreamWriter(backupFilePath))
+            using (StreamWriter output = new StreamWriter(backupFilePath, false, Encoding.Unicode))
             {
                 output.Write(process.StandardOutput.ReadToEnd());
             }
