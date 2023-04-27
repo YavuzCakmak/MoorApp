@@ -7,6 +7,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="MySqlBackup.NET" Version="2.3.8" />
+		<PackageReference Include="MySqlBackup.Net.DevartExpress" Version="2.3.8" />
+		<PackageReference Include="MySqlBackup.NET.MySqlConnector" Version="2.3.8" />
 		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.2.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.7">
 			<PrivateAssets>all</PrivateAssets>

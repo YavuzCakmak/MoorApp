@@ -1,12 +1,5 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Net.Mail;
-using System.Text;
-using MailKit.Net.Smtp;
-using MailKit.Security;
-using Microsoft.AspNetCore.Mvc;
-using MimeKit;
+﻿using Microsoft.AspNetCore.Mvc;
+using MySqlConnector;
 using NCrontab;
 
 namespace Moor.API.Controllers
@@ -35,8 +28,67 @@ namespace Moor.API.Controllers
 
         static async void BackupDatabase()
         {
-            var client = new HttpClient();
-            var response = await client.GetAsync("https://localhost:7019/api/Settings/TakeBackUp");
+
+            string server = "127.0.0.1";
+            string database = "moor";
+            string user = "root";
+            string password = "MpuH8QHcFniDNQv";
+
+            string backupDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Backup");
+            string backupFileName = "VeritabaniYedekleri-" + DateTime.Now.ToString("yyyy-MM-dd") + ".sql";
+            string backupFilePath = Path.Combine(backupDirectory, backupFileName);
+
+            if (!Directory.Exists(backupDirectory))
+            {
+                Directory.CreateDirectory(backupDirectory);
+            }
+
+            string constring = $"server={server};user={user};pwd={password};database={database};";
+            string file = backupFilePath;
+            using (MySqlConnection conn = new MySqlConnection(constring))
+            {
+                using (MySqlCommand cmd = new MySqlCommand())
+                {
+                    using (MySqlBackup mb = new MySqlBackup(cmd))
+                    {
+                        cmd.Connection = conn;
+                        conn.Open();
+                        mb.ExportToFile(file);
+                        conn.Close();
+                    }
+                }
+            }
+
+            Console.WriteLine($"Database backup created at '{backupFilePath}'.");
+
+            string fromEmail = "anka_yedek@hotmail.com";
+            string toEmail = "musaozmen58@icloud.com";
+
+            string emailSubject = $"Günlük Veritabanı Yedeği -- {DateTime.Now.Date}";
+            string emailBody = "Merhaba,\n\nGünlük veritabanı yedeği ektedir.";
+
+            var message = new MimeKit.MimeMessage();
+            message.From.Add(new MimeKit.MailboxAddress("Backup Service", fromEmail));
+            message.To.Add(MimeKit.MailboxAddress.Parse(toEmail));
+            message.Subject = emailSubject;
+
+            var builder = new MimeKit.BodyBuilder();
+            builder.TextBody = emailBody;
+            builder.Attachments.Add(backupFilePath);
+
+            message.Body = builder.ToMessageBody();
+
+            using (var client = new MailKit.Net.Smtp.SmtpClient())
+            {
+                client.CheckCertificateRevocation = false;
+                client.ServerCertificateValidationCallback = (s, c, h, e) => true;
+                client.Connect("smtp.office365.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
+                client.Authenticate(fromEmail, "morey1010");
+                client.Send(message);
+                client.Disconnect(true);
+            }
+
+            System.IO.File.Delete(backupFilePath);
         }
     }
 }
