@@ -39,6 +39,7 @@ namespace Moor.API.Controllers
             _personnelService = personnelService;
             _transferService = transferService;
         }
+
         [HttpGet]
         public async Task<IActionResult> All([FromQuery] DataFilterModel dataFilterModel)
         {

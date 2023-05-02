@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Moor.Core.Entities.MoorEntities;
 using Moor.Core.Enums;
 using Moor.Core.Extension.String;
@@ -34,6 +35,7 @@ namespace Moor.Service.Services.MoorService
     public class TransferService : Service<TransferEntity>, ITransferService
     {
         private readonly ITravellerService _travellerService;
+        private readonly IWalletService _walletService;
         private readonly INotificationService _notificationService;
         private readonly IAgencyService _agencyService;
         private readonly IDriverService _driverService;
@@ -46,7 +48,7 @@ namespace Moor.Service.Services.MoorService
         private readonly ITransferRepository _transferRepository;
         private readonly IMapper _mapper;
 
-        public TransferService(IGenericRepository<TransferEntity> repository, IUnitOfWork unitOfWork, IMapper mapper, ITransferRepository transferRepository, IDistrictService districtService, IAgencyService agencyService, ICityService cityService, ICarParameterService carParameterService, IPriceService priceService, ITravellerService travellerService, ICountyService countyService, IDriverService driverService, INotificationService notificationService, IDriverCarService driverCarService) : base(repository, unitOfWork)
+        public TransferService(IGenericRepository<TransferEntity> repository, IUnitOfWork unitOfWork, IMapper mapper, ITransferRepository transferRepository, IDistrictService districtService, IAgencyService agencyService, ICityService cityService, ICarParameterService carParameterService, IPriceService priceService, ITravellerService travellerService, ICountyService countyService, IDriverService driverService, INotificationService notificationService, IDriverCarService driverCarService, IWalletService walletService) : base(repository, unitOfWork)
         {
             _mapper = mapper;
             _transferRepository = transferRepository;
@@ -60,6 +62,7 @@ namespace Moor.Service.Services.MoorService
             _driverService = driverService;
             _notificationService = notificationService;
             _driverCarService = driverCarService;
+            _walletService = walletService;
         }
 
 
@@ -74,6 +77,12 @@ namespace Moor.Service.Services.MoorService
             var transferEntity = base.Where(x => x.Id == transferChangeModel.TransferId).FirstOrDefault();
             if (transferEntity.IsNotNull())
             {
+                #region Payment
+                if (transferChangeModel.Status.IsNotNull())
+                    await CalculateWalletForAgency(transferEntity, Convert.ToInt32(transferChangeModel.Status));
+                #endregion
+
+
                 if (transferEntity.DriverId.IsNull() && transferChangeModel.DriverId.IsNotNull() && transferChangeModel.DriverId > 0)
                 {
                     var driverModel = _driverService.Where(x => x.Id == transferChangeModel.DriverId).FirstOrDefault();
@@ -81,6 +90,11 @@ namespace Moor.Service.Services.MoorService
                     transferEntity.DriverAmount = driverModel.Price;
                     await base.UpdateAsync(transferEntity);
                     dataResult.IsSuccess = true;
+
+                    #region PaymentDriver
+                    CalculateWalletForDriverProgessing(transferEntity);
+                    #endregion
+
                     #region Notification
                     NotificationPostModel notificationPostModel = new NotificationPostModel();
                     notificationPostModel.TransferId = transferChangeModel.TransferId;
@@ -93,11 +107,17 @@ namespace Moor.Service.Services.MoorService
                 }
                 else if (transferEntity.DriverId.IsNotNull() && transferChangeModel.DriverId.IsNotNull() && transferChangeModel.DriverId > 0 && transferEntity.DriverId != transferChangeModel.DriverId)
                 {
+                    var oldDriverId = transferEntity.DriverId;
                     var driverModel = _driverService.Where(x => x.Id == transferChangeModel.DriverId).FirstOrDefault();
                     transferEntity.DriverId = transferChangeModel.DriverId;
                     transferEntity.DriverAmount = driverModel.Price;
                     await base.UpdateAsync(transferEntity);
                     #region Notification
+
+                    #region PaymentTransfer
+                    ChangetheAmountOfDrivers(transferEntity, Convert.ToInt32(oldDriverId), Convert.ToInt32(transferChangeModel.DriverId));
+                    #endregion
+
                     NotificationPostModel notificationPostModel = new NotificationPostModel();
                     notificationPostModel.TransferId = transferChangeModel.TransferId;
                     notificationPostModel.AgencyId = transferEntity.AgencyId;
@@ -115,6 +135,11 @@ namespace Moor.Service.Services.MoorService
                     await base.UpdateAsync(transferEntity);
                     dataResult.IsSuccess = true;
                     #region Notification
+
+                    #region PaymentUpdateAgency
+                    UpdateAgencyAmount(transferEntity);
+                    #endregion
+
                     NotificationPostModel notificationPostModel = new NotificationPostModel();
                     notificationPostModel.TransferId = transferChangeModel.TransferId;
                     notificationPostModel.AgencyId = transferEntity.AgencyId;
@@ -148,6 +173,137 @@ namespace Moor.Service.Services.MoorService
             }
             return dataResult;
         }
+
+
+        #region PaymentMethods
+
+        //Transferin Tutarı Değiştiği zaman bu tutar değişir
+        public async Task<DataResult> UpdateAgencyAmount(TransferEntity transferEntity)
+        {
+            DataResult dataResult = new DataResult();
+            if (transferEntity.Status == Convert.ToInt32(TransferStatus.TAMAMLANDI))
+            {
+                var wallet = _walletService.Where(x => x.AgencyId == transferEntity.AgencyId).FirstOrDefault();
+                if (wallet.IsNotNull())
+                {
+                    wallet.TotalAmount = transferEntity.AgencyAmount + wallet.TotalAmount;
+                    await _walletService.UpdateAsync(wallet);
+                }
+                else
+                {
+                    WalletEntity walletEntity = new WalletEntity();
+                    walletEntity.AgencyId = transferEntity.AgencyId;
+                    walletEntity.TotalAmount = transferEntity.AgencyAmount;
+                    walletEntity.CreatedDate = DateTime.Now;
+                    await _walletService.AddAsync(walletEntity);
+                }
+            }
+            return dataResult;
+        }
+
+        public async Task<DataResult> CalculateWalletForAgency(TransferEntity transferEntity, int transferChangeStatus)
+        {
+            DataResult dataResult = new DataResult();
+            if (transferEntity.Status != transferChangeStatus && transferChangeStatus == Convert.ToInt32(TransferStatus.TAMAMLANDI))
+            {
+                var wallet = _walletService.Where(x => x.AgencyId == transferEntity.AgencyId).FirstOrDefault();
+                if (wallet.IsNotNull())
+                {
+                    wallet.TotalAmount = transferEntity.AgencyAmount + wallet.TotalAmount;
+                    await _walletService.UpdateAsync(wallet);
+                }
+                else
+                {
+                    WalletEntity walletEntity = new WalletEntity();
+                    walletEntity.AgencyId = transferEntity.AgencyId;
+                    walletEntity.TotalAmount = transferEntity.AgencyAmount;
+                    walletEntity.CreatedDate = DateTime.Now;
+                    await _walletService.AddAsync(walletEntity);
+                }
+                if (transferEntity.DriverId.IsNotNull())
+                    await CalculateWalletForDriver(transferEntity);
+
+            }
+            return dataResult;
+        }
+
+        public async Task<DataResult> CalculateWalletForDriver(TransferEntity transferEntity)
+        {
+            DataResult dataResult = new DataResult();
+            var wallet = _walletService.Where(x => x.DriverId == transferEntity.DriverId).FirstOrDefault();
+            if (wallet.IsNotNull())
+            {
+                wallet.TotalAmount = transferEntity.DriverAmount + wallet.TotalAmount;
+                await _walletService.UpdateAsync(wallet);
+            }
+            else
+            {
+                WalletEntity walletEntity = new WalletEntity();
+                walletEntity.DriverId = transferEntity.DriverId;
+                walletEntity.TotalAmount = transferEntity.DriverAmount;
+                walletEntity.CreatedDate = DateTime.Now;
+                await _walletService.AddAsync(walletEntity);
+            }
+            return dataResult;
+        }
+
+        // Tamamlandı olan transferin üzerine şoför atanır ve transferin statüsü TAMAMLANDI ise
+        public async Task<DataResult> CalculateWalletForDriverProgessing(TransferEntity transferEntity)
+        {
+            DataResult dataResult = new DataResult();
+            if (transferEntity.Status == Convert.ToInt32(TransferStatus.TAMAMLANDI))
+            {
+                var wallet = _walletService.Where(x => x.DriverId == transferEntity.DriverId).FirstOrDefault();
+                if (wallet.IsNotNull())
+                {
+                    wallet.TotalAmount = transferEntity.DriverAmount + wallet.TotalAmount;
+                    await _walletService.UpdateAsync(wallet);
+                }
+                else
+                {
+                    WalletEntity walletEntity = new WalletEntity();
+                    walletEntity.DriverId = transferEntity.DriverId;
+                    walletEntity.TotalAmount = transferEntity.DriverAmount;
+                    walletEntity.CreatedDate = DateTime.Now;
+                    await _walletService.AddAsync(walletEntity);
+                }
+            }
+            return dataResult;
+        }
+
+        // Transferin üzerinde mevcut olan sürücü değişir ve transferin statüsü tamamlandı ise parayı aktarmak için yazıldı. 
+        public async Task<DataResult> ChangetheAmountOfDrivers(TransferEntity transferEntity, int oldDriverId, int newDriverId)
+        {
+            DataResult dataResult = new DataResult();
+            if (transferEntity.Status == Convert.ToInt32(TransferStatus.TAMAMLANDI))
+            {
+                var wallet = _walletService.Where(x => x.DriverId == oldDriverId).FirstOrDefault();
+                if (wallet.IsNotNull())
+                {
+                    wallet.TotalAmount = transferEntity.DriverAmount - wallet.TotalAmount;
+                    await _walletService.UpdateAsync(wallet);
+                }
+
+                var newDriverWallet = _walletService.Where(x => x.DriverId == newDriverId).FirstOrDefault();
+                if (newDriverWallet.IsNotNull())
+                {
+                    wallet.TotalAmount = transferEntity.DriverAmount + newDriverWallet.TotalAmount;
+                    await _walletService.UpdateAsync(wallet);
+                }
+                else
+                {
+                    WalletEntity walletEntity = new WalletEntity();
+                    walletEntity.DriverId = transferEntity.DriverId;
+                    walletEntity.TotalAmount = transferEntity.DriverAmount;
+                    walletEntity.CreatedDate = DateTime.Now;
+                    await _walletService.AddAsync(walletEntity);
+                }
+            }
+            return dataResult;
+        }
+
+        #endregion
+
         public async Task<DataResult> CreateTransfer(TransferPostDto transferPostDto)
         {
             #region Objects
@@ -400,10 +556,14 @@ namespace Moor.Service.Services.MoorService
         public async Task<AgencyWalletModel> GetAgencyWallet(long agencyId)
         {
             AgencyWalletModel agencyWalletModel = new AgencyWalletModel();
-            var driverTransfer = base.Where(x => x.AgencyId == agencyId && x.Status == Convert.ToInt32(TransferStatus.TAMAMLANDI)).ToList();
-            if (driverTransfer.IsNotNullOrEmpty())
+            var agencyWallet = _walletService.Where(x => x.AgencyId == agencyId).FirstOrDefault();
+            if (agencyWallet.IsNotNull())
             {
-                agencyWalletModel.AgencyTotalAmount = (decimal)driverTransfer.Sum(x => x.AgencyAmount);
+                agencyWalletModel.AgencyTotalAmount = Convert.ToDecimal(agencyWallet.TotalAmount);
+            }
+            else
+            {
+                agencyWalletModel.AgencyTotalAmount = 0;
             }
             return agencyWalletModel;
         }
@@ -411,10 +571,14 @@ namespace Moor.Service.Services.MoorService
         public async Task<DriverWalletModel> GetDriverWallet(long driverId)
         {
             DriverWalletModel driverWalletModel = new DriverWalletModel();
-            var driverTransfer = base.Where(x => x.DriverId == driverId && x.Status == Convert.ToInt32(TransferStatus.TAMAMLANDI)).ToList();
-            if (driverTransfer.IsNotNullOrEmpty())
+            var driverWallet = _walletService.Where(x => x.DriverId == driverId).FirstOrDefault();
+            if (driverWallet.IsNotNull())
             {
-                driverWalletModel.DriverTotalAmount = (decimal)driverTransfer.Sum(x => x.DriverAmount);
+                driverWalletModel.DriverTotalAmount = Convert.ToDecimal(driverWallet.TotalAmount);
+            }
+            else
+            {
+                driverWalletModel.DriverTotalAmount = 0;
             }
             return driverWalletModel;
         }
@@ -428,28 +592,19 @@ namespace Moor.Service.Services.MoorService
             #endregion
             if (debitForDriverModel.TransferId.IsNotNull() && debitForDriverModel.DriverId.IsNotNull() && debitForDriverModel.Amount.IsNotNull())
             {
-                var transferModel = base.Where(x => x.Id == debitForDriverModel.TransferId && x.DriverId == debitForDriverModel.DriverId).FirstOrDefault();
-                if (transferModel.IsNotNull())
+                var driverWalletModel = _walletService.Where(x => x.DriverId == debitForDriverModel.DriverId).FirstOrDefault();
+                if (driverWalletModel.IsNotNull())
                 {
-                    transferModel.DriverAmount = transferModel.DriverAmount + debitForDriverModel.Amount;
-                    if (transferModel.DriverAmount < 0)
-                    {
-                        dataResult.IsSuccess = false;
-                        dataResult.ErrorMessage = "Hatalı tutar girişi yaptınız.";
-                        return dataResult;
-                    }
-                    else
-                    {
-                        await base.UpdateAsync(transferModel);
-                        dataResult.IsSuccess = true;
-                        return dataResult;
-                    }
+                    driverWalletModel.TotalAmount = driverWalletModel.TotalAmount + debitForDriverModel.Amount;
+                    await _walletService.UpdateAsync(driverWalletModel);
                 }
                 else
                 {
-                    dataResult.IsSuccess = false;
-                    dataResult.ErrorMessage = "Transfer bilgisi bulunamadı.";
-                    return dataResult;
+                    WalletEntity walletEntity = new WalletEntity();
+                    walletEntity.DriverId = debitForDriverModel.DriverId;
+                    walletEntity.TotalAmount = debitForDriverModel.Amount;
+                    walletEntity.CreatedDate = DateTime.Now;
+                    await _walletService.AddAsync(walletEntity);
                 }
             }
             return dataResult;
@@ -462,28 +617,19 @@ namespace Moor.Service.Services.MoorService
             #endregion
             if (debitForAgencyModel.TransferId.IsNotNull() && debitForAgencyModel.AgencyId.IsNotNull() && debitForAgencyModel.Amount.IsNotNull())
             {
-                var transferModel = base.Where(x => x.Id == debitForAgencyModel.TransferId && x.AgencyId == debitForAgencyModel.AgencyId).FirstOrDefault();
-                if (transferModel.IsNotNull())
+                var driverWalletModel = _walletService.Where(x => x.DriverId == debitForAgencyModel.AgencyId).FirstOrDefault();
+                if (driverWalletModel.IsNotNull())
                 {
-                    transferModel.AgencyAmount = transferModel.AgencyAmount + debitForAgencyModel.Amount;
-                    if (transferModel.AgencyAmount < 0)
-                    {
-                        dataResult.IsSuccess = false;
-                        dataResult.ErrorMessage = "Hatalı tutar girişi yaptınız.";
-                        return dataResult;
-                    }
-                    else
-                    {
-                        await base.UpdateAsync(transferModel);
-                        dataResult.IsSuccess = true;
-                        return dataResult;
-                    }
+                    driverWalletModel.TotalAmount = driverWalletModel.TotalAmount + debitForAgencyModel.Amount;
+                    await _walletService.UpdateAsync(driverWalletModel);
                 }
                 else
                 {
-                    dataResult.IsSuccess = false;
-                    dataResult.ErrorMessage = "Transfer bilgisi bulunamadı.";
-                    return dataResult;
+                    WalletEntity walletEntity = new WalletEntity();
+                    walletEntity.AgencyId = debitForAgencyModel.AgencyId;
+                    walletEntity.TotalAmount = debitForAgencyModel.Amount;
+                    walletEntity.CreatedDate = DateTime.Now;
+                    await _walletService.AddAsync(walletEntity);
                 }
             }
             return dataResult;
