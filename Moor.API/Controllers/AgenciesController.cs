@@ -30,14 +30,16 @@ namespace Moor.API.Controllers
         private readonly IAgencyService _agencyService;
         private readonly IPersonnelService _personnelService;
         private readonly ITransferService _transferService;
+        private readonly IWalletService _walletService;
         private readonly IMapper _mapper;
 
-        public AgenciesController(IAgencyService agencyService, IMapper mapper, IPersonnelService personnelService, ITransferService transferService)
+        public AgenciesController(IAgencyService agencyService, IMapper mapper, IPersonnelService personnelService, ITransferService transferService, IWalletService walletService)
         {
             _agencyService = agencyService;
             _mapper = mapper;
             _personnelService = personnelService;
             _transferService = transferService;
+            _walletService = walletService;
         }
 
         [HttpGet]
@@ -54,8 +56,15 @@ namespace Moor.API.Controllers
                     string base64Data = Convert.ToBase64String(bytes);
                     agencyDto.MediaPath = base64Data;
                 }
-                var agencyTotalPrice = _transferService.Where(x => x.AgencyId == agencyDto.Id && x.Status == Convert.ToInt32(TransferStatus.TAMAMLANDI)).Sum(x => x.AgencyAmount);
-                agencyDto.AgencyTotalPrice = agencyTotalPrice;
+                var agencyTotalPrice = _walletService.Where(x => x.AgencyId == agencyDto.Id).FirstOrDefault();
+                if (agencyTotalPrice.IsNotNull())
+                {
+                    agencyDto.AgencyTotalPrice = agencyTotalPrice.TotalAmount;
+                }
+                else
+                {
+                    agencyDto.AgencyTotalPrice = 0;
+                }
             }
             return CreateActionResult(CustomResponseDto<List<AgencyDto>>.Succces((int)HttpStatusCode.OK, agencyDtos));
         }
