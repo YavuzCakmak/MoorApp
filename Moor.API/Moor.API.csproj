@@ -7,6 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="ExcelMapper" Version="5.2.542" />
 		<PackageReference Include="MySqlBackup.NET" Version="2.3.8" />
 		<PackageReference Include="MySqlBackup.Net.DevartExpress" Version="2.3.8" />
 		<PackageReference Include="MySqlBackup.NET.MySqlConnector" Version="2.3.8" />

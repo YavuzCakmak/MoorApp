@@ -12,6 +12,7 @@
 		<PackageReference Include="JWT" Version="10.0.2" />
 		<PackageReference Include="MailKit" Version="3.4.3" />
 		<PackageReference Include="MimeKit" Version="3.5.0" />
+		<PackageReference Include="ExcelMapper" Version="5.2.542" />
 	</ItemGroup>
 
 	<ItemGroup>

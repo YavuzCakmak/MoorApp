@@ -63,6 +63,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containersBuilder => container
 
 
 builder.Services.AddScoped<IAuthorizeService, AuthorizeService>();
+builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<SessionManager>();
 builder.Services.AddScoped(typeof(TokenHelper));
 
@@ -86,7 +87,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 
-app.UseCors(options => 
+app.UseCors(options =>
  options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 

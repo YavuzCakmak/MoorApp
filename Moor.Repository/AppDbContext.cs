@@ -33,8 +33,6 @@ namespace Moor.Repository
         public DbSet<PriceEntity> Price { get; set; }
         public DbSet<TransferEntity> Transfer { get; set; }
         public DbSet<TravellerEntity> Traveller { get; set; }
-        public DbSet<WalletEntity> Wallet { get; set; }
-        public DbSet<PaymentDescriptionEntity> PaymentDescription { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
