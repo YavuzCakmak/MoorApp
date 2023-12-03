@@ -44,7 +44,8 @@ namespace Moor.API.Controllers
         {
             var agencyEntities = await _agencyService.GetAllAsync(dataFilterModel);
             var agencyDtos = _mapper.Map<List<AgencyDto>>(agencyEntities);
-            foreach (var agencyDto in agencyDtos)
+            List<long> agencyIds = new List<long> { 17, 18, 19, 20, 21, 22, 26, 27, 28, 29, 30, 32, 33, 36, 37, 38, 39, 40 };
+            foreach (var agencyDto in agencyDtos.Where(x => !agencyIds.Contains(x.Id)))
             {
                 using (FileStream stream = new FileStream(agencyDto.MediaPath, FileMode.Open))
                 {
@@ -53,6 +54,10 @@ namespace Moor.API.Controllers
                     string base64Data = Convert.ToBase64String(bytes);
                     agencyDto.MediaPath = base64Data;
                 }
+
+            }
+            foreach (var agencyDto in agencyDtos)
+            {
                 var agencyTotalPrice = _transferService.Where(x => x.AgencyId == agencyDto.Id && x.Status == Convert.ToInt32(TransferStatus.TAMAMLANDI)).Sum(x => x.AgencyAmount);
                 agencyDto.AgencyTotalPrice = agencyTotalPrice;
             }

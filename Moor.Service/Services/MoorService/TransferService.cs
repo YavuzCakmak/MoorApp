@@ -28,6 +28,7 @@ using Moor.Model.Models.MoorModels.TransferModel.TransferUpdateModel;
 using Moor.Model.Utilities;
 using Moor.Service.Services.BaseService;
 using Org.BouncyCastle.Math.EC.Rfc7748;
+using System.Linq;
 
 namespace Moor.Service.Services.MoorService
 {
@@ -235,6 +236,9 @@ namespace Moor.Service.Services.MoorService
             transferViewDto.ReturnDate = transferPostDto.ReturnDate;
             transferViewDto.DepartureDate = transferPostDto.DepartureDate;
             transferViewDto.Price = (decimal)transferPostDto.Amount;
+
+            //await _mailService.SendTransferMail(transferAddResult.Id);
+
             transferViewDto.IsSucces = true;
             dataResult.IsSuccess = true;
             dataResult.PkId = transferAddResult.Id;
@@ -281,12 +285,22 @@ namespace Moor.Service.Services.MoorService
                 transferViewDto.Plate = driverCarModel.Car.NumberPlate;
                 transferViewDto.DriverMediaPath = driverModel.Personnel.MediaPath.IsNotNullOrEmpty() ? driverModel.Personnel.MediaPath : string.Empty;
 
-                using (FileStream stream = new FileStream(driverModel.Personnel.MediaPath, FileMode.Open))
+                List<long> oldDriverMedia = new List<long> { 12,
+13,
+14,
+16,
+20,
+21,
+22};
+                if (!oldDriverMedia.Contains(driverModel.Id))
                 {
-                    byte[] bytes = new byte[stream.Length];
-                    stream.Read(bytes, 0, bytes.Length);
-                    string base64Data = Convert.ToBase64String(bytes);
-                    transferViewDto.DriverMediaPath = base64Data;
+                    using (FileStream stream = new FileStream(driverModel.Personnel.MediaPath, FileMode.Open))
+                    {
+                        byte[] bytes = new byte[stream.Length];
+                        stream.Read(bytes, 0, bytes.Length);
+                        string base64Data = Convert.ToBase64String(bytes);
+                        transferViewDto.DriverMediaPath = base64Data;
+                    }
                 }
             }
 
@@ -330,13 +344,25 @@ namespace Moor.Service.Services.MoorService
 
                     transferViewDto.DriverMediaPath = driverModel.Personnel.MediaPath.IsNotNullOrEmpty() ? driverModel.Personnel.MediaPath : string.Empty;
 
-                    using (FileStream stream = new FileStream(driverModel.Personnel.MediaPath, FileMode.Open))
+                    List<long> oldDriverMedia = new List<long> { 12,
+13,
+14,
+16,
+20,
+21,
+22};
+
+                    if (!oldDriverMedia.Contains(driverModel.Id))
                     {
-                        byte[] bytes = new byte[stream.Length];
-                        stream.Read(bytes, 0, bytes.Length);
-                        string base64Data = Convert.ToBase64String(bytes);
-                        transferViewDto.DriverMediaPath = base64Data;
+                        using (FileStream stream = new FileStream(driverModel.Personnel.MediaPath, FileMode.Open))
+                        {
+                            byte[] bytes = new byte[stream.Length];
+                            stream.Read(bytes, 0, bytes.Length);
+                            string base64Data = Convert.ToBase64String(bytes);
+                            transferViewDto.DriverMediaPath = base64Data;
+                        }
                     }
+
                 }
 
                 var districtModel = _districtService.GetByIdAsync((long)transferEntity.DisctrictId).Result;
@@ -355,12 +381,18 @@ namespace Moor.Service.Services.MoorService
 
                 transferViewDto.Id = transferEntity.Id;
                 transferViewDto.AgencyName = transferEntity.Agency.Name;
-                using (FileStream stream = new FileStream(transferEntity.Agency.MediaPath, FileMode.Open))
+
+                List<long> agencyIds = new List<long> { 17, 18, 19, 20, 21, 22, 26, 27, 28, 29, 30, 32, 33, 36, 37, 38, 39, 40 };
+
+                if (!agencyIds.Contains(transferEntity.AgencyId.Value))
                 {
-                    byte[] bytes = new byte[stream.Length];
-                    stream.Read(bytes, 0, bytes.Length);
-                    string base64Data = Convert.ToBase64String(bytes);
-                    transferViewDto.AgencyMediaPath = base64Data;
+                    using (FileStream stream = new FileStream(transferEntity.Agency.MediaPath, FileMode.Open))
+                    {
+                        byte[] bytes = new byte[stream.Length];
+                        stream.Read(bytes, 0, bytes.Length);
+                        string base64Data = Convert.ToBase64String(bytes);
+                        transferViewDto.AgencyMediaPath = base64Data;
+                    }
                 }
                 if (travellers.IsNotNullOrEmpty())
                 {
@@ -550,12 +582,16 @@ namespace Moor.Service.Services.MoorService
                 {
                     transferGetByIdModel.Plate = driverCarModel.Car.NumberPlate;
                 }
-                using (FileStream stream = new FileStream(driverModel.Personnel.MediaPath, FileMode.Open))
+                List<long> oldDriverMedia = new List<long> { 12,13,14,16,20,21,22};
+                if (!oldDriverMedia.Contains(driverModel.Id))
                 {
-                    byte[] bytes = new byte[stream.Length];
-                    stream.Read(bytes, 0, bytes.Length);
-                    string base64Data = Convert.ToBase64String(bytes);
-                    transferGetByIdModel.DriverMediaPath = base64Data;
+                    using (FileStream stream = new FileStream(driverModel.Personnel.MediaPath, FileMode.Open))
+                    {
+                        byte[] bytes = new byte[stream.Length];
+                        stream.Read(bytes, 0, bytes.Length);
+                        string base64Data = Convert.ToBase64String(bytes);
+                        transferGetByIdModel.DriverMediaPath = base64Data;
+                    }
                 }
                 transferGetByIdModel.DriverPhoneNumber = driverModel.Personnel.PhoneNumber.IsNotNullOrEmpty() ? driverModel.Personnel.PhoneNumber : "";
             }

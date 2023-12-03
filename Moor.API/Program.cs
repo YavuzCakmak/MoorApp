@@ -64,6 +64,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containersBuilder => container
 
 builder.Services.AddScoped<IAuthorizeService, AuthorizeService>();
 builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<IMailService, MailService>();
 builder.Services.AddScoped<SessionManager>();
 builder.Services.AddScoped(typeof(TokenHelper));
 

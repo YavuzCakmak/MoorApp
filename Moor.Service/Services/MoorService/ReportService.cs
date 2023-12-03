@@ -124,7 +124,7 @@ namespace Moor.Service.Services.MoorService
             string fileName = $"{Guid.NewGuid()}.xlsx";
             excelMapper.Save(memoryStream, excelData, "Rapor");
 
-            string directoryPath = @"C:\Users\PC\Desktop\Test Klasörü";
+            string directoryPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Report");
 
             if (!Directory.Exists(directoryPath))
             {

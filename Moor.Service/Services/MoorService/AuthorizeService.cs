@@ -103,6 +103,11 @@ namespace Moor.Service.Services.MoorService
             tokenModel.Roles = roleDtos.ToList();
             tokenModel.Username = personnel.UserName;
 
+            List<long> oldMediaFile = new List<long>
+            {
+                549,570,571,572,573,574,575,576,577,578,579,580,584,585,586,587,588,589,590,591,592,593,594,595,596,597,600,601,602,603,604
+            };
+
 
             if (personnelRoles.Any(x => x.RoleId == (long)Roles.ACENTE))
             {
@@ -110,13 +115,17 @@ namespace Moor.Service.Services.MoorService
                 tokenModel.AgencyId = agencyModel.Id;
                 var agencyMedia = agencyModel.MediaPath.IsNotNullOrEmpty() ? agencyModel.MediaPath : string.Empty;
 
-                using (FileStream stream = new FileStream(agencyMedia, FileMode.Open))
+                if (!oldMediaFile.Contains(personnel.Id))
                 {
-                    byte[] bytes = new byte[stream.Length];
-                    stream.Read(bytes, 0, bytes.Length);
-                    string base64Data = Convert.ToBase64String(bytes);
-                    tokenModel.AgencyMedia = base64Data;
+                    using (FileStream stream = new FileStream(agencyMedia, FileMode.Open))
+                    {
+                        byte[] bytes = new byte[stream.Length];
+                        stream.Read(bytes, 0, bytes.Length);
+                        string base64Data = Convert.ToBase64String(bytes);
+                        tokenModel.AgencyMedia = base64Data;
+                    }
                 }
+
             }
             else if (personnelRoles.Any(x => x.RoleId == (long)Roles.SOFOR))
             {
@@ -125,12 +134,15 @@ namespace Moor.Service.Services.MoorService
 
                 var personnelMedia = personnel.MediaPath.IsNotNullOrEmpty() ? personnel.MediaPath : string.Empty;
 
-                using (FileStream stream = new FileStream(personnelMedia, FileMode.Open))
+                if (!oldMediaFile.Contains(personnel.Id))
                 {
-                    byte[] bytes = new byte[stream.Length];
-                    stream.Read(bytes, 0, bytes.Length);
-                    string base64Data = Convert.ToBase64String(bytes);
-                    tokenModel.DriverMedia = base64Data;
+                    using (FileStream stream = new FileStream(personnelMedia, FileMode.Open))
+                    {
+                        byte[] bytes = new byte[stream.Length];
+                        stream.Read(bytes, 0, bytes.Length);
+                        string base64Data = Convert.ToBase64String(bytes);
+                        tokenModel.DriverMedia = base64Data;
+                    }
                 }
             }
 

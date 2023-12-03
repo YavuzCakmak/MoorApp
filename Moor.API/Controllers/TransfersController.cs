@@ -26,16 +26,17 @@ using System.Net;
 
 namespace Moor.API.Controllers
 {
-    //[HasPermission]
     public class TransfersController : CustomBaseController
     {
         private readonly ITransferService _transferService;
+        private readonly IMailService _mailService;
         private readonly IMapper _mapper;
 
-        public TransfersController(ITransferService transferService, IMapper mapper)
+        public TransfersController(ITransferService transferService, IMapper mapper, IMailService mailService)
         {
             _transferService = transferService;
             _mapper = mapper;
+            _mailService = mailService;
         }
 
         [HttpGet]
@@ -56,7 +57,7 @@ namespace Moor.API.Controllers
         }
 
         [HttpGet("GetTransferUpdateModel")]
-        public async Task<IActionResult> GetTransferUpdateModel([FromQuery]long transferId)
+        public async Task<IActionResult> GetTransferUpdateModel([FromQuery] long transferId)
         {
             var getTransferUpdateModel = await _transferService.GetTransferUpdateModel(transferId);
             if (getTransferUpdateModel.IsNotNull())
@@ -125,6 +126,7 @@ namespace Moor.API.Controllers
             var dataResult = await _transferService.CreateTransfer(transferPostDto);
             if (dataResult.IsSuccess)
             {
+                await _mailService.SendTransferMail(dataResult.PkId);
                 var transferEntity = _transferService.Where(x => x.Id == dataResult.PkId).FirstOrDefault();
                 var transferViewDto = await _transferService.MapTransferViewDto(transferEntity);
                 return CreateActionResult(CustomResponseDto<TransferViewDto>.Succces((int)HttpStatusCode.OK, transferViewDto));
