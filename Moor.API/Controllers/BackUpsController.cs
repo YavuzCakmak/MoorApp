@@ -30,9 +30,9 @@ namespace Moor.API.Controllers
         {
 
             string server = "127.0.0.1";
-            string database = "moor";
+            string database = "moordb";
             string user = "root";
-            string password = "MpuH8QHcFniDNQv";
+            string password = "123456";
 
             string backupDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Backup");
             string backupFileName = "VeritabaniYedekleri-" + DateTime.Now.ToString("yyyy-MM-dd") + ".sql";
