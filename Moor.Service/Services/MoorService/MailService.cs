@@ -24,7 +24,7 @@ namespace Moor.Service.Services.MoorService
 
                 #region Mail
                 string fromEmail = "anka_yedek@hotmail.com";
-                string toEmail = "musaozmen58@icloud.com";
+                string toEmail = "operation@ankavip.com.tr";
 
                 string emailSubject = $"Yeni Transfer Kaydı -- {DateTime.Now.Date}";
 

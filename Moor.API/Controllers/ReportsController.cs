@@ -17,7 +17,7 @@ namespace Moor.API.Controllers
 
 
         [HttpGet]
-        public async Task<List<ReportDto>> All([FromQuery] int reportType)
+        public async Task<string> All([FromQuery] int reportType)
         {
             return await reportService.GetReport(reportType);
         }

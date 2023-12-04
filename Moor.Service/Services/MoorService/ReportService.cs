@@ -17,7 +17,7 @@ namespace Moor.Service.Services.MoorService
             _travellerService = travellerService;
             _districtService = districtService;
         }
-        public async Task<List<ReportDto>> GetReport(int reportType)
+        public async Task<string> GetReport(int reportType)
         {
             //Report Type = 1 kümül
             //Report Type = 2 haftalık
@@ -138,8 +138,8 @@ namespace Moor.Service.Services.MoorService
 
             string filePath = Path.Combine(directoryPath, fileName);
 
-
-            return reportDtos;
+            var returnFileName = $"https://backend.ankavip.com.tr/Report/{fileName}";
+            return returnFileName;
         }
 
         public class ExcelReportModel
