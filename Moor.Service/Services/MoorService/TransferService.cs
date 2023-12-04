@@ -285,12 +285,9 @@ namespace Moor.Service.Services.MoorService
                 transferViewDto.Plate = driverCarModel.Car.NumberPlate;
                 transferViewDto.DriverMediaPath = driverModel.Personnel.MediaPath.IsNotNullOrEmpty() ? driverModel.Personnel.MediaPath : string.Empty;
 
-                List<long> oldDriverMedia = new List<long> { 12,
-13,
-14,
+                List<long> oldDriverMedia = new List<long> {
 16,
 20,
-21,
 22};
                 if (!oldDriverMedia.Contains(driverModel.Id))
                 {
@@ -344,9 +341,7 @@ namespace Moor.Service.Services.MoorService
 
                     transferViewDto.DriverMediaPath = driverModel.Personnel.MediaPath.IsNotNullOrEmpty() ? driverModel.Personnel.MediaPath : string.Empty;
 
-                    List<long> oldDriverMedia = new List<long> { 12,
-13,
-14,
+                    List<long> oldDriverMedia = new List<long> { 
 16,
 20,
 21,
@@ -582,7 +577,7 @@ namespace Moor.Service.Services.MoorService
                 {
                     transferGetByIdModel.Plate = driverCarModel.Car.NumberPlate;
                 }
-                List<long> oldDriverMedia = new List<long> { 12,13,14,16,20,21,22};
+                List<long> oldDriverMedia = new List<long> {  16, 20, 22 };
                 if (!oldDriverMedia.Contains(driverModel.Id))
                 {
                     using (FileStream stream = new FileStream(driverModel.Personnel.MediaPath, FileMode.Open))
