@@ -27,7 +27,7 @@ namespace Moor.Service.Services.MoorService
 
             if (reportType == 1)
             {
-                var transfers = _transferService.Where(x => x.Status != 3 && x.IsDeleted == false && x.AgencyId != 18).OrderByDescending(a => a.CreatedDate).ToList();
+                var transfers = _transferService.Where(x => x.Status == 3 && x.IsDeleted == false && x.AgencyId != 18).OrderByDescending(a => a.CreatedDate).ToList();
                 if (transfers != null && transfers.Count > 0)
                 {
                     foreach (var transferEntity in transfers)
@@ -68,7 +68,7 @@ namespace Moor.Service.Services.MoorService
                 DateTime firstDayOfWeek = currentDate.AddDays(-(int)currentDate.DayOfWeek + (int)DayOfWeek.Monday);
                 DateTime lastDayOfWeek = firstDayOfWeek.AddDays(6);
 
-                var transfers = _transferService.Where(x => x.Status != 3 
+                var transfers = _transferService.Where(x => x.Status == 3 
                                                     && x.IsDeleted == false 
                                                     && x.AgencyId != 18
                                                     && (x.CreatedDate >= firstDayOfWeek && x.CreatedDate <= lastDayOfWeek)
